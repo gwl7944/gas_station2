@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.PrintDao">
+
+    <!-- 查询消费记录 -->
+    <select id="findOperatorsPrint" parameterType="Integer" resultType="Records_consumption">
+        select * from records_consumption where rc_id=#{rc_id}
+    </select>
+    <!-- 更新消费记录 ,rc_oil_gun=#{rc_oil_gun},rc_oil_num=#{rc_oil_num}-->
+    <update id="updatePrintInfo" parameterType="Records_consumption">
+        update records_consumption set rc_user_id=#{rc_user_id},rc_print=2 where rc_id=#{rc_id}
+    </update>
+    <!-- 打印当前站点 开班时间 -  下班时间的石油售卖情况 -->
+    <select id="findStationPrintInfo" parameterType="User" resultType="com.gas.pojo.StationPrintInfo">
+        SELECT sum(rc_actual_amount) as receivable_amount,sum(rc_amount_payable) as paid_amount,SUM(rc_oil_num) as sales_volume	FROM records_consumption WHERE  rc_datetime &gt;=#{user_onduty_time_str} and rc_datetime &lt;=#{user_offduty_time_str} and rc_sitecode=#{user_sitecode}
+    </select>
+    <!-- 查询充值金额 -->
+    <select id="findTopUpAmounp" parameterType="User" resultType="com.gas.pojo.StationPrintInfo">
+        SELECT sum(rc_amount_payable) as top_up_amounp	FROM records_consumption WHERE ISNULL(rc_consumer_projects_code) and rc_datetime &gt;=#{user_onduty_time_str} and rc_datetime &lt;=#{user_offduty_time_str} and rc_sitecode=#{user_sitecode}
+    </select>
+    <!-- 查询当前时间段的销售记录 -->
+    <select id="findRec" parameterType="User" resultType="com.gas.pojo.Records_consumption">
+        SELECT * FROM records_consumption WHERE  rc_sitecode=#{user_sitecode}
+        <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
+            and rc_datetime &gt;=#{user_onduty_time_str}
+        </if>
+        <if test="user_offduty_time_str!='' and user_offduty_time_str!=null">
+            and rc_datetime &lt;=#{user_offduty_time_str}
+        </if>
+    </select>
+    <!-- 新增结班销售记录 -->
+    <insert id="insertPrint" parameterType="com.gas.pojo.StationPrintInfo">
+        insert into station_print(site_name,classes,business_day,user_onduty_time_str,user_offduty_time_str,fixture_number,
+        operator,paid_amount,coupon_amount,top_up_amounp,sales_volume,site_id,
+        sales_amount,sales_official_amount,sales_coupon_amount,sales_nocard_amount)
+        values (#{site_name},#{classes},#{business_day},#{user_onduty_time_str},#{user_offduty_time_str},#{fixture_number},
+        #{operator},#{paid_amount},#{coupon_amount},#{top_up_amounp},#{sales_volume},#{site_id},
+        #{sales_amount},#{sales_official_amount},#{sales_coupon_amount},#{sales_nocard_amount})
+    </insert>
+
+    <!-- 查询结班销售记录 -->
+    <select id="findAllStationPrintInfo" parameterType="StationPrintInfo" resultType="StationPrintInfo">
+          select * from station_print where site_id=#{site_id}
+          <if test="site_name!='' and site_name!=null" >
+              and site_name =#{site_name}
+          </if>
+          <if test="business_day!='' and business_day!=null">
+              and business_day=#{business_day}
+          </if>
+          <if test="start_date!='' and start_date!=null">
+              and business_day &gt;= #{start_date}
+          </if>
+          <if test="end_date!='' and end_date!=null ">
+              and business_day &lt;= #{end_date}
+          </if>
+    </select>
+
+    <!-- 查询当天此站点此班次有无销售信息 -->
+    <select id="findStationPrintNowDate" parameterType="StationPrintInfo" resultType="Integer">
+        select count(*) from station_print where classes=#{classes} and business_day=#{business_day} and site_id=#{site_id}
+    </select>
+
+    <!-- 更新班次信息 -->
+    <update id="updateNowDatePrintInfo" parameterType="StationPrintInfo">
+        update station_print
+        <set>
+            <if test="site_name!='' and site_name!=null">
+                site_name=#{site_name},
+            </if>
+            <if test="classes!='' and classes!=null">
+                classes=#{classes},
+            </if>
+            <if test="business_day!='' and business_day!=null">
+                business_day=#{business_day},
+            </if>
+            <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
+                user_onduty_time_str=#{user_onduty_time_str},
+            </if>
+            <if test="user_offduty_time_str!='' and user_offduty_time_str!=null">
+                user_offduty_time_str=#{user_offduty_time_str},
+            </if>
+            <if test="fixture_number!=0 and fixture_number!=null">
+                fixture_number=#{fixture_number},
+            </if>
+            <if test="operator!='' and operator!=null">
+                operator=#{operator},
+            </if>
+            <if test="receivable_amount!=0 and receivable_amount!=null">
+                receivable_amount=#{receivable_amount},
+            </if>
+            <if test="paid_amount!=0 and paid_amount!=null">
+                paid_amount=#{paid_amount},
+            </if>
+            <if test="coupon_amount!=0 and coupon_amount!=null">
+                coupon_amount=#{coupon_amount},
+            </if>
+            <if test="top_up_amounp!=0 and top_up_amounp!=null">
+                top_up_amounp=#{top_up_amounp},
+            </if>
+            <if test="sales_volume!=0 and sales_volume!=null">
+                sales_volume=#{sales_volume}
+            </if>
+        </set>
+        where classes=#{classes} and business_day=#{business_day} and site_id=#{site_id}
+    </update>
+
+    <!-- 将用户开结班时间清空 -->
+    <update id="updateUserOnOFFClear" parameterType="StationPrintInfo">
+        update `user` set user_onduty_time=null,user_offduty_time=null where user_classes=#{classes} and user_sitecode=#{site_id}
+    </update>
+
+
+    <!-- 查询 充值应收总金额  充值实收总金额  充值活动优惠总金额 -->
+    <select id="findTopInfo" parameterType="User" resultType="com.gas.pojo.StationPrintInfo">
+        SELECT sum(rc_actual_amount) as top_up_amounp,sum(rc_amount_payable) as paid_amount FROM records_consumption WHERE ISNULL(rc_consumer_projects_code) and rc_sitecode=#{user_sitecode}
+        <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
+            and rc_datetime &gt;=#{user_onduty_time_str}
+        </if>
+        <if test="user_offduty_time_str!='' and user_offduty_time_str!=null">
+            and rc_datetime &lt;=#{user_offduty_time_str}
+        </if>
+    </select>
+
+    <!-- 查询 消费应收总金额 消费实收总金额 消费优惠卷优惠总金额 石油总销售量 -->
+    <select id="findSalesInfo" parameterType="User" resultType="com.gas.pojo.StationPrintInfo">
+        SELECT sum(rc_actual_amount) as sales_amount,sum(rc_amount_payable) as sales_official_amount,sum(rc_oil_num) as sales_volume FROM records_consumption WHERE rc_consumer_projects_code is not null and rc_sitecode=#{user_sitecode}
+        <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
+            and rc_datetime &gt;=#{user_onduty_time_str}
+        </if>
+        <if test="user_offduty_time_str!='' and user_offduty_time_str!=null">
+            and rc_datetime &lt;=#{user_offduty_time_str}
+        </if>
+    </select>
+
+    <!-- 查询 消费无卡支付总金额 -->
+    <select id="findNoCardInfo" parameterType="User" resultType="com.gas.pojo.StationPrintInfo">
+        SELECT sum(rc_amount_payable) as sales_nocard_amount FROM records_consumption WHERE ISNULL(rc_wu_id) and rc_sitecode=#{user_sitecode}
+        <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
+            and rc_datetime &gt;=#{user_onduty_time_str}
+        </if>
+        <if test="user_offduty_time_str!='' and user_offduty_time_str!=null">
+            and rc_datetime &lt;=#{user_offduty_time_str}
+        </if>
+    </select>
+
+    <!-- 查询充值数 -->
+    <select id="findTopUpNum" parameterType="User" resultType="Integer">
+        SELECT COUNT(*) FROM records_consumption WHERE ISNULL(rc_consumer_projects_code) and rc_sitecode=#{user_sitecode}
+        <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
+            and rc_datetime &gt;=#{user_onduty_time_str}
+        </if>
+        <if test="user_offduty_time_str!='' and user_offduty_time_str!=null">
+            and rc_datetime &lt;=#{user_offduty_time_str}
+        </if>
+    </select>
+
+    <!-- 新增打印机信息 -->
+    <insert id="insertPrinterInfo" parameterType="com.gas.pojo.Printer">
+        insert into printer(printer_code,printer_alias,printer_state,printer_del,printer_state_id,printer_key)
+        values (#{printer_code},#{printer_alias},#{printer_state},1,#{printer_state_id},#{printer_key})
+    </insert>
+
+    <!-- 更新打印机信息 -->
+    <update id="updatePrinterInfo" parameterType="com.gas.pojo.Printer">
+        update printer set printer_code=#{printer_code},printer_Identification_code=#{printer_Identification_code},printer_alias=#{printer_alias},printer_key=#{printer_key},
+        printer_state=#{printer_state} where printer_id=#{printer_id}
+    </update>
+
+    <!-- 删除打印机信息 -->
+    <update id="deletePrinterInfo" parameterType="Integer">
+        update printer set printer_del=2 where printer_id=#{printer_id}
+    </update>
+
+    <!-- 查询全部打印机信息 -->
+    <select id="findAllPrinterInfo" parameterType="Integer" resultType="com.gas.pojo.Printer">
+        select * from printer where printer_state_id=#{printer_state_id} and printer_del=1
+    </select>
+
+    <!-- 根据门店id查询打印机信息 -->
+    <select id="findPrinterBySiteId" parameterType="Integer" resultType="com.gas.pojo.Printer">
+        select * from printer where printer_state_id=#{rc_sitecode} and printer_del=1
+    </select>
+
+    <!-- 查询打印次数 -->
+    <select id="findPrintNum" parameterType="User" resultType="Integer">
+        select print_num from station_print where user_onduty_time_str=#{user_onduty_time_str} and user_offduty_time_str=#{user_offduty_time_str}
+    </select>
+
+    <!-- 更新打印次数 -->
+    <update id="updatePrintNum" parameterType="User">
+        update station_print set print_num=print_num+1 where user_onduty_time_str=#{user_onduty_time_str} and user_offduty_time_str=#{user_offduty_time_str}
+    </update>
+
+</mapper>

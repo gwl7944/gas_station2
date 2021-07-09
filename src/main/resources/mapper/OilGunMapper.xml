@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.OilGunDao">
+    <!-- 新增油枪-->
+    <insert id="insertOilGun" parameterType="OilGun">
+        insert into oil_gun(oil_gun_num,oil_gun_sitecode,oil_gun_del,oil_op_id) values (#{oil_gun_num},#{oil_gun_sitecode},1,#{oil_op_id})
+    </insert>
+    <!-- 更新油枪 -->
+    <update id="updateOilGun" parameterType="OilGun">
+        update oil_gun 
+        <set>
+            <if test="oil_gun_num!=null">
+                oil_gun_num=#{oil_gun_num},
+            </if>
+            <if test="oil_op_id!=null">
+                oil_op_id=#{oil_op_id}
+            </if>
+        </set> where oil_gun_id=#{oil_gun_id}
+    </update>
+    <!-- 查询全部当前站点下的全部油枪 -->
+    <select id="findAllOilGun" parameterType="OilGun" resultType="OilGun">
+        select * from oil_gun where oil_gun_del=1 and oil_gun_sitecode=#{oil_gun_sitecode}
+        <if test="oil_op_id!=null">
+            and oil_op_id=#{oil_op_id}
+        </if>
+    </select>
+    <!-- 删除油枪 -->
+    <update id="deleteOilGun" parameterType="Integer">
+        update oil_gun set oil_gun_del=2 where oil_gun_id=#{oil_gun_id}
+    </update>
+</mapper>

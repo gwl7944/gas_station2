@@ -1,0 +1,20 @@
+server:
+  port: 4455
+
+spring:
+  application:
+    name: gas_station
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rm-bp1ico89l2ndglykp1250100m.mysql.rds.aliyuncs.com:3306/gasstation?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = Asia/Shanghai
+    #url: jdbc:mysql://rm-bp1ico89l2ndglykp1250100m.mysql.rds.aliyuncs.com:3306/gas_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = Asia/Shanghai
+    username: gwl7944
+    password: Gwl794403044
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.gas.pojo
+
+
+serveraddress: http://39.97.187.244

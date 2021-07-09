@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.WechatUsersDao">
+
+
+    <select id="findWechat_usersByOpenId" parameterType="String" resultType="Wechat_users">
+          select * from wechat_users where wu_openid=#{wu_openid}
+    </select>
+
+    <insert id="insertWechat_users" parameterType="Wechat_users" useGeneratedKeys="true" keyProperty="wu_id">
+        insert into wechat_users (wu_name,wu_fullname,wu_telephone,wu_gender,wu_birthday,wu_id_number,wu_qr_code,wu_bar_code,wu_integral,wu_current_points,wu_remainder,
+        wu_Invitation_code,wu_openid,wu_membership_card_number,wu_membership_card_growth,wu_sitecode,wu_recommend_num,wu_state,wu_del,wu_remarks)
+        value (#{wu_name},#{wu_fullname},#{wu_telephone},#{wu_gender},#{wu_birthday},#{wu_id_number},#{wu_qr_code},#{wu_bar_code},#{wu_integral},#{wu_integral},
+        #{wu_remainder},#{wu_membership_card_number},#{wu_openid},#{wu_membership_card_number},#{wu_membership_card_growth},
+        (select site_id from site where site_appid=#{wu_appid}),#{wu_recommend_num},1,1,#{wu_remarks})
+    </insert>
+    
+    <update id="updateWechat_users" parameterType="Wechat_users">
+        update wechat_users
+        <set>
+            <if test='wu_name!=null and wu_name!=""'>
+                wu_name=#{wu_name},
+            </if>
+            <if test='wu_fullname!=null and wu_fullname!=""'>
+                wu_fullname=#{wu_fullname},
+            </if>
+            <if test='wu_telephone!=null and wu_telephone!=""'>
+                wu_telephone=#{wu_telephone},
+            </if>
+            <if test="wu_gender!=0 and wu_gender!=null">
+                wu_gender=#{wu_gender},
+            </if>
+            <if test="wu_birthday!=null">
+                wu_birthday=#{wu_birthday},
+            </if>
+            <if test='wu_id_number!=null and wu_id_number!=""'>
+                wu_id_number=#{wu_id_number},
+            </if>
+            <if test="wu_current_points!=0 and wu_current_points!=null">
+                wu_current_points=#{wu_current_points},
+            </if>
+            <if test="wu_integral!=0 and wu_integral!=null">
+                wu_integral=wu_integral+#{wu_integral},
+            </if>
+            <if test="wu_remainder!=0 and wu_remainder!=null">
+                wu_remainder=#{wu_remainder},
+            </if>
+            <if test="wu_membership_card_growth !=0 and wu_membership_card_growth !=null">
+                wu_membership_card_growth =#{wu_membership_card_growth},
+            </if>
+            <if test="wu_recommend_num !=0 and wu_recommend_num !=null">
+                wu_recommend_num =#{wu_recommend_num},
+            </if>
+            <if test="wu_state !=0 and wu_state !=null">
+                wu_state =#{wu_state},
+            </if>
+            <if test='wu_remarks!=null and wu_remarks!=""'>
+                wu_remarks =#{wu_remarks}
+            </if>
+        </set>
+        where wu_id=#{wu_id}
+    </update>
+
+    <select id="findWci_numberByWci_wu_id" parameterType="Integer" resultType="Integer">
+        select SUM(wci_number) from wu_coupon_information where wci_wu_id=#{wci_wu_id}
+    </select>
+
+    <select id="findCouponByWci_wu_id" parameterType="Integer" resultType="Coupon">
+        select c.*,wci.wci_number coupon_wxuser_number from wu_coupon_information wci,coupon c
+        where wci.wci_coupon_type=c.coupon_id and wci.wci_wu_id=#{wci_wu_id}
+    </select>
+
+    <select id="findRecords_consumptionByRc_wu_id" parameterType="Records_consumption" resultType="Records_consumption">
+        select * from records_consumption where rc_wu_id=#{rc_wu_id}
+         <if test='rc_Date_str!=null and rc_Date_str!=""'>
+             and rc_datetime like CONCAT(#{rc_Date_str},'%')
+         </if>
+    </select>
+
+    <select id="findAllActivity" parameterType="String" resultType="Activity">
+        select * from activity
+        where activity_sitecode=(select site_id from site where site_appid=#{activity_sitecode})
+        and activity_del=1
+        and DATE_FORMAT(#{date},'%Y-%m-%d') BETWEEN DATE_FORMAT(activity_start_date,'%Y-%m-%d') AND DATE_FORMAT(activity_end_date,'%Y-%m-%d')
+    </select>
+
+    <select id="findNoEndTimeActivity" parameterType="String" resultType="Activity">
+        select * from activity
+        where activity_sitecode=(select site_id from site where site_appid=#{activity_sitecode})
+        and activity_del=1
+        and activity_end_date is null
+    </select>
+
+
+    <select id="findAllCoupon" parameterType="String" resultType="Coupon">
+        select * from coupon
+        where coupon_sitecode=(select site_id from site where site_appid=#{coupon_sitecode})
+        and coupon_del=1 and coupon_term_validity &lt;=#{now_date} and coupon_enddate &gt;=#{now_date}
+    </select>
+    
+    <update id="updateCoupon" parameterType="Coupon">
+        update coupon
+        <set>
+            <if test='coupon_name!=null and coupon_name!=""'>
+                coupon_name=#{coupon_name},
+            </if>
+            <if test='coupon_describe!=null and coupon_describe!=""'>
+                coupon_describe=#{coupon_describe},
+            </if>
+            <if test="coupon_money!=0 and coupon_money!=null">
+                coupon_money=#{coupon_money},
+            </if>
+            <if test="coupon_number!=0 and coupon_number!=null">
+                coupon_number=#{coupon_number},
+            </if>
+            <if test="coupon_term_validity!=null">
+                coupon_term_validity=#{coupon_term_validity}
+            </if>
+            <if test="coupon_state!=0 and coupon_state!=null">
+                coupon_state=#{coupon_state},
+            </if>
+            <if test='coupon_remarks!=null and coupon_remarks!=""'>
+                coupon_remarks=#{coupon_remarks}
+            </if>
+        </set>
+        where coupon_id=#{coupon_id}
+    </update>
+
+    <select id="findWCIcount" resultType="Integer">
+        select count(*) from wu_coupon_information where wci_wu_id=#{wci_wu_id} and wci_coupon_type=#{wci_coupon_type}
+    </select>
+
+    <select id="findWCIcountUseNum" resultType="Integer">
+        select count(*) from wu_coupon_information where wci_wu_id=#{wci_wu_id} and wci_coupon_type=#{wci_coupon_type} and wci_number=0
+    </select>
+
+    <update id="updateWCI" parameterType="Wu_coupon_information">
+        update wu_coupon_information set wci_number=wci_number+#{wci_number} where wci_wu_id=#{wci_wu_id} and wci_coupon_type=#{wci_coupon_type}
+    </update>
+
+    <insert id="insertWCI" parameterType="Wu_coupon_information">
+        insert into wu_coupon_information (wci_wu_id,wci_coupon_type,wci_number) value(#{wci_wu_id},#{wci_coupon_type},#{wci_number})
+    </insert>
+
+    <update id="updateWechat_usersWu_current_points" parameterType="Wechat_users">
+        update wechat_users set wu_current_points=wu_current_points+#{wu_current_points} where wu_id=#{wu_id}
+    </update>
+
+    <update id="updateCouponCoupon_number" parameterType="Coupon">
+        update coupon set coupon_number=coupon_number+#{coupon_number} where coupon_id=#{coupon_id}
+    </update>
+
+    <select id="findAllOil_price" parameterType="String" resultType="Oil_price">
+        select * from oil_price where op_del=1 and op_sitecode=(select site_id from site where site_appid=#{op_sitecode})
+    </select>
+
+    <!--根据AppID 查询站点 -->
+    <select id="findSiteByAppId" resultType="Site">
+        select * from site where site_appid=#{site_appid}
+    </select>
+
+    <!-- 根据id查询活动 -->
+    <select id="findActivity" parameterType="Integer" resultType="com.gas.pojo.Activity">
+        select * from activity where activity_id=#{rc_activity} and activity_del=1
+    </select>
+
+    <!-- 更新用户充值信息 -->
+    <update id="updateWechatTopUpInfo" parameterType="Wechat_users">
+        update wechat_users set wu_integral=wu_integral+#{wu_integral},wu_current_points=wu_current_points+#{wu_current_points},wu_remainder=wu_remainder+#{wu_remainder},wu_membership_card_growth=wu_membership_card_growth+#{wu_membership_card_growth}
+        where wu_id=#{wu_id}
+    </update>
+
+    <!-- 用户充值待支付信息新增 -->
+    <insert id="insertRecordsConsumptionWait" parameterType="com.gas.pojo.Records_consumption">
+        insert into records_consumption_wait(rc_consumer_projects,rc_consumer_projects_code,rc_datetime,
+        rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,rc_activity,rc_coupon,rc_number,rc_oil_gun,rc_oil_num,rc_nocard_phone)
+        values (#{rc_consumer_projects},#{rc_consumer_projects_code},#{rc_datetime},
+        #{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},#{rc_coupon},#{rc_number},#{rc_oil_gun},#{rc_oil_num},#{rc_nocard_phone})
+    </insert>
+
+    <!-- 新增消费记录 -->
+    <insert id="insertRecordsConsumption" parameterType="com.gas.pojo.Records_consumption">
+        insert into records_consumption(rc_consumer_projects,rc_consumer_projects_code,rc_datetime,
+        rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,rc_activity,rc_coupon,rc_number,rc_oil_gun,rc_oil_num,rc_nocard_phone,rc_oil_price)
+        values (#{rc_consumer_projects},#{rc_consumer_projects_code},#{rc_datetime},
+        #{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},#{rc_coupon},#{rc_number},#{rc_oil_gun},#{rc_oil_num},#{rc_nocard_phone},#{rc_oil_price})
+    </insert>
+
+    <!-- 减少账户余额 -->
+    <update id="updateWechatBalanceInfo" parameterType="Wechat_users">
+        update wechat_users set wu_remainder=wu_remainder-#{wu_remainder} where wu_id=#{wu_id}
+    </update>
+
+    <!-- 减少账户优惠券数量 -->
+    <update id="updateWuCouponNum" parameterType="com.gas.pojo.Wu_coupon_information">
+        update wu_coupon_information set wci_number=wci_number-1 where wci_wu_id=#{wci_wu_id} and wci_coupon_type=#{wci_coupon_type}
+    </update>
+
+    <!-- 嘉联支付 -->
+    <insert id="insertJlOrder" parameterType="JlOrder">
+        insert into jl_order(ret_code,ret_msg,sign,status,mch_id,org_code,term_no,device_info,transaction_id,out_trade_no,total_fee,pay_info,order_time,pay_type,trans_time)
+        values (#{ret_code},#{ret_msg},#{sign},#{status},#{mch_id},#{org_code},#{term_no},#{device_info},#{transaction_id},#{out_trade_no},#{total_fee},#{pay_info},#{order_time},#{pay_type},#{trans_time})
+    </insert>
+    <!-- 根据单号查询消费记录 -->
+    <select id="findRecordsByRcNum" parameterType="String" resultType="Records_consumption">
+        select * from records_consumption_wait where rc_number=#{out_trade_no}
+    </select>
+
+    <!--查询全部会员日-->
+    <select id="findAllMember_day" parameterType="Integer" resultType="Member_day">
+        select * from member_day where med_sitecode=#{med_sitecode} and med_del=1
+    </select>
+
+    <!--根据油品ID 星期值 查询会员日-->
+    <select id="findMember_dayByMed_op_id" parameterType="Integer" resultType="Member_day">
+        select * from member_day where med_op_id=#{param1} and med_weekday=#{param2} and med_sitecode=#{param3} and med_del=1
+    </select>
+
+    <!--新增会员日-->
+    <insert id="insertMember_day" parameterType="Member_day">
+        insert into member_day (med_weekday,med_float_value,med_op_id,med_sitecode,med_del)
+        value (#{med_weekday},#{med_float_value},#{med_op_id},#{med_sitecode},1)
+    </insert>
+
+    <!--删除会员日-->
+    <update id="deleteMember_day" parameterType="Integer">
+        update member_day set med_del=2 where med_id=#{med_id}
+    </update>
+
+    <!-- 修改会员日 -->
+    <update id="updateMember_day" parameterType="Member_day">
+        update member_day
+        <set>
+            <if test="med_weekday!=0 and med_weekday!=null">
+                med_weekday=#{med_weekday},
+            </if>
+            <if test="med_float_value!=null">
+                med_float_value=#{med_float_value},
+            </if>
+            <if test="med_op_id!=0 and med_op_id!=null">
+                med_op_id=#{med_op_id},
+            </if>
+            <if test="med_sitecode!=0 and med_sitecode!=null">
+                med_sitecode=#{med_sitecode}
+            </if>
+        </set> where med_id=#{med_id}
+    </update>
+
+    <!--查询无卡消费明细-->
+    <select id="findRecords_consumptionByNocard" parameterType="Integer" resultType="Records_consumption">
+        select rc.rc_id,rc.rc_consumer_projects,rc.rc_consumer_projects_code,rc.rc_actual_amount,rc.rc_amount_payable,rc.rc_datetime rc_Date_str,rc.rc_oil_gun,rc.rc_oil_num,op.op_price rc_oil_price
+        from records_consumption rc,oil_price op
+        where rc.rc_consumer_projects_code=op.op_id and rc.rc_wu_id is null and rc.rc_sitecode=#{rc_sitecode} order by rc.rc_id desc
+    </select>
+</mapper>
