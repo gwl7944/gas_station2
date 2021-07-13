@@ -48,5 +48,12 @@ public class Activity {
 
     private Double activity_condition;  //活动条件
 
+    /*--------------------------- 以下为2.0 版本新增字段 -------------------------------*/
+
+    private Integer activity_oil_price; //油品外键
+
+    private Integer activity_type;  //活动类型  1-折扣 2满减
+
+    private Double activity_full_impairment; //满减值
 
 }
