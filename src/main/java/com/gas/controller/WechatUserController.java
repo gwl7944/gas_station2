@@ -35,7 +35,7 @@ import java.util.Map;
  * @Package: com.gas.controller
  * @ClassName: WechatUserController
  * @Author: gwl
- * @Description: 微信用户功能那个模块接口
+ * @Description: 微信用户功能模块接口
  * @Date: 2021/3/22 11:48
  * @Version: 1.0
  */
@@ -166,6 +166,7 @@ public class WechatUserController {
         return ResultData.getResponseData(wechatUsersService.getRecords_consumptionByRc_wu_id(records_consumption), ResultCode.SYS_SUCCESS);
     }
 
+
     /**
      * 查询全部活动信息
      *
@@ -194,6 +195,7 @@ public class WechatUserController {
         return ResultData.getResponseData(wechatUsersService.CouponExchange(wu_coupon_information, coupon_integralnum), ResultCode.SYS_SUCCESS);
     }
 
+
     /**
      * 查询全部油价
      */
@@ -202,13 +204,6 @@ public class WechatUserController {
         return ResultData.getResponseData(wechatUsersService.getAllOil_price(op_sitecode), ResultCode.SYS_SUCCESS);
     }
 
-    /**
-     * 会员日油价
-     */
-    /*@GetMapping("/WechatUserController/findAllOilPriceMember/{op_sitecode}/{op_oil_id}")
-    public JSON findAllOilPriceMember(@PathVariable("op_sitecode") String op_sitecode,@PathVariable("op_oil_id") Integer op_oil_id){
-        return ResultData.getResponseData(wechatUsersService.findAllOilPriceMember(op_sitecode),ResultCode.SYS_SUCCESS);
-    }*/
 
     /**
      * 余额充值

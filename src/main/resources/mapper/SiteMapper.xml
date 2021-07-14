@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.SiteDao">
+
+    <select id="findSite" resultType="com.gas.pojo.Site">
+        select * from site where site_del =1
+    </select>
+
+    <!-- 新增站点 -->
+    <insert id="addSite" parameterType="com.gas.pojo.Site">
+        insert into site(site_name,site_appid,site_secret,site_mch_id,site_org_code,site_state,site_del)
+        values (#{site_name},#{site_appid},#{site_secret},#{site_mch_id},#{site_org_code},1,1)
+    </insert>
+    <!--修改站点-->
+    <update id="updateSite" parameterType="com.gas.pojo.Site">
+        update site
+        <set>
+            <if test='site_name!=null and site_name!=""'>
+                site_name=#{site_name},
+            </if>
+            <if test='site_appid!=null and site_appid!=""'>
+                site_appid=#{site_appid},
+            </if>
+            <if test='site_secret!=null and site_secret!=""'>
+                site_secret=#{site_secret},
+            </if>
+            <if test='site_mch_id!=null and site_mch_id!=""'>
+                site_mch_id=#{site_mch_id},
+            </if>
+            <if test='site_org_code!=null and site_org_code!=""'>
+                site_org_code=#{site_org_code},
+            </if>
+            <if test='site_state!=0 and site_state!=null'>
+                site_state=#{site_state}
+            </if>
+        </set>
+        where site_id=#{site_id}
+    </update>
+    <!-- 删除站点 -->
+    <delete id="deleteSite" parameterType="Integer">
+        delete from site where site_id=#{site_id}
+    </delete>
+
+    <!-- 根据id查询站点 -->
+    <select id="findSiteById" parameterType="Integer" resultType="com.gas.pojo.Site">
+        select * from site where site_id=#{rc_sitecode}
+    </select>
+</mapper>

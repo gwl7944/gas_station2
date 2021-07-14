@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.UserDao">
+
+    <select id="findUserByName" parameterType="String" resultType="User">
+       select * from user where user_loginname=#{loginname} and user_del=1
+    </select>
+
+    <select id="findUserById" parameterType="Integer" resultType="User">
+       select * from user where user_id=#{id} and user_del=1
+    </select>
+
+    <select id="findAllUser" parameterType="User" resultType="User">
+        select * from user where  user_del=1
+        <if test="user_sitecode!=7 and user_sitecode!=null">
+            and  user_sitecode=#{user_sitecode}
+        </if>
+    </select>
+
+    <insert id="insertUser" parameterType="User">
+        insert into user (user_name,user_pwd,user_loginname,user_phone,user_sitecode,user_id_number,user_gender,user_del,user_role_id,user_classes)
+        value (#{user_name},#{user_pwd},#{user_loginname},#{user_phone},#{user_sitecode},#{user_id_number},#{user_gender},1,#{user_role_id},#{user_classes})
+    </insert>
+
+    <update id="updateUser" parameterType="User">
+        update user
+        <set>
+            <if test='user_name!=null and user_name!=""'>
+                user_name=#{user_name},
+            </if>
+            <if test='user_pwd!=null and user_pwd!=""'>
+                user_pwd=#{user_pwd},
+            </if>
+            <if test='user_loginname!=null and user_loginname!=""'>
+                user_loginname=#{user_loginname},
+            </if>
+            <if test='user_phone!=null and user_phone!=""'>
+                user_phone=#{user_phone},
+            </if>
+            <if test="user_sitecode!=0 and user_sitecode!=null">
+                user_sitecode=#{user_sitecode},
+            </if>
+            <if test='user_id_number!=null and user_id_number!=""'>
+                user_id_number=#{user_id_number},
+            </if>
+            <if test="user_gender!=0 and user_gender!=null">
+                user_gender=#{user_gender},
+            </if>
+            <if test="user_role_id!=0 and user_role_id!=null">
+                user_role_id=#{user_role_id},
+            </if>
+            <if test='user_classes!=null and user_classes!=""'>
+                user_classes=#{user_classes}
+            </if>
+            where user_id=#{user_id}
+        </set>
+    </update>
+
+    <update id="deleteUser" parameterType="Integer">
+        update user set user_del=2 where user_id=#{user_id}
+    </update>
+
+
+    <select id="findRcByUserId" parameterType="Integer" resultType="com.gas.pojo.Records_consumption">
+        select * from records_consumption where rc_wu_id=#{wu_id}
+    </select>
+
+
+    <!-- 查询微信用户 -->
+    <select id="findWcUser"  parameterType="com.gas.pojo.Wechat_users" resultType="com.gas.pojo.Wechat_users">
+        select * from wechat_users where wu_del=1
+        <if test="wu_id_number!=null and wu_id_number!=''">
+            and wu_id_number =#{wu_id_number}
+        </if>
+        <if test="wu_membership_card_number!=null and wu_membership_card_number!=''">
+            and wu_membership_card_number =#{wu_membership_card_number}
+        </if>
+        <if test="wu_telephone!=null and wu_telephone!=''">
+            and wu_telephone =#{wu_telephone}
+        </if>
+        <if test="wu_sitecode!=0 and wu_sitecode!=''">
+            and wu_sitecode =#{wu_sitecode}
+        </if>
+    </select>
+
+
+    <select id="findUserByNs" parameterType="User" resultType="User">
+        select * from `user` where user_del =1
+        <if test="user_loginname!=null and user_loginname!=''">
+            and user_loginname=#{user_loginname}
+        </if>
+        <if test="user_sitecode!=null and user_sitecode!=0">
+            and user_sitecode=#{user_sitecode}
+        </if>
+    </select>
+
+    <!-- 删除微信用户 -->
+    <update id="deleteWcUserById" parameterType="Integer">
+        update wechat_users set wu_del=2 where wu_id=#{wu_id}
+    </update>
+
+    <!-- 用户上下班时间打卡 -->
+    <update id="updateUserOnOrOffDuty" parameterType="User">
+        update `user`
+        <set>
+            <if test="user_onduty_time!=null">
+                user_onduty_time=#{user_onduty_time}
+            </if>
+            <if test="user_offduty_time!=null">
+                user_offduty_time=#{user_offduty_time}
+            </if>
+        </set>
+        where user_sitecode=#{user_sitecode} and user_classes=#{user_classes}
+    </update>
+
+    <!-- 查询当前站点下的用户信息 -->
+    <select id="findUserOnOrOffDuty" parameterType="Integer" resultType="User">
+          select * from `user` where user_id=#{user_id} and user_sitecode=#{user_sitecode}
+    </select>
+
+    <!-- 更新消费记录打印单号 -->
+    <update id="updateReByRcNum" parameterType="String">
+        update records_consumption set rc_print_num=#{data} where rc_number=#{rc_number}
+    </update>
+
+
+    <!-- 修改微信用户 -->
+    <update id="updateWcUserById" parameterType="Wechat_users">
+        update wechat_users
+        <set>
+            <if test='wu_name!=null and wu_name!=""'>
+                wu_name=#{wu_name},
+            </if>
+            <if test='wu_fullname!=null and wu_fullname!=""'>
+                wu_fullname=#{wu_fullname},
+            </if>
+            <if test='wu_telephone!=null and wu_telephone!=""'>
+                wu_telephone=#{wu_telephone},
+            </if>
+            <if test="wu_gender!=0 and wu_gender!=null">
+                wu_gender=#{wu_gender},
+            </if>
+            <if test="wu_birthday!=null">
+                wu_birthday=#{wu_birthday},
+            </if>
+            <if test='wu_id_number!=null and wu_id_number!=""'>
+                wu_id_number=#{wu_id_number},
+            </if>
+            <if test="wu_current_points!=0 and wu_current_points!=null">
+                wu_current_points=#{wu_current_points},
+            </if>
+            <if test="wu_integral!=0 and wu_integral!=null">
+                wu_integral=#{wu_integral},
+            </if>
+            <if test="wu_remainder!=0 and wu_remainder!=null">
+                wu_remainder=#{wu_remainder},
+            </if>
+            <if test="wu_membership_card_growth !=0 and wu_membership_card_growth !=null">
+                wu_membership_card_growth =#{wu_membership_card_growth},
+            </if>
+            <if test="wu_recommend_num !=0 and wu_recommend_num !=null">
+                wu_recommend_num =#{wu_recommend_num},
+            </if>
+            <if test="wu_state !=0 and wu_state !=null">
+                wu_state =#{wu_state},
+            </if>
+            <if test='wu_remarks!=null and wu_remarks!=""'>
+                wu_remarks =#{wu_remarks}
+            </if>
+        </set>
+        where wu_id=#{wu_id}
+    </update>
+
+    <!-- 根据id查询微信用户 -->
+    <select id="findWcUserById" parameterType="Integer" resultType="Wechat_users">
+        select * from wechat_users where wu_del=1 and wu_id=#{wu_id}
+    </select>
+</mapper>

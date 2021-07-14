@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.OliInDao">
+    <!-- 新增油价 -->
+    <insert id="insertOliInfo" parameterType="com.gas.pojo.Oil_price">
+        insert into oil_price(op_name,op_price,op_sitecode,op_state,op_del) values (#{op_name},#{op_price},#{op_sitecode},1,1)
+    </insert>
+
+    <!-- 修改油价 -->
+    <update id="updateOliInfo" parameterType="com.gas.pojo.Oil_price">
+        update oil_price
+        <set>
+            <if test="op_name!='' and op_name!=null">
+                op_name=#{op_name},
+            </if>
+            <if test="op_price!=0 and op_price!=null">
+                op_price=#{op_price},
+            </if>
+            <if test="op_sitecode!=0 and op_sitecode!=null">
+                op_sitecode=#{op_sitecode},
+            </if>
+            <if test="op_state!=0 and op_state!=null">
+                op_state=#{op_state}
+            </if>
+        </set>
+        where op_id=#{op_id}
+    </update>
+    <!-- 删除油价 -->
+    <update id="deleteOliInfoById" parameterType="Integer">
+        update oil_price set  op_del=2 where op_id=#{oil_id}
+    </update>
+
+    <!-- 根据站点查询油价信息 -->
+    <select id="findAllOliInfoBySite" parameterType="Integer" resultType="com.gas.pojo.Oil_price">
+        select * from oil_price where op_sitecode=#{site_id} and op_del =1
+    </select>
+
+    <!-- 根据id查询油价信息 -->
+    <select id="findOliInfoById" parameterType="Integer" resultType="com.gas.pojo.Oil_price">
+        select * from oil_price where op_id=#{oil_id} and op_del =1
+    </select>
+</mapper>

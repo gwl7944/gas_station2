@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.CouponDao">
+
+    <!-- 新增优惠卷 -->
+    <insert id="insertCoupon" parameterType="com.gas.pojo.Coupon">
+        insert into coupon(coupon_name,coupon_describe,coupon_money,coupon_number,coupon_term_validity,coupon_enddate,coupon_threshold,coupon_sitecode,coupon_integralnum,coupon_state,coupon_del,coupon_remarks)
+        values(#{coupon_name},#{coupon_describe},#{coupon_money},#{coupon_number},#{coupon_term_validity},#{coupon_enddate},#{coupon_threshold},#{coupon_sitecode},#{coupon_integralnum},1,1,#{coupon_remarks})
+    </insert>
+
+    <!-- 查询当前站点下的所有优惠卷 -->
+    <select id="findAllCouponBySite" parameterType="com.gas.pojo.Coupon" resultType="com.gas.pojo.Coupon">
+        select * from coupon where coupon_del=1
+        <if test="coupon_sitecode!=0 and coupon_sitecode!=null">
+            and coupon_sitecode =#{coupon_sitecode}
+        </if>
+        <if test="coupon_term_validity!=null">
+            and coupon_term_validity =#{coupon_term_validity}
+        </if>
+        <if test="coupon_name!='' and coupon_name!=null">
+            and coupon_name =#{coupon_name}
+        </if>
+    </select>
+
+    <!-- 删除优惠卷 -->
+    <update id="deleteCouponById" parameterType="Integer">
+          update coupon set coupon_del=2 where coupon_id=#{coupon_id}
+    </update>
+
+    <!-- 更新优惠卷 -->
+    <update id="updateCouponById" parameterType="com.gas.pojo.Coupon">
+        update coupon
+        <set>
+            <if test="coupon_name!='' and coupon_name!=null">
+                coupon_name=#{coupon_name},
+            </if>
+            <if test="coupon_describe!='' and coupon_describe!=null">
+                coupon_describe=#{coupon_describe},
+            </if>
+            <if test="coupon_money!=0 and coupon_money!=null">
+                coupon_money=#{coupon_money},
+            </if>
+            <if test="coupon_number!=0 and coupon_number!=null">
+                coupon_number=#{coupon_number},
+            </if>
+            <if test="coupon_term_validity!=null">
+                coupon_term_validity=#{coupon_term_validity},
+            </if>
+            <if test="coupon_enddate!=null">
+                coupon_enddate=#{coupon_enddate},
+            </if>
+            <if test="coupon_threshold!=0 and coupon_threshold!=null">
+                coupon_threshold=#{coupon_threshold},
+            </if>
+            <if test="coupon_sitecode!=null">
+                coupon_sitecode=#{coupon_sitecode},
+            </if>
+            <if test="coupon_integralnum!=null">
+                coupon_integralnum=#{coupon_integralnum},
+            </if>
+            <if test="coupon_state!=0 and coupon_state!=null">
+                coupon_state=#{coupon_state},
+            </if>
+            <if test="coupon_remarks!='' and coupon_remarks!=null">
+                coupon_remarks=#{coupon_remarks}
+            </if>
+        </set>
+        where coupon_id=#{coupon_id}
+    </update>
+
+    <!-- 根据id查询优惠卷 -->
+    <select id="findCouponById" parameterType="Integer" resultType="com.gas.pojo.Coupon">
+        select * from coupon where coupon_id=#{rc_coupon}
+    </select>
+</mapper>

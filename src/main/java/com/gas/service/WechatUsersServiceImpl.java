@@ -3,9 +3,7 @@ package com.gas.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.gas.dao.AuthorityDao;
-import com.gas.dao.PrintDao;
-import com.gas.dao.WechatUsersDao;
+import com.gas.dao.*;
 import com.gas.pojo.*;
 import com.gas.util.Api_java_demo;
 import com.gas.util.DataCompletion;
@@ -13,7 +11,6 @@ import com.gas.util.DateTO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +38,12 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     AuthorityDao authorityDao;
     @Resource
     PrintDao printDao;
+    @Resource
+    SiteDao siteDao;
+    @Resource
+    OliInDao oliInDao;
+    @Resource
+    UserDao userDao;
 
     @Override
     public Wechat_users getWechat_usersByOpenId(String wu_openid) {
@@ -234,7 +237,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         recordsConsumption.setRc_number("GZH" + RandomStringUtils.randomNumeric(10));
         recordsConsumption.setRc_datetime(new Date());
         if (recordsConsumption.getRc_consumer_projects_code() != null) {
-            Oil_price oilPrice = authorityDao.findOliInfoById(recordsConsumption.getRc_consumer_projects_code());
+            Oil_price oilPrice = oliInDao.findOliInfoById(recordsConsumption.getRc_consumer_projects_code());
             recordsConsumption.setRc_oil_num(Double.parseDouble(df.format(recordsConsumption.getRc_actual_amount() / oilPrice.getOp_price())));
         }
         int i = wechatUsersDao.insertRecordsConsumptionWait(recordsConsumption);
@@ -281,14 +284,14 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             }
         }
         if (i + i1 > 0) {
-            Site site = authorityDao.findSiteById(recordsConsumption.getRc_sitecode());
+            Site site = siteDao.findSiteById(recordsConsumption.getRc_sitecode());
             recordsConsumption.setRc_sitecode_name(site.getSite_name());
             recordsConsumption.setRc_Date_str(DateTO.getStringDateTime(recordsConsumption.getRc_datetime()));
-            Oil_price oilPrice = authorityDao.findOliInfoById(recordsConsumption.getRc_consumer_projects_code());
+            Oil_price oilPrice = oliInDao.findOliInfoById(recordsConsumption.getRc_consumer_projects_code());
             recordsConsumption.setOilPrice(oilPrice);
             //查询用户
             if (recordsConsumption.getRc_wu_id() != null) {
-                Wechat_users wcUserById = authorityDao.findWcUserById(recordsConsumption.getRc_wu_id());
+                Wechat_users wcUserById = userDao.findWcUserById(recordsConsumption.getRc_wu_id());
                 recordsConsumption.setWechat_users(wcUserById);
             }
             try {
@@ -303,7 +306,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                     if (ret.equals("0")){
                         //更新当前消费记录的打印单号
                         String data = jsonObject.getString("data");
-                        int i3 =  authorityDao.updateReByRcNum(recordsConsumption.getRc_number(),data);
+                        int i3 =  userDao.updateReByRcNum(recordsConsumption.getRc_number(),data);
                     }
                 }
             }catch (Exception e){
@@ -326,18 +329,17 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         //新增到消费记录正式表里
         int i = insertRecords(records_consumption);
         if (records_consumption.getRc_consumer_projects_code()!=null){
-            Site site = authorityDao.findSiteById(records_consumption.getRc_sitecode());
+            Site site = siteDao.findSiteById(records_consumption.getRc_sitecode());
             records_consumption.setRc_sitecode_name(site.getSite_name());
             records_consumption.setRc_Date_str(DateTO.getStringDateTime(records_consumption.getRc_datetime()));
 
             //油价
-
-            Oil_price oilPrice = authorityDao.findOliInfoById(records_consumption.getRc_consumer_projects_code());
+            Oil_price oilPrice = oliInDao.findOliInfoById(records_consumption.getRc_consumer_projects_code());
             records_consumption.setOilPrice(oilPrice);
 
             //查询用户
             if (records_consumption.getRc_wu_id() != null) {
-                Wechat_users wcUserById = authorityDao.findWcUserById(records_consumption.getRc_wu_id());
+                Wechat_users wcUserById = userDao.findWcUserById(records_consumption.getRc_wu_id());
                 records_consumption.setWechat_users(wcUserById);
             }
             try {
@@ -352,7 +354,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                     if (ret.equals("0")){
                         //更新当前消费记录的打印单号
                         String data = jsonObject.getString("data");
-                        int i3 =  authorityDao.updateReByRcNum(records_consumption.getRc_number(),data);
+                        int i3 =  userDao.updateReByRcNum(records_consumption.getRc_number(),data);
                     }
                 }
             }catch (Exception e){
@@ -367,11 +369,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         List<Member_day> allMember_day = wechatUsersDao.findAllMember_day(med_sitecode);
         for (Member_day member_day : allMember_day) {
             //查询站点
-            Site site = authorityDao.findSiteById(member_day.getMed_sitecode());
+            Site site = siteDao.findSiteById(member_day.getMed_sitecode());
             member_day.setSite(site);
 
             //查询油价
-            Oil_price oilPrice = authorityDao.findOliInfoById(member_day.getMed_op_id());
+            Oil_price oilPrice = oliInDao.findOliInfoById(member_day.getMed_op_id());
             member_day.setOilPrice(oilPrice);
         }
         return allMember_day;
@@ -383,11 +385,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         Member_day member_day = wechatUsersDao.findMember_dayByMed_op_id(med_op_id, med_weekday, med_sitecode);
         if (member_day!=null){
             //查询站点
-            Site site = authorityDao.findSiteById(med_sitecode);
+            Site site = siteDao.findSiteById(med_sitecode);
             member_day.setSite(site);
 
             //查询油价
-            Oil_price oilPrice = authorityDao.findOliInfoById(med_op_id);
+            Oil_price oilPrice = oliInDao.findOliInfoById(med_op_id);
             member_day.setOilPrice(oilPrice);
         }
         return member_day;

@@ -2,8 +2,7 @@ package com.gas.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.gas.dao.AuthorityDao;
-import com.gas.dao.PrintDao;
+import com.gas.dao.*;
 import com.gas.pojo.*;
 import com.gas.util.Api_java_demo;
 import com.gas.util.DateTO;
@@ -11,7 +10,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -28,9 +26,18 @@ public class PrintServiceImpl implements PrintService {
 
     @Resource
     PrintDao printDao;
-
     @Resource
     AuthorityDao authorityDao;
+    @Resource
+    SiteDao siteDao;
+    @Resource
+    OliInDao oliInDao;
+    @Resource
+    UserDao userDao;
+    @Resource
+    ActivityDao activityDao;
+    @Resource
+    CouponDao couponDao;
 
     public static final String USER = "794403044@qq.com";//*必填*：账号名
     public static final String UKEY = "zEKe4v6fwpeQVAKK";//*必填*: 飞鹅云后台注册账号后生成的UKEY 【备注：这不是填打印机的KEY】
@@ -43,17 +50,17 @@ public class PrintServiceImpl implements PrintService {
         recordsConsumption.setRc_Date_str(DateTO.getStringDateTime(recordsConsumption.getRc_datetime()));
 
         //查询油价信息
-        Oil_price oilPrice = authorityDao.findOliInfoById(recordsConsumption.getRc_consumer_projects_code());
+        Oil_price oilPrice = oliInDao.findOliInfoById(recordsConsumption.getRc_consumer_projects_code());
         recordsConsumption.setOilPrice(oilPrice);
 
         //查询活动信息
         if (recordsConsumption.getRc_activity() != null) {
-            Activity activity = authorityDao.findActivityById(recordsConsumption.getRc_activity());
+            Activity activity = activityDao.findActivityById(recordsConsumption.getRc_activity());
             recordsConsumption.setActivity(activity);
         }
         //查询优惠卷信息
         if (recordsConsumption.getRc_coupon() != null) {
-            Coupon coupon = authorityDao.findCouponById(recordsConsumption.getRc_coupon());
+            Coupon coupon = couponDao.findCouponById(recordsConsumption.getRc_coupon());
             recordsConsumption.setCoupon(coupon);
         }
 
@@ -86,7 +93,7 @@ public class PrintServiceImpl implements PrintService {
             List<Records_consumption> recList = printDao.findRec(user);
 
             //查询当前站点下的所有
-            List<Oil_price> oilPriceList = authorityDao.findAllOliInfoBySite(user.getUser_sitecode());
+            List<Oil_price> oilPriceList = oliInDao.findAllOliInfoBySite(user.getUser_sitecode());
             int fixture_number = 0;
             List<OilPrint> list = new ArrayList<>();
             for (Oil_price oilPrice : oilPriceList) {
@@ -230,12 +237,12 @@ public class PrintServiceImpl implements PrintService {
             stationPrintInfo.setUser_offduty_time_str(user.getUser_offduty_time_str());//下班时间
         }
         //查询站点
-        Site site = authorityDao.findSiteById(user.getUser_sitecode());
+        Site site = siteDao.findSiteById(user.getUser_sitecode());
         if (site != null) {
             stationPrintInfo.setSite_name(site.getSite_name());
         }
         //查询操作人
-        User user1 = authorityDao.findUserById(user.getUser_id());
+        User user1 = userDao.findUserById(user.getUser_id());
         if (user1 != null) {
             stationPrintInfo.setOperator(user1.getUser_name());
             //查询打印次数
@@ -335,7 +342,7 @@ public class PrintServiceImpl implements PrintService {
         List<Printer> printerList = printDao.findAllPrinterInfo(printer_state_id);
         for (Printer printer : printerList) {
             //查找站点
-            Site site = authorityDao.findSiteById(printer.getPrinter_state_id());
+            Site site = siteDao.findSiteById(printer.getPrinter_state_id());
             printer.setSite(site);
             //查询打印机状态
             try {
@@ -403,7 +410,7 @@ public class PrintServiceImpl implements PrintService {
         List<Records_consumption> recList = printDao.findRec(user);
 
         //查询当前站点下的所有油价信息
-        List<Oil_price> oilPriceList = authorityDao.findAllOliInfoBySite(user.getUser_sitecode());
+        List<Oil_price> oilPriceList = oliInDao.findAllOliInfoBySite(user.getUser_sitecode());
 
         int fixture_number = 0;
         List<OilPrint> list = new ArrayList<>();
