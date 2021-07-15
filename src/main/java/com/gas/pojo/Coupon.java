@@ -26,11 +26,13 @@ public class Coupon {
 
     private String coupon_name;//	名称
 
-    private String coupon_describe;//	描述
+    /*private String coupon_describe;*/   //描述
 
-    private Double coupon_money;//	金额
+    private Double coupon_discount;  //折扣
 
-    private Integer coupon_number;//	数量
+    private Double coupon_quota;//	金额
+
+    private Integer coupon_number;//数量
 
     private Date coupon_term_validity;//	开始日期
 
@@ -42,19 +44,21 @@ public class Coupon {
 
     private Integer coupon_threshold;   //门槛
 
-    private Integer coupon_sitecode;   //站点编号
+    private Integer coupon_site_id;   //站点编号
 
     private Site site;  //站点对象
 
-    private Integer coupon_integralnum;  //所需积分
+    private String coupon_exchange_code;  //兑换码
+
+    /*private Integer coupon_integralnum;*/  //所需积分
 
     private Integer coupon_state;//	状态（默认启用为1  禁用为2）
 
     private Integer coupon_del;//	删除（默认为1   删除为2）
 
-    private String coupon_remarks;//	备注
+   /* private String coupon_remarks;*///	备注
 
-    private Integer coupon_wxuser_number;  //用户优惠券持有数量
+    /*private Integer coupon_wxuser_number;*/  //用户优惠券持有数量
 
 
 }
