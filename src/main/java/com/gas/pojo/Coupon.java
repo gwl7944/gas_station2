@@ -30,7 +30,7 @@ public class Coupon {
 
     private Double coupon_discount;  //折扣
 
-    private Double coupon_quota;//	金额
+    private Double coupon_money;//	金额
 
     private Integer coupon_number;//数量
 
