@@ -1,10 +1,11 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 import com.gas.dao.AuthorityDao;
 import com.gas.dao.OliInDao;
 import com.gas.dao.SiteDao;
 import com.gas.dao.UserDao;
 import com.gas.pojo.*;
+import com.gas.service.UserService;
 import com.gas.util.DateTO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -157,7 +158,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Wechat_users findWcUserById(Integer wu_id) {
         Wechat_users wcUserById = userDao.findWcUserById(wu_id);
-        wcUserById.setWu_birthday_str(DateTO.getStringDate(wcUserById.getWu_birthday()));
+        //wcUserById.setWu_birthday_str(DateTO.getStringDate(wcUserById.getWu_birthday()));
         //查询所属站点
         Site site = siteDao.findSiteById(wcUserById.getWu_sitecode());
         wcUserById.setSite(site);
@@ -166,7 +167,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateWcUserById(Wechat_users wechatUsers) {
-        wechatUsers.setWu_birthday(DateTO.getDate(wechatUsers.getWu_birthday_str()));
+        //wechatUsers.setWu_birthday(DateTO.getDate(wechatUsers.getWu_birthday_str()));
         return userDao.updateWcUserById(wechatUsers);
     }
 
@@ -270,9 +271,9 @@ public class UserServiceImpl implements UserService {
         List<Wechat_users> wechat_users = userDao.findWcUser(wechatUsers);
         System.out.println("wechat_users1>>"+wechat_users);
         for (Wechat_users wechat_user : wechat_users) {
-            if (wechat_user.getWu_birthday()!=null){
+            /*if (wechat_user.getWu_birthday()!=null){
                 wechat_user.setWu_birthday_str(DateTO.getStringDate(wechat_user.getWu_birthday()));
-            }
+            }*/
             //查询所属站点
             Site site = siteDao.findSiteById(wechat_user.getWu_sitecode());
             wechat_user.setSite(site);

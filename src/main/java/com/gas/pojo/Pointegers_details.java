@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pointegers_Details {
+public class Pointegers_details {
 
     private Integer pds_id;//	主键
 

@@ -252,4 +252,53 @@
         from records_consumption rc,oil_price op
         where rc.rc_consumer_projects_code=op.op_id and rc.rc_wu_id is null and rc.rc_sitecode=#{rc_sitecode} order by rc.rc_id desc
     </select>
+
+
+    <!--   ~~~~~~~~~~~~~~~~~~~~~~~~~~ 2.0 新增 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      -->
+
+    <!--根据ID 查询会员等级-->
+    <select id="findMembership_levelById" parameterType="Integer" resultType="Membership_level">
+        select * from membership_level where ml_id=#{ml_id} and ml_del=1
+    </select>
+
+    <!--查询全部会员权益  站点-->
+    <select id="findAllMembership_rules" parameterType="Integer" resultType="Membership_rules">
+       select mr.* from membership_level ml,membership_rules mr where ml.ml_sitecode=#{site_id} and ml.ml_id=mr.mr_ml_id
+    </select>
+
+    <!--根据会员等级ID 查询会员权益-->
+    <select id="findMembership_rulesByMl_id" parameterType="Integer" resultType="Membership_rules">
+        select * from membership_rules where mr_ml_id=#{mr_ml_id}
+    </select>
+
+    <!--领取会员卡-->
+    <update id="getTheCard" parameterType="Wechat_users">
+        update wechat_users
+        set wu_qr_code= (SELECT MD5(RAND() * 10000)),
+        wu_growth_value=wu_growth_value+#{wu_growth_value},
+        wu_ml_id=(select ml_id from membership_level where ml_level=1 and ml_sitecode=#{wu_sitecode}),
+        wu_membership_card_number=CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
+        wu_balance=wu_balance+#{wu_balance},
+        wu_integeregral=wu_integeregral+#{wu_integeregral}
+        where wu_id=#{wu_id}
+    </update>
+
+    <!--查询开卡福利-->
+    <select id="findDevelopment_welfareById" parameterType="Integer" resultType="Development_welfare">
+        select * from development_welfare where dwe_siteid=#{dwe_siteid}
+    </select>
+
+    <!--查询用户会员成长值变动记录-->
+    <select id="findGrowthvalue_recordByGvr_wu_id" parameterType="Integer" resultType="Growthvalue_record">
+        select * from growthvalue_record where gvr_wu_id=#{gvr_wu_id}
+    </select>
+
+    <!--添加会员成长值变更记录-->
+    <insert id="insertGrowthvalue_record" parameterType="Growthvalue_record">
+        insert into growthvalue_record (gvr_valuenum,gvr_date,gvr_type,gvr_wu_id) values(#{gvr_valuenum},now(),#{gvr_type},#{gvr_wu_id})
+    </insert>
+
+
+
+
 </mapper>

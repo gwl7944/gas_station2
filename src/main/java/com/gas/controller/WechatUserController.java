@@ -63,6 +63,9 @@ public class WechatUserController {
     }
 
 
+    /**
+     * 获取站点信息
+     * */
     @PostMapping("/WechatUserController/getSite")
     public JSON getSite(@ModelAttribute Site site) {
         Site site1 = wechatUsersService.findSiteByAppId(site);
@@ -452,6 +455,45 @@ public class WechatUserController {
     public JSON findRecords_consumptionByNocard(@PathVariable("currentpage") Integer currentpage, @PathVariable("currentnumber") Integer currentnumber, @PathVariable("rc_sitecode") Integer rc_sitecode) {
         Page<Records_consumption> records_consumptionByNocard = wechatUsersService.findRecords_consumptionByNocard(currentpage, currentnumber, rc_sitecode);
         return ResultData.getResponseData(records_consumptionByNocard, ResultCode.QUERY_SUCCESS);
+    }
+
+
+    /**------------------------------------------ 2.0 新增 ----------------------------------------------*/
+
+    /**
+     * 查询全部会员权益  站点
+     * */
+    @GetMapping("/WechatUserController/getAllMembership_rules/{site_id}")
+    public JSON getAllMembership_rules(@PathVariable("site_id") Integer site_id) {
+        return ResultData.getResponseData(wechatUsersService.getAllMembership_rules(site_id), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 领取会员卡
+     * */
+    @PostMapping("/WechatUserController/getTheCard")
+    public JSON getTheCard(@ModelAttribute Wechat_users wechat_users){
+        if (wechatUsersService.getTheCard(wechat_users)>0){
+            return ResultData.getResponseData(null, ResultCode.INSERT_SUCCESS);
+        }else {
+            return ResultData.getResponseData(null, ResultCode.INSERT_ERROR);
+        }
+    }
+
+    /**
+     * 查询门店开卡福利
+     * */
+    @GetMapping("/WechatUserController/getDevelopment_welfareById/{dwe_siteid}")
+    public JSON getDevelopment_welfareById(@PathVariable("dwe_siteid") Integer dwe_siteid){
+        return  ResultData.getResponseData(wechatUsersService.getDevelopment_welfareById(dwe_siteid), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 查询用户会员成长值变动记录
+     * */
+    @GetMapping("/WechatUserController/getGrowthvalue_recordByGvr_wu_id/{gvr_wu_id}")
+    public JSON getGrowthvalue_recordByGvr_wu_id(@PathVariable("gvr_wu_id") Integer gvr_wu_id){
+        return  ResultData.getResponseData(wechatUsersService.getGrowthvalue_recordByGvr_wu_id(gvr_wu_id), ResultCode.QUERY_SUCCESS);
     }
 
 }

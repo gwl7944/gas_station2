@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Development_Welfare {
+public class Development_welfare {
 
     private Integer dwe_id;//	主键
 

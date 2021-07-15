@@ -1,10 +1,11 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 import com.gas.dao.CouponDao;
 import com.gas.dao.SiteDao;
 import com.gas.pojo.Coupon;
 import com.gas.pojo.Page;
 import com.gas.pojo.Site;
+import com.gas.service.CouponService;
 import com.gas.util.DateTO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -44,7 +45,7 @@ public class CouponServiceImpl implements CouponService {
         for (Coupon coupon1 : couponList) {
             coupon1.setCoupon_term_validity_str(DateTO.getStringDate(coupon1.getCoupon_term_validity()));
             //查询所属站点
-            Site site = siteDao.findSiteById(coupon1.getCoupon_sitecode());
+            Site site = siteDao.findSiteById(coupon1.getCoupon_site_id());
             coupon1.setSite(site);
 
             if (coupon1.getCoupon_term_validity()!=null){

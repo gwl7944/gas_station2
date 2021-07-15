@@ -1,8 +1,9 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 import com.gas.dao.SiteDao;
 import com.gas.pojo.Page;
 import com.gas.pojo.Site;
+import com.gas.service.SiteService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.util.List;
  * Description: No Description
  */
 @Service
-public class SiteServiceImpl implements SiteService{
+public class SiteServiceImpl implements SiteService {
 
     @Resource
     SiteDao siteDao;

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Membership_Rules {
+public class Membership_rules {
 
     private Integer mr_id;//	主键
 

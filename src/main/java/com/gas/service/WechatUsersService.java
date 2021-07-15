@@ -126,4 +126,27 @@ public interface WechatUsersService {
      * 拉取全部无卡消费信息
      * */
     Page<Records_consumption> findRecords_consumptionByNocard(Integer currentpage, Integer currentnumber,Integer rc_sitecode);
+
+
+    /**----------------------------------------------- 2.0 新增 --------------------------------------------*/
+
+    /**
+     * 查询全部会员权益  站点
+     * */
+    List<Membership_rules> getAllMembership_rules(Integer site_id);
+
+    /**
+     * 领取会员卡
+     * */
+    Integer getTheCard(Wechat_users wechat_users);
+
+    /**
+     * 查询门店开卡福利
+     * */
+    Development_welfare getDevelopment_welfareById(Integer dwe_siteid);
+
+    /**
+     * 查询用户会员成长值变动记录
+     * */
+    List<Growthvalue_record> getGrowthvalue_recordByGvr_wu_id(Integer gvr_wu_id);
 }

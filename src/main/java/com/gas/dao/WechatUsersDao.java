@@ -182,6 +182,67 @@ public interface WechatUsersDao {
     List<Records_consumption> findRecords_consumptionByNocard(Integer rc_sitecode);
 
 
+    /**-------------------------------- 2.0 新增 ------------------------------------------------*/
+
+
+    /**
+     * 根据ID 查询会员等级
+     * */
+    Membership_level findMembership_levelById(Integer ml_id);
+
+    /**
+     * 查询全部会员权益  站点
+     * */
+    List<Membership_rules> findAllMembership_rules(Integer site_id);
+
+    /**
+     * 根据会员等级ID 查询会员权益
+     * */
+    Membership_rules findMembership_rulesByMl_id(Integer mr_ml_id);
+
+    /**
+     * 领取会员卡
+     * */
+    Integer getTheCard(Wechat_users wechat_users);
+
+    /**
+     * 查询门店开卡福利
+     * */
+    Development_welfare findDevelopment_welfareById(Integer dwe_siteid);
+
+    /**
+     * 查询用户会员成长值变动记录
+     * */
+    List<Growthvalue_record> findGrowthvalue_recordByGvr_wu_id(Integer gvr_wu_id);
+
+    /**
+     * 添加会员成长值变更记录
+     * */
+    Integer insertGrowthvalue_record(Growthvalue_record growthvalue_record);
+
+
+    /**
+     * 查询全部充值额度
+     * */
+    List<Recharge> findAllRecharge(Integer rech_site_id);
+
+
+    /**
+     * 查询用户的积分详情
+     * */
+    List<Pointegers_details> findPoIntegers_detailsByPds_wu_id(Integer pds_wu_id);
+
+    /**
+     * 添加用户积分变更记录
+     * */
+    Integer insertPointegers_details(Pointegers_details pointegers_details);
+
+    /**
+     * 查询门店积分规则 (消费)
+     * */
+    Integeregral_rule findIntegeregral_ruleByLr_siteid(Integer lr_siteid);
+
+
 }
 
 

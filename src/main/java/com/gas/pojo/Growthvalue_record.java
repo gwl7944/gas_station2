@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Growthvalue_Record {
+public class Growthvalue_record {
 
     private Integer gvr_id;//	主键
 

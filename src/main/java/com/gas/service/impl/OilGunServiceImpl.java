@@ -1,4 +1,4 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 import com.gas.dao.AuthorityDao;
 import com.gas.dao.OilGunDao;
@@ -8,6 +8,7 @@ import com.gas.pojo.OilGun;
 import com.gas.pojo.Oil_price;
 import com.gas.pojo.Page;
 import com.gas.pojo.Site;
+import com.gas.service.OilGunService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;

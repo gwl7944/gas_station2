@@ -33,17 +33,17 @@ public class Wechat_users {
 
     private	Integer	wu_gender;   //性别
 
-    private Date wu_birthday;     //生日
+    /*private Date wu_birthday;*/     //生日
 
-    private String wu_birthday_str;     //生日
+    /*private String wu_birthday_str;*/     //生日
 
-    private	String	wu_id_number;  //身份证号
+    /*private	String	wu_id_number;*/  //身份证号
 
     private	String	wu_qr_code;   //二维码
 
-    private	String	wu_bar_code;   //条形码
+    /*private	String	wu_bar_code;*/   //条形码
 
-    private	Integer	wu_integral;    //累计积分
+    /*private	Integer	wu_integral;*/    //累计积分
 
     private Integer wu_current_points;  //当前积分
 
@@ -56,6 +56,10 @@ public class Wechat_users {
     private	String	wu_membership_card_number;   //会员卡号
 
     private	Integer	wu_membership_card_growth ;   //会员成长值
+
+    private Integer wu_ml_id;   //会员等级
+
+    private Membership_level membership_level; //会员等级
 
     private	Integer	wu_sitecode;     //站点编号
 

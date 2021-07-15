@@ -1,10 +1,11 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 import com.gas.dao.ActivityDao;
 import com.gas.dao.SiteDao;
 import com.gas.pojo.Activity;
 import com.gas.pojo.Page;
 import com.gas.pojo.Site;
+import com.gas.service.ActivityService;
 import com.gas.util.DateTO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

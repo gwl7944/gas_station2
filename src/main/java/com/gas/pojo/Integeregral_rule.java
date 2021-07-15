@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Integeregral_Rule {
+public class Integeregral_rule {
 
     private Integer lr_id;//	主键
 

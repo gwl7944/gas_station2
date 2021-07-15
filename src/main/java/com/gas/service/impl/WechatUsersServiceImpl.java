@@ -1,10 +1,11 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.gas.dao.*;
 import com.gas.pojo.*;
+import com.gas.service.WechatUsersService;
 import com.gas.util.Api_java_demo;
 import com.gas.util.DataCompletion;
 import com.gas.util.DateTO;
@@ -48,11 +49,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Override
     public Wechat_users getWechat_usersByOpenId(String wu_openid) {
         Wechat_users wechat_usersByOpenId = wechatUsersDao.findWechat_usersByOpenId(wu_openid);
-        if (wechat_usersByOpenId!= null) {
+        /*if (wechat_usersByOpenId!= null) {
             if (wechat_usersByOpenId.getWu_birthday()!=null){
                 wechat_usersByOpenId.setWu_birthday_str(DateTO.getStringDate(wechat_usersByOpenId.getWu_birthday()));
             }
-        }
+        }*/
         if (wechat_usersByOpenId != null) {
             Integer wci_numberByWci_wu_id =null;
             if (wechat_usersByOpenId.getWu_id()!=null){
@@ -70,17 +71,17 @@ public class WechatUsersServiceImpl implements WechatUsersService {
 
     @Override
     public int insertWechat_users(Wechat_users wechat_users) {
-        if(wechat_users.getWu_birthday_str()!=null){
+        /*if(wechat_users.getWu_birthday_str()!=null){
             wechat_users.setWu_birthday(DateTO.getDate(wechat_users.getWu_birthday_str()));
-        }
+        }*/
         return wechatUsersDao.insertWechat_users(DataCompletion.getWechat_usersData(wechat_users));
     }
 
     @Override
     public int updateWechat_users(Wechat_users wechat_users) {
-        if (wechat_users.getWu_birthday_str() != null && wechat_users.getWu_birthday_str() != "") {
+        /*if (wechat_users.getWu_birthday_str() != null && wechat_users.getWu_birthday_str() != "") {
             wechat_users.setWu_birthday(DateTO.getDate(wechat_users.getWu_birthday_str()));
-        }
+        }*/
         return wechatUsersDao.updateWechat_users(wechat_users);
     }
 
@@ -214,7 +215,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             if (rc_actual_amount != null) {
                 integral = rc_actual_amount / 1.0;
             }
-            wechatUsers.setWu_integral(integral.intValue());  //累计积分
+            //wechatUsers.setWu_integral(integral.intValue());  //累计积分
             wechatUsers.setWu_current_points(integral.intValue());  //增加当前积分
             wechatUsers.setWu_membership_card_growth(integral.intValue());  //增加会员成长值
 
@@ -459,6 +460,27 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         page.setTotalnumber((int) info.getTotal());
         page.setDatalist(info.getList());
         return page;
+    }
+
+    /**------------------------------------------------ 2.0 新增 -----------------------------------------------------------*/
+    @Override
+    public List<Membership_rules> getAllMembership_rules(Integer site_id) {
+        return wechatUsersDao.findAllMembership_rules(site_id);
+    }
+
+    @Override
+    public Integer getTheCard(Wechat_users wechat_users) {
+        return wechatUsersDao.getTheCard(wechat_users);
+    }
+
+    @Override
+    public Development_welfare getDevelopment_welfareById(Integer dwe_siteid) {
+        return wechatUsersDao.findDevelopment_welfareById(dwe_siteid);
+    }
+
+    @Override
+    public List<Growthvalue_record> getGrowthvalue_recordByGvr_wu_id(Integer gvr_wu_id) {
+        return wechatUsersDao.findGrowthvalue_recordByGvr_wu_id(gvr_wu_id);
     }
 
 }

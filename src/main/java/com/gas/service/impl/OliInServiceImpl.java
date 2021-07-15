@@ -1,10 +1,11 @@
-package com.gas.service;
+package com.gas.service.impl;
 
 import com.gas.dao.OliInDao;
 import com.gas.dao.SiteDao;
 import com.gas.pojo.Oil_price;
 import com.gas.pojo.Page;
 import com.gas.pojo.Site;
+import com.gas.service.OliInService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
