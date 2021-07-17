@@ -26,4 +26,6 @@ public class Integeregral_rule {
     private Double lr_consumption_ratio;//	消费比
 
     private Integer lr_siteid;//	门店ID
+
+    private Site site;
 }

@@ -23,7 +23,7 @@ public class DataCompletion {
     public  static Wechat_users getWechat_usersData(Wechat_users wechat_users){
         wechat_users.setWu_membership_card_number(getNumberData());   //会员卡号
         wechat_users.setWu_membership_card_growth(0);  //会员成长值
-        wechat_users.setWu_integral(0);  //累计积分
+        //wechat_users.setWu_integral(0);  //累计积分
         wechat_users.setWu_remainder(0.00);   //余额
         wechat_users.setWu_recommend_num(0); //推荐成功次数
         return wechat_users;

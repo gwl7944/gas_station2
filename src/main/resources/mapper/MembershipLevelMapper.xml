@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.MembershipLevelDao">
+
+    <!--  新增会员等级 -->
+    <insert id="insertMembershipLevel" parameterType="Membership_level">
+        insert into membership_level(ml_name,ml_upper_limit,ml_level,ml_sitecode,ml_del) values (#{ml_name},#{ml_upper_limit},#{ml_level},#{ml_sitecode},1)
+    </insert>
+
+    <!-- 修改会员等级 -->
+    <update id="updateMembershipLevel" parameterType="Membership_level">
+        update membership_level
+        <set>
+            <if test="ml_name!=null and ml_name!=''">
+                ml_name = #{ml_name},
+            </if>
+            <if test="ml_upper_limit!=null">
+                ml_upper_limit = #{ml_upper_limit},
+            </if>
+            <if test="ml_level!=null">
+                ml_level = #{ml_level},
+            </if>
+            <if test="ml_sitecode!=null">
+                ml_sitecode = #{ml_sitecode}
+            </if>
+        </set> where ml_id = #{ml_id}
+    </update>
+
+    <!-- 查询会员等级 -->
+    <select id="findMembershipLevel" parameterType="Membership_level" resultType="Membership_level">
+        select * from membership_level where ml_del=1
+        <if test="ml_name!=null and ml_name!=''">
+            and ml_name = #{ml_name}
+        </if>
+        <if test="ml_upper_limit!=null">
+            and ml_upper_limit = #{ml_upper_limit}
+        </if>
+        <if test="ml_level!=null">
+            and ml_level =#{ml_level}
+        </if>
+        <if test="ml_sitecode!=null">
+            and ml_sitecode =#{ml_sitecode}
+        </if>
+    </select>
+
+    <!-- 删除会员等级 -->
+    <update id="deleteMemberLevelById" parameterType="Integer">
+        update membership_level set ml_del=2 where ml_id = #{ml_id}
+    </update>
+
+    <!-- 查询积分规则 -->
+    <select id="findIntegeregralRule" resultType="Integeregral_rule">
+        select * from integeregral_rule
+    </select>
+
+    <!-- 修改积分规则 -->
+    <update id="updateIntegeregralRule" parameterType="Integeregral_rule">
+        update integeregral_rule
+        <set>
+            <if test="lr_name!=null and lr_name!=''">
+                lr_name = #{lr_name},
+            </if>
+            <if test="lr_recharge_ratio!=null">
+                lr_recharge_ratio = #{lr_recharge_ratio},
+            </if>
+            <if test="lr_consumption_ratio!=null">
+                lr_consumption_ratio = #{lr_consumption_ratio},
+            </if>
+            <if test="lr_siteid!=null">
+                lr_siteid = #{lr_siteid}
+            </if>
+        </set> where lr_id = #{lr_id}
+    </update>
+
+    <!-- 查询会员积分规则 -->
+    <select id="findMembershipRules" resultType="Membership_rules">
+        select * from membership_rules
+    </select>
+
+    <!-- 修改会员积分规则 -->
+    <update id="updateMembershipRules" parameterType="Membership_rules">
+        update membership_rules
+        <set>
+            <if test="mr_ml_id !=null">
+                mr_ml_id = #{mr_ml_id},
+            </if>
+            <if test="mr_name !=null and mr_name!=''">
+                mr_name = #{mr_name},
+            </if>
+            <if test="mr_recharge_discount !=null">
+                mr_recharge_discount = #{mr_recharge_discount},
+            </if>
+            <if test="mr_consumption_discount !=null">
+                mr_consumption_discount = #{mr_consumption_discount},
+            </if>
+            <if test="mr_recharge_growthvalue !=null">
+                mr_recharge_growthvalue = #{mr_recharge_growthvalue},
+            </if>
+            <if test="mr_consumption_growthvalue !=null">
+                mr_consumption_growthvalue = #{mr_consumption_growthvalue}
+            </if>
+        </set> where mr_id=#{mr_id}
+    </update>
+
+    <!-- 根据id查询会员等级 -->
+    <select id="findMembershipLevelById" parameterType="Integer" resultType="Membership_level">
+        select * from membership_level where mr_id = #{mr_ml_id}
+    </select>
+</mapper>

@@ -31,4 +31,8 @@ public class Membership_rules {
 
     private Double mr_consumption_growthvalue;//	消费成长值比
 
+    private Membership_level membershipLevel;  //会员等级
+
+
+
 }

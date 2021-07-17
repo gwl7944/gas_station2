@@ -28,4 +28,6 @@ public class Membership_level {
     private Integer ml_sitecode;//	门店外键
 
     private Integer ml_del;//	删除
+
+    private Site site; //站点
 }

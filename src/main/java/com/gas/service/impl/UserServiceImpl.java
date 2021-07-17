@@ -1,9 +1,6 @@
 package com.gas.service.impl;
 
-import com.gas.dao.AuthorityDao;
-import com.gas.dao.OliInDao;
-import com.gas.dao.SiteDao;
-import com.gas.dao.UserDao;
+import com.gas.dao.*;
 import com.gas.pojo.*;
 import com.gas.service.UserService;
 import com.gas.util.DateTO;
@@ -36,6 +33,8 @@ public class UserServiceImpl implements UserService {
     SiteDao siteDao;
     @Resource
     OliInDao oliInDao;
+    @Resource
+    MembershipLevelDao membershipLevelDao;
 
     @Override
     public User login(User user) {
@@ -263,6 +262,63 @@ public class UserServiceImpl implements UserService {
             }
         }
         return map;
+    }
+
+    /* ----------------  消费记录 2.0 新增 ----------------*/
+    @Override
+    public int insertMembershipLevel(Membership_level membershipLevel) {
+
+        return membershipLevelDao.insertMembershipLevel(membershipLevel);
+    }
+
+    @Override
+    public int updateMembershipLevel(Membership_level membershipLevel) {
+        return membershipLevelDao.updateMembershipLevel(membershipLevel);
+    }
+
+    @Override
+    public List<Membership_level> findMembershipLevel(Membership_level membershipLevel) {
+        List<Membership_level> membershipLevel1 = membershipLevelDao.findMembershipLevel(membershipLevel);
+        for (Membership_level membership_level : membershipLevel1) {
+            membership_level.setSite(siteDao.findSiteById(membership_level.getMl_sitecode()));
+        }
+        return membershipLevel1;
+    }
+
+    @Override
+    public int deleteMemberLevelById(Integer ml_id) {
+        return membershipLevelDao.deleteMemberLevelById(ml_id);
+    }
+
+    @Override
+    public List<Integeregral_rule> findIntegeregralRule() {
+        List<Integeregral_rule> integeregralRule = membershipLevelDao.findIntegeregralRule();
+        for (Integeregral_rule integeregral_rule : integeregralRule) {
+            integeregral_rule.setSite(siteDao.findSiteById(integeregral_rule.getLr_siteid()));
+        }
+        return integeregralRule;
+    }
+
+    @Override
+    public int updateIntegeregralRule(Integeregral_rule integeregralRule) {
+        return membershipLevelDao.updateIntegeregralRule(integeregralRule);
+    }
+
+    @Override
+    public List<Membership_rules> findMembershipRules() {
+        List<Membership_rules> membershipRules = membershipLevelDao.findMembershipRules();
+        for (Membership_rules membershipRule : membershipRules) {
+            membershipRule.setMembershipLevel(membershipLevelDao.findMembershipLevelById(membershipRule.getMr_ml_id()));
+            if (membershipRule.getMembershipLevel()!=null){
+                membershipRule.getMembershipLevel().setSite(siteDao.findSiteById(membershipRule.getMembershipLevel().getMl_sitecode()));
+            }
+        }
+        return membershipRules;
+    }
+
+    @Override
+    public int updateMembershipRules(Membership_rules membershipRules) {
+        return membershipLevelDao.updateMembershipRules(membershipRules);
     }
 
 

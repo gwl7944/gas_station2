@@ -1,10 +1,7 @@
 package com.gas.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.gas.pojo.ResultCode;
-import com.gas.pojo.ResultData;
-import com.gas.pojo.User;
-import com.gas.pojo.Wechat_users;
+import com.gas.pojo.*;
 import com.gas.service.AuthorityService;
 import com.gas.service.UserService;
 import com.gas.util.DateTO;
@@ -181,6 +178,115 @@ public class UserController {
                 user.setUser_offduty_time_str(DateTO.getStringDateTime(user.getUser_offduty_time()));
             }
             return ResultData.getResponseData(user,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
+
+
+    /*---------------------------  会员等级 2.0新增  ------------------------------*/
+
+    /**
+     * 新增会员等级
+     */
+    @PostMapping("/user/addMembershipLevel")
+    public JSON addMembershipLevel(@RequestBody Membership_level membershipLevel){
+
+        int i = userService.insertMembershipLevel(membershipLevel);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.INSERT_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
+    }
+
+    /**
+     *  修改会员等级
+     */
+    @PostMapping("/user/editMembershipLevel")
+    public JSON editMembershipLevel(@RequestBody Membership_level membershipLevel){
+
+        int i = userService.updateMembershipLevel(membershipLevel);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
+
+    /**
+     * 查询全部会员等级
+     */
+    @GetMapping("/user/membershipLevel")
+    public JSON membershipLevel(@RequestBody Membership_level membershipLevel){
+
+        List<Membership_level> membershipLevels =  userService.findMembershipLevel(membershipLevel);
+        if (membershipLevels.size()>0){
+            return ResultData.getResponseData(membershipLevels,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(membershipLevels,ResultCode.QUERY_ERROR);
+    }
+
+    /**
+     * 删除会员等级
+     */
+    @DeleteMapping("/user/membershipLevelById/{ml_id}")
+    public JSON membershipLevelById(@PathVariable("ml_id") Integer ml_id){
+        int i = userService.deleteMemberLevelById(ml_id);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.DELETE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.DELETE_ERROR);
+    }
+
+    /*---------------------------   积分规则   系统设置固定 2.0新增  ------------------------------*/
+    /**
+     * 查询会员等级
+     */
+    @GetMapping("/user/integeregralRule")
+    public JSON integeregralRule(){
+
+        List<Integeregral_rule> integeregralRules = userService.findIntegeregralRule();
+
+        if (integeregralRules.size()>0){
+            return ResultData.getResponseData(integeregralRules,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(integeregralRules,ResultCode.QUERY_ERROR);
+    }
+
+    /**
+     * 修改会员等级
+     */
+    @PostMapping("/user/editIntegeregralRule")
+    public JSON editIntegeregralRule(@RequestBody Integeregral_rule integeregralRule){
+        int i = userService.updateIntegeregralRule(integeregralRule);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
+
+    /*---------------------------   会员规则   系统设置固定 2.0新增  ------------------------------*/
+
+    /**
+     * 查询会员规则
+     */
+    @GetMapping("/user/membershipRules")
+    public JSON membershipRules(){
+
+        List<Membership_rules> membershipRules = userService.findMembershipRules();
+
+        if (membershipRules.size()>0){
+            return ResultData.getResponseData(membershipRules,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(membershipRules,ResultCode.QUERY_ERROR);
+    }
+
+    /**
+     * 修改会员规则
+     */
+    @PostMapping("/user/editMembershipRules")
+    public JSON editMembershipRules(@RequestBody Membership_rules membershipRules){
+        int i = userService.updateMembershipRules(membershipRules);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
         }
         return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
     }

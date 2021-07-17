@@ -1,9 +1,6 @@
 package com.gas.service;
 
-import com.gas.pojo.Page;
-import com.gas.pojo.Records_consumption;
-import com.gas.pojo.User;
-import com.gas.pojo.Wechat_users;
+import com.gas.pojo.*;
 
 import java.util.List;
 import java.util.Map;
@@ -70,4 +67,47 @@ public interface UserService {
      * 用户上班 下班时间 时间创建
      */
     Map<String, String> findUserOnOrOffDuty(Integer user_id, Integer user_sitecode);
+
+    /* ----------------  消费记录 2.0新增 ----------------*/
+
+    /**
+     * 新增会员等级
+     */
+    int insertMembershipLevel(Membership_level membershipLevel);
+
+    /**
+     * 更新会员等级
+     */
+    int updateMembershipLevel(Membership_level membershipLevel);
+
+    /**
+     * 查找会员等级
+     */
+    List<Membership_level> findMembershipLevel(Membership_level membershipLevel);
+
+    /**
+     * 删除会员等级
+     */
+    int deleteMemberLevelById(Integer ml_id);
+
+    /* ----------------  积分规则 2.0新增 ----------------*/
+    /**
+     * 查询积分规则 系统设置固定
+     */
+    List<Integeregral_rule> findIntegeregralRule();
+
+    /**
+     * 更新积分规则 系统设置固定
+     */
+    int updateIntegeregralRule(Integeregral_rule integeregralRule);
+
+    /**
+     * 查询会员规则 系统设置固定
+     */
+    List<Membership_rules> findMembershipRules();
+
+    /**
+     * 更新会员规则 系统设置固定
+     */
+    int updateMembershipRules(Membership_rules membershipRules);
 }
