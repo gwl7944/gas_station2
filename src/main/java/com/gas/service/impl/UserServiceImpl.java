@@ -35,12 +35,14 @@ public class UserServiceImpl implements UserService {
     OliInDao oliInDao;
     @Resource
     MembershipLevelDao membershipLevelDao;
+    @Resource
+    PictureDao pictureDao;
 
     @Override
     public User login(User user) {
-        System.out.println("user》》"+user);
+        System.out.println("user》》" + user);
         User userByName = userDao.findUserByName(user.getUser_loginname());
-        if (userByName != null && user.getUser_pwd()!="" && user.getUser_pwd()!=null) {
+        if (userByName != null && user.getUser_pwd() != "" && user.getUser_pwd() != null) {
             if (userByName.getUser_pwd().equals(user.getUser_pwd())) {
                 Role roleById = authorityDao.findRoleById(userByName.getUser_role_id());
                 List<Menu> menuByRoleId = authorityDao.findMenuByRoleId(userByName.getUser_role_id());
@@ -73,7 +75,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findUserById(id);
         //根据id查询角色名称
         Role role = authorityDao.findRoleById(user.getUser_role_id());
-        if (role!=null){
+        if (role != null) {
             user.setUser_role_name(role.getRole_name());
         }
         return user;
@@ -217,54 +219,51 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
-
     @Override
     public int updateUserOnOrOffDuty(Integer user_id, Integer type) {
         Date time = new Date();
         User user = new User();
         user.setUser_id(user_id);
         User user1 = userDao.findUserById(user_id);
-        if (user1!=null){
+        if (user1 != null) {
             user.setUser_sitecode(user1.getUser_sitecode());
             user.setUser_classes(user1.getUser_classes());
         }
-        int i=0;
-        if (type==1){ //上班
+        int i = 0;
+        if (type == 1) { //上班
             user.setUser_onduty_time(time);
-            i= userDao.updateUserOnOrOffDuty(user);
-        }else {
+            i = userDao.updateUserOnOrOffDuty(user);
+        } else {
             user.setUser_offduty_time(time);
-            i= userDao.updateUserOnOrOffDuty(user);
+            i = userDao.updateUserOnOrOffDuty(user);
         }
         return i;
     }
 
     @Override
     public Map<String, String> findUserOnOrOffDuty(Integer user_id, Integer user_sitecode) {
-        User user =  userDao.findUserOnOrOffDuty(user_id,user_sitecode);
+        User user = userDao.findUserOnOrOffDuty(user_id, user_sitecode);
         Map<String, String> map = new HashMap<>();
-        if (user!=null){
-            if (user.getUser_onduty_time()==null){
-                map.put("onduty","1"); //未开班
-                map.put("user_onduty_time","");
-            }else {
-                map.put("onduty","2");//已开班
+        if (user != null) {
+            if (user.getUser_onduty_time() == null) {
+                map.put("onduty", "1"); //未开班
+                map.put("user_onduty_time", "");
+            } else {
+                map.put("onduty", "2");//已开班
                 map.put("user_onduty_time", DateTO.getStringDateTime(user.getUser_onduty_time()));
             }
-            if (user.getUser_offduty_time()==null){
-                map.put("offduty","3");  //未结班
-                map.put("user_offduty_time","");
-            }else{
-                map.put("offduty","4");  //已结班
-                map.put("user_offduty_time",DateTO.getStringDateTime(user.getUser_offduty_time()));
+            if (user.getUser_offduty_time() == null) {
+                map.put("offduty", "3");  //未结班
+                map.put("user_offduty_time", "");
+            } else {
+                map.put("offduty", "4");  //已结班
+                map.put("user_offduty_time", DateTO.getStringDateTime(user.getUser_offduty_time()));
             }
         }
         return map;
     }
 
-    /* ----------------  消费记录 2.0 新增 ----------------*/
+    /* ----------------  2.0 新增 ----------------*/
     @Override
     public int insertMembershipLevel(Membership_level membershipLevel) {
 
@@ -291,8 +290,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Integeregral_rule> findIntegeregralRule() {
-        List<Integeregral_rule> integeregralRule = membershipLevelDao.findIntegeregralRule();
+    public List<Integeregral_rule> findIntegeregralRule(Integer lr_siteid) {
+        List<Integeregral_rule> integeregralRule = membershipLevelDao.findIntegeregralRule(lr_siteid);
         for (Integeregral_rule integeregral_rule : integeregralRule) {
             integeregral_rule.setSite(siteDao.findSiteById(integeregral_rule.getLr_siteid()));
         }
@@ -305,11 +304,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Membership_rules> findMembershipRules() {
-        List<Membership_rules> membershipRules = membershipLevelDao.findMembershipRules();
+    public List<Membership_rules> findMembershipRules(Integer mr_ml_id) {
+        List<Membership_rules> membershipRules = membershipLevelDao.findMembershipRules(mr_ml_id);
         for (Membership_rules membershipRule : membershipRules) {
             membershipRule.setMembershipLevel(membershipLevelDao.findMembershipLevelById(membershipRule.getMr_ml_id()));
-            if (membershipRule.getMembershipLevel()!=null){
+            if (membershipRule.getMembershipLevel() != null) {
                 membershipRule.getMembershipLevel().setSite(siteDao.findSiteById(membershipRule.getMembershipLevel().getMl_sitecode()));
             }
         }
@@ -321,11 +320,40 @@ public class UserServiceImpl implements UserService {
         return membershipLevelDao.updateMembershipRules(membershipRules);
     }
 
+    @Override
+    public int insertProductPicture(Product_Picture productPicture) {
+        return pictureDao.insertProductPicture(productPicture);
+    }
+
+    @Override
+    public Page<Product_Picture> findProductPicture(Integer ppe_type, Integer ppe_siteid, Integer currentpage, Integer currentnumber) {
+
+        Page<Product_Picture> page = new Page<>();
+        PageHelper.startPage(currentpage, currentnumber);
+        List<Product_Picture> productPictures = pictureDao.findProductPicture(ppe_type,ppe_siteid);
+        for (Product_Picture productPicture : productPictures) {
+            productPicture.setSite(siteDao.findSiteById(productPicture.getPpe_siteid()));
+            productPicture.setCarousel(pictureDao.findCarouselById(productPicture.getPpe_carousel_id()));
+        }
+        PageInfo<Product_Picture> info = new PageInfo<>(productPictures);
+        page.setCurrentnumber(info.getPageNum());
+        page.setCurrentpage(currentpage);
+        page.setPagecount(info.getPages());
+        page.setTotalnumber((int) info.getTotal());
+        page.setDatalist(info.getList());
+        return page;
+    }
+
+    @Override
+    public List<Carousel> findCarousel() {
+        return pictureDao.findCarousel();
+    }
+
 
     // ------------------------- 公共方法 -------------------------------------------
     public List<Wechat_users> findAllWcUserPu(Wechat_users wechatUsers) {
         List<Wechat_users> wechat_users = userDao.findWcUser(wechatUsers);
-        System.out.println("wechat_users1>>"+wechat_users);
+        System.out.println("wechat_users1>>" + wechat_users);
         for (Wechat_users wechat_user : wechat_users) {
             /*if (wechat_user.getWu_birthday()!=null){
                 wechat_user.setWu_birthday_str(DateTO.getStringDate(wechat_user.getWu_birthday()));
@@ -334,7 +362,7 @@ public class UserServiceImpl implements UserService {
             Site site = siteDao.findSiteById(wechat_user.getWu_sitecode());
             wechat_user.setSite(site);
         }
-        System.out.println("wechat_users>>"+wechat_users);
+        System.out.println("wechat_users>>" + wechat_users);
         return wechat_users;
     }
 }

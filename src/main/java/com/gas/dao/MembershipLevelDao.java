@@ -40,7 +40,7 @@ public interface MembershipLevelDao {
     /**
      * 查询积分规则
      */
-    List<Integeregral_rule> findIntegeregralRule();
+    List<Integeregral_rule> findIntegeregralRule(Integer lr_siteid);
 
     /**
      * 修改积分规则
@@ -50,7 +50,7 @@ public interface MembershipLevelDao {
     /**
      * 查询会员积分规则
      */
-    List<Membership_rules> findMembershipRules();
+    List<Membership_rules> findMembershipRules(Integer mr_ml_id);
 
     /**
      * 修改会员积分规则

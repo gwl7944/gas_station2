@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.PictureDao">
+
+    <!-- 新增图片 -->
+    <insert id="insertProductPicture" parameterType="Product_Picture">
+        insert into product_picture(ppe_type,ppe_url,ppe_pim_id,ppe_carousel_id,ppe_siteid,ppe_del) values (#{ppe_type},#{ppe_url},#{ppe_pim_id},#{ppe_carousel_id},#{ppe_siteid},1)
+    </insert>
+
+    <!-- 查询图片 -->
+    <select id="findProductPicture" parameterType="Integer" resultType="Product_Picture">
+        select * from product_picture where ppe_del =1
+        <if test="ppe_type!=null">
+            and ppe_type=#{ppe_type}
+        </if>
+        <if test="ppe_siteid!=null and ppe_siteid!=0">
+            and ppe_siteid=#{ppe_siteid}
+        </if>
+    </select>
+
+    <!-- 根据id查询轮播位 -->
+    <select id="findCarouselById" parameterType="Integer" resultType="Carousel">
+        select * from carousel where cal_id=#{cal_id}
+    </select>
+
+    <!-- 查询轮播位 -->
+    <select id="findCarousel" resultType="Carousel">
+        select * from carousel
+    </select>
+</mapper>

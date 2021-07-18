@@ -50,7 +50,10 @@
 
     <!-- 查询积分规则 -->
     <select id="findIntegeregralRule" resultType="Integeregral_rule">
-        select * from integeregral_rule
+        select * from integeregral_rule where 1=1
+        <if test="lr_siteid!=null and lr_siteid!=0">
+          and lr_siteid=#{lr_siteid}
+        </if>
     </select>
 
     <!-- 修改积分规则 -->
@@ -74,7 +77,7 @@
 
     <!-- 查询会员积分规则 -->
     <select id="findMembershipRules" resultType="Membership_rules">
-        select * from membership_rules
+        select * from membership_rules where mr_ml_id=#{mr_ml_id}
     </select>
 
     <!-- 修改会员积分规则 -->
@@ -104,6 +107,6 @@
 
     <!-- 根据id查询会员等级 -->
     <select id="findMembershipLevelById" parameterType="Integer" resultType="Membership_level">
-        select * from membership_level where mr_id = #{mr_ml_id}
+        select * from membership_level where mr_id = #{mr_ml_id} and ml_sitecode=#{ml_sitecode}
     </select>
 </mapper>

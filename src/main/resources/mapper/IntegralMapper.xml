@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.IntegralDao">
+
+    <!-- 新增积分商品 -->
+    <insert id="insertIntegralProduct" parameterType="Pointegers_Item">
+        insert into pointegers_item(pim_name,pim_describe,pim_poIntegers_number,pim_default_picture,pim_stock,pim_site_id,pim_state,pim_del)
+        values (#{pim_name},#{pim_describe},#{pim_poIntegers_number},#{pim_default_picture},#{pim_stock},#{pim_site_id},#{pim_state},1)
+    </insert>
+</mapper>

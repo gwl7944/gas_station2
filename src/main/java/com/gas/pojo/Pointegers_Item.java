@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ywj
@@ -33,4 +35,6 @@ public class Pointegers_Item {
     private Integer pim_state;//	状态
 
     private Integer pim_del;//	删除
+
+    private List<Product_Picture> pictureList;  //商品图片
 }

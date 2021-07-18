@@ -94,7 +94,7 @@ public interface UserService {
     /**
      * 查询积分规则 系统设置固定
      */
-    List<Integeregral_rule> findIntegeregralRule();
+    List<Integeregral_rule> findIntegeregralRule(Integer lr_siteid);
 
     /**
      * 更新积分规则 系统设置固定
@@ -104,10 +104,25 @@ public interface UserService {
     /**
      * 查询会员规则 系统设置固定
      */
-    List<Membership_rules> findMembershipRules();
+    List<Membership_rules> findMembershipRules(Integer mr_ml_id);
 
     /**
      * 更新会员规则 系统设置固定
      */
     int updateMembershipRules(Membership_rules membershipRules);
+
+    /**
+     * 新增图片
+     */
+    int insertProductPicture(Product_Picture productPicture);
+
+    /**
+     * 查询图片
+     */
+    Page<Product_Picture> findProductPicture(Integer ppe_type, Integer ppe_siteid, Integer currentpage, Integer currentnumber);
+
+    /**
+     * 查询轮播位
+     */
+    List<Carousel> findCarousel();
 }

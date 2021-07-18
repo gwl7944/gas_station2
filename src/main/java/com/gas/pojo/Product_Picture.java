@@ -26,4 +26,12 @@ public class Product_Picture {
     private Integer ppe_pim_id;//	商品外键
 
     private Integer ppe_carousel_id;//	轮播位外键
+
+    private Integer ppe_siteid;  //门店外键
+
+    private Integer ppe_del; //删除
+
+    private Site site; //门店id
+
+    private Carousel carousel; //轮播位
 }

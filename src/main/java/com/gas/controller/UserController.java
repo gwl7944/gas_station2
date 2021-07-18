@@ -5,8 +5,11 @@ import com.gas.pojo.*;
 import com.gas.service.AuthorityService;
 import com.gas.service.UserService;
 import com.gas.util.DateTO;
+import com.gas.util.OOS_Util;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -238,12 +241,12 @@ public class UserController {
 
     /*---------------------------   积分规则   系统设置固定 2.0新增  ------------------------------*/
     /**
-     * 查询会员等级
+     * 根据站点查询会员等级
      */
-    @GetMapping("/user/integeregralRule")
-    public JSON integeregralRule(){
+    @GetMapping("/user/integeregralRule/{lr_siteid}")
+    public JSON integeregralRule(@PathVariable("lr_siteid") Integer lr_siteid){
 
-        List<Integeregral_rule> integeregralRules = userService.findIntegeregralRule();
+        List<Integeregral_rule> integeregralRules = userService.findIntegeregralRule(lr_siteid);
 
         if (integeregralRules.size()>0){
             return ResultData.getResponseData(integeregralRules,ResultCode.QUERY_SUCCESS);
@@ -266,12 +269,12 @@ public class UserController {
     /*---------------------------   会员规则   系统设置固定 2.0新增  ------------------------------*/
 
     /**
-     * 查询会员规则
+     * 根据会员id查询会员规则
      */
-    @GetMapping("/user/membershipRules")
-    public JSON membershipRules(){
+    @GetMapping("/user/membershipRules/{mr_ml_id}")
+    public JSON membershipRules(@PathVariable("mr_ml_id") Integer mr_ml_id){
 
-        List<Membership_rules> membershipRules = userService.findMembershipRules();
+        List<Membership_rules> membershipRules = userService.findMembershipRules(mr_ml_id);
 
         if (membershipRules.size()>0){
             return ResultData.getResponseData(membershipRules,ResultCode.QUERY_SUCCESS);
@@ -291,5 +294,89 @@ public class UserController {
         return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
     }
 
+    /*---------------------------   图片上传 OSS 2.0新增  ------------------------------*/
+    /**
+     * 图片上传
+     */
+    @PostMapping("/user/uploadPic")
+    public JSON uploadPic(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam("type") Integer type) {
+        //System.out.println("file>>>>"+file);
+        String fileType="";
+        if (type.equals(1)) { //积分商品图
+            fileType="gas/sp";
+        }else if(type.equals(2)) { //商品详情图
+            fileType="gas/spdetails";
+        }else {  //宣传图
+            fileType="gas/pub";
+        }
+        if (file!=null){
+            try {
+                String url = OOS_Util.uploadDocuments(file,fileType);
+                return ResultData.getResponseData(url,ResultCode.SYS_SUCCESS);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return ResultData.getResponseData("",ResultCode.SYS_ERROR);
+    }
 
+
+    /**
+     * 图片删除
+     */
+    @GetMapping("/user/deletePic")
+    public JSON deletePic(String pic_name) {
+        try {
+            String flag = OOS_Util.deleteimg(pic_name);
+            if (flag.equals("success")){
+                return ResultData.getResponseData("success",ResultCode.SYS_SUCCESS);
+            }else {
+                return ResultData.getResponseData("fail",ResultCode.SYS_ERROR);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return ResultData.getResponseData("fail",ResultCode.SYS_ERROR);
+    }
+
+    /*---------------------------   图片相关 2.0新增  ------------------------------*/
+    /**
+     * 新增图片
+     */
+    @PostMapping("/user/addProductPicture")
+    public JSON addProductPicture(@RequestBody Product_Picture productPicture){
+        int i = userService.insertProductPicture(productPicture);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.INSERT_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
+    }
+
+    /**
+     * 根据类型查看图片
+     */
+    @GetMapping("/user/getProductPicture/{ppe_type}/{ppe_siteid}")
+    public JSON getProductPicture(@PathVariable("ppe_type") Integer ppe_type,@PathVariable("ppe_siteid") Integer ppe_siteid,@Param("currentpage") Integer currentpage, @Param("currentnumber") Integer currentnumber){
+
+        Page<Product_Picture> productPicturePage = userService.findProductPicture(ppe_type,ppe_siteid,currentpage,currentnumber);
+
+        if (productPicturePage!=null){
+            return ResultData.getResponseData(productPicturePage,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(productPicturePage,ResultCode.QUERY_ERROR);
+    }
+
+    /**
+     * 查询所有轮播位
+     */
+    @GetMapping("/user/getCarousel")
+    public JSON getCarousel(){
+        List<Carousel> carousels = userService.findCarousel();
+        if (carousels.size()>0){
+            return ResultData.getResponseData(carousels,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(carousels,ResultCode.QUERY_ERROR);
+    }
+
+    
 }
