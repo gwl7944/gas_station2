@@ -5,10 +5,7 @@ import com.gas.pojo.Pointegers_Item;
 import com.gas.pojo.ResultCode;
 import com.gas.pojo.ResultData;
 import com.gas.service.IntegralService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -38,4 +35,18 @@ public class IntegralController {
         }
         return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
     }
+
+    /**
+     * 积分商品修改
+     */
+    @RequestMapping(value = "/integral/editIntegralProduct",method = RequestMethod.POST)
+    public String editIntegralProduct(@RequestBody Pointegers_Item pointegersItem){
+        if (integralService.updateIntegralProduct(pointegersItem)>0){
+            return ResultData.getResponseData(null,ResultCode.UPDATE_SUCCESS).toString();
+        }else {
+            return ResultData.getResponseData(null,ResultCode.UPDATE_ERROR).toString();
+        }
+    }
+
+
 }

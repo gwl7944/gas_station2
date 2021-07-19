@@ -62,4 +62,14 @@ public interface MembershipLevelDao {
      * 根据id查询会员
      */
     Membership_level findMembershipLevelById(Integer mr_ml_id);
+
+    /**
+     * 新增会员规则
+     */
+    int insertMembershipRules(Membership_rules membershipRules);
+
+    /**
+     * 新增积分规则
+     */
+    int insertIntegeregralRule(Integeregral_rule integeregralRule);
 }

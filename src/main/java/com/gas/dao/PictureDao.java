@@ -35,4 +35,11 @@ public interface PictureDao {
      * 查询轮播位
      */
     List<Carousel> findCarousel();
+
+    /**
+     * 删除图片
+     */
+    int deleteProductPictureById(Integer ppe_id);
+
+
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.gas.dao.MembershipLevelDao">
 
     <!--  新增会员等级 -->
-    <insert id="insertMembershipLevel" parameterType="Membership_level">
+    <insert id="insertMembershipLevel" parameterType="Membership_level" useGeneratedKeys="true" keyProperty="ml_id">
         insert into membership_level(ml_name,ml_upper_limit,ml_level,ml_sitecode,ml_del) values (#{ml_name},#{ml_upper_limit},#{ml_level},#{ml_sitecode},1)
     </insert>
 
@@ -109,4 +109,15 @@
     <select id="findMembershipLevelById" parameterType="Integer" resultType="Membership_level">
         select * from membership_level where ml_id = #{mr_ml_id} and ml_sitecode=#{ml_sitecode}
     </select>
+
+    <!-- 新增会员规则 -->
+    <insert id="insertMembershipRules" parameterType="Membership_rules">
+        insert into membership_rules (mr_ml_id,mr_name,mr_recharge_discount,mr_consumption_discount,mr_recharge_growthvalue,mr_consumption_growthvalue)
+        values (#{mr_ml_id},#{mr_name},#{mr_recharge_discount},#{mr_consumption_discount},#{mr_recharge_growthvalue},#{mr_consumption_growthvalue})
+    </insert>
+
+    <!-- 新增积分规则 -->
+    <insert id="insertIntegeregralRule" parameterType="Integeregral_rule">
+        insert into integeregral_rule (lr_name,lr_recharge_ratio,lr_consumption_ratio,lr_siteid) values (#{lr_name},#{lr_recharge_ratio},#{lr_consumption_ratio},#{lr_siteid})
+    </insert>
 </mapper>

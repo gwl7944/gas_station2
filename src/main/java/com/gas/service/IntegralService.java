@@ -14,4 +14,8 @@ public interface IntegralService {
      * 新增积分商品
      */
     Integer insertIntegralProduct(Pointegers_Item pointegersItem);
+    /**
+     * 修改积分商品
+     */
+    Integer  updateIntegralProduct(Pointegers_Item pointegersItem);
 }

@@ -34,4 +34,6 @@ public class Product_Picture {
     private Site site; //门店id
 
     private Carousel carousel; //轮播位
+
+    private Integer ppe_default;  //是否默认
 }

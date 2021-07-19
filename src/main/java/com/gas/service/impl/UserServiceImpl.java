@@ -4,9 +4,12 @@ import com.gas.dao.*;
 import com.gas.pojo.*;
 import com.gas.service.UserService;
 import com.gas.util.DateTO;
+import com.gas.util.OOS_Util;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
@@ -22,6 +25,7 @@ import java.util.Map;
  * Time: 17:09
  * Description: No Description
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -265,9 +269,18 @@ public class UserServiceImpl implements UserService {
 
     /* ----------------  2.0 新增 ----------------*/
     @Override
+    @Transactional
     public int insertMembershipLevel(Membership_level membershipLevel) {
 
-        return membershipLevelDao.insertMembershipLevel(membershipLevel);
+        int i = membershipLevelDao.insertMembershipLevel(membershipLevel);
+        if (i>0){
+            //新增规则
+            Membership_rules membershipRules = membershipLevel.getMembershipRules();
+            membershipRules.setMr_ml_id(membershipLevel.getMl_id());
+            log.info("会员规则》》》"+membershipRules);
+            i =  membershipLevelDao.insertMembershipRules(membershipRules);
+        }
+        return i;
     }
 
     @Override
@@ -300,7 +313,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateIntegeregralRule(Integeregral_rule integeregralRule) {
-        return membershipLevelDao.updateIntegeregralRule(integeregralRule);
+        int i=0;
+        if (integeregralRule.getLr_id()!=null){
+            i = membershipLevelDao.updateIntegeregralRule(integeregralRule);
+        }else {
+            i = membershipLevelDao.insertIntegeregralRule(integeregralRule);
+        }
+        return i;
     }
 
     @Override
@@ -322,6 +341,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int insertProductPicture(Product_Picture productPicture) {
+        productPicture.setPpe_default(0);
         return pictureDao.insertProductPicture(productPicture);
     }
 
@@ -347,6 +367,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Carousel> findCarousel() {
         return pictureDao.findCarousel();
+    }
+
+    @Override
+    public int deleteProductPicture(Integer ppe_id,String ppe_url) {
+
+        int i =  pictureDao.deleteProductPictureById(ppe_id);
+        if (i>0){
+            //删除图片
+            String flag = OOS_Util.deleteimg(ppe_url);
+            if (flag.equals("success")){
+                i++;
+            }
+        }
+        return i;
     }
 
 

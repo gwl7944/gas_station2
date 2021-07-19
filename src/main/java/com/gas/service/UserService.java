@@ -125,4 +125,9 @@ public interface UserService {
      * 查询轮播位
      */
     List<Carousel> findCarousel();
+
+    /**
+     * 删除图片
+     */
+    int deleteProductPicture(Integer ppe_id, String ppe_url);
 }

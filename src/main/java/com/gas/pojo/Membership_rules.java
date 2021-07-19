@@ -33,6 +33,4 @@ public class Membership_rules {
 
     private Membership_level membershipLevel;  //会员等级
 
-
-
 }

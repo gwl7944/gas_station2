@@ -3,8 +3,12 @@
 <mapper namespace="com.gas.dao.IntegralDao">
 
     <!-- 新增积分商品 -->
-    <insert id="insertIntegralProduct" parameterType="Pointegers_Item">
+    <insert id="insertIntegralProduct" parameterType="Pointegers_Item" useGeneratedKeys="true" keyProperty="pim_id">
         insert into pointegers_item(pim_name,pim_describe,pim_poIntegers_number,pim_default_picture,pim_stock,pim_site_id,pim_state,pim_del)
-        values (#{pim_name},#{pim_describe},#{pim_poIntegers_number},#{pim_default_picture},#{pim_stock},#{pim_site_id},#{pim_state},1)
+        values (#{pim_name},#{pim_describe},#{pim_poIntegers_number},#{pim_default_picture},#{pim_stock},#{pim_site_id},1,1)
     </insert>
+    <!-- 修改积分商品基本信息 -->
+    <update id="updateIntegralProduct" parameterType="Pointegers_Item">
+        update
+    </update>
 </mapper>

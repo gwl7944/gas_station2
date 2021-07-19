@@ -4,7 +4,7 @@
 
     <!-- 新增图片 -->
     <insert id="insertProductPicture" parameterType="Product_Picture">
-        insert into product_picture(ppe_type,ppe_url,ppe_pim_id,ppe_carousel_id,ppe_siteid,ppe_del) values (#{ppe_type},#{ppe_url},#{ppe_pim_id},#{ppe_carousel_id},#{ppe_siteid},1)
+        insert into product_picture(ppe_type,ppe_url,ppe_pim_id,ppe_carousel_id,ppe_siteid,ppe_del,ppe_default) values (#{ppe_type},#{ppe_url},#{ppe_pim_id},#{ppe_carousel_id},#{ppe_siteid},1,#{ppe_default})
     </insert>
 
     <!-- 查询图片 -->

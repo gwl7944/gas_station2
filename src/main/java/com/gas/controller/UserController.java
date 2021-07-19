@@ -287,6 +287,7 @@ public class UserController {
      */
     @PostMapping("/user/editMembershipRules")
     public JSON editMembershipRules(@RequestBody Membership_rules membershipRules){
+        System.out.println("membershipRules>>"+membershipRules);
         int i = userService.updateMembershipRules(membershipRules);
         if (i>0){
             return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
@@ -379,5 +380,15 @@ public class UserController {
         return ResultData.getResponseData(carousels,ResultCode.QUERY_ERROR);
     }
 
-    
+    /**
+     * 删除图片
+     */
+    @DeleteMapping("/user/productPicture")
+    public JSON productPicture(@RequestParam("ppe_id") Integer ppe_id,@RequestParam("ppe_url") String ppe_url){
+        int i = userService.deleteProductPicture(ppe_id,ppe_url);
+        if (i>0){
+           return ResultData.getResponseData(i,ResultCode.DELETE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.DELETE_ERROR);
+    }
 }
