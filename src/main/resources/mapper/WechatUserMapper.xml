@@ -3,6 +3,22 @@
 <mapper namespace="com.gas.dao.WechatUsersDao">
 
 
+    <!--findAllRecharge-->
+    <resultMap id="findAllRechargeMap" type="Recharge">
+        <id column="rech_id" property="rech_id"/>
+        <result column="rech_quota" property="rech_quota"/>
+        <result column="rech_Integeregral_value" property="rech_Integeregral_value"/>
+        <result column="rech_balance_value" property="rech_balance_value"/>
+        <result column="rech_coupons_id" property="rech_coupons_id"/>
+        <result column="rech_site_id" property="rech_site_id"/>
+        <result column="rech_del" property="rech_del"/>
+        <association property="coupon" javaType="Coupon">
+            <id column="coupon_id" property="coupon_id"/>
+            <result column="coupon_name" property="coupon_name"/>
+        </association>
+    </resultMap>
+
+
     <select id="findWechat_usersByOpenId" parameterType="String" resultType="Wechat_users">
           select * from wechat_users where wu_openid=#{wu_openid}
     </select>
@@ -298,6 +314,28 @@
         insert into growthvalue_record (gvr_valuenum,gvr_date,gvr_type,gvr_wu_id) values(#{gvr_valuenum},now(),#{gvr_type},#{gvr_wu_id})
     </insert>
 
+    <!--查询全部充值额度-->
+    <select id="findAllRecharge" parameterType="Integer" resultMap="findAllRechargeMap">
+        select re.*,co.coupon_name
+        from recharge re,coupon co
+        where  re.rech_coupons_id=co.coupon_id and re.rech_site_id=#{rech_site_id} order by rech_quota asc
+    </select>
+
+    <!--查询用户的积分详情-->
+    <select id="findPointegers_detailsByPds_wu_id" parameterType="Integer" resultType="Pointegers_details">
+        select * from pointegers_details  where pds_wu_id=#{pds_wu_id}
+    </select>
+
+    <!--添加用户积分变更记录-->
+    <insert id="insertPointegers_details" parameterType="Pointegers_details">
+        insert into pointegers_details (pds_type,pds_operation,pds_project,pds_date,pds_num,pds_wu_id)
+        value(#{pds_type},#{pds_operation},#{pds_project},now(),#{pds_num},#{pds_wu_id})
+    </insert>
+
+    <!--查询门店积分规则-->
+    <select id="findIntegeregral_ruleByLr_siteid" parameterType="Integer" resultType="Integeregral_rule">
+        select * from integeregral_rule where lr_siteid=#{lr_siteid}
+    </select>
 
 
 

@@ -496,4 +496,37 @@ public class WechatUserController {
         return  ResultData.getResponseData(wechatUsersService.getGrowthvalue_recordByGvr_wu_id(gvr_wu_id), ResultCode.QUERY_SUCCESS);
     }
 
+
+    /**
+     * 查询全部充值额度
+     * */
+    @GetMapping("/WechatUserController/getAllRecharge/{rech_site_id}")
+    public JSON getAllRecharge(@PathVariable("rech_site_id") Integer rech_site_id){
+        return  ResultData.getResponseData(wechatUsersService.getAllRecharge(rech_site_id), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 查询用户的积分详情
+     * */
+    @GetMapping("/WechatUserController/getPoIntegers_detailsByPds_wu_id/{pds_wu_id}")
+    public JSON getPoIntegers_detailsByPds_wu_id(@PathVariable("pds_wu_id") Integer pds_wu_id){
+        return  ResultData.getResponseData(wechatUsersService.getPoIntegers_detailsByPds_wu_id(pds_wu_id), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 查询门店积分规则 (消费)
+     * */
+    @GetMapping("/WechatUserController/getIntegeregral_ruleByLr_siteid/{lr_siteid}")
+    public JSON getIntegeregral_ruleByLr_siteid(Integer lr_siteid){
+        return  ResultData.getResponseData(wechatUsersService.getIntegeregral_ruleByLr_siteid(lr_siteid), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 添加用户积分变更记录
+     * */
+    @PostMapping("/WechatUserController/insertPointegers_details")
+    public JSON insertPointegers_details(Pointegers_details pointegers_details){
+        return  ResultData.getResponseData(wechatUsersService.insertPointegers_details(pointegers_details), ResultCode.QUERY_SUCCESS);
+    }
+
 }

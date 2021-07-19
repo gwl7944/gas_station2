@@ -149,4 +149,26 @@ public interface WechatUsersService {
      * 查询用户会员成长值变动记录
      * */
     List<Growthvalue_record> getGrowthvalue_recordByGvr_wu_id(Integer gvr_wu_id);
+
+
+    /**
+     * 查询全部充值额度
+     * */
+    List<Recharge> getAllRecharge(Integer rech_site_id);
+
+
+    /**
+     * 查询用户的积分详情
+     * */
+    List<Pointegers_details> getPoIntegers_detailsByPds_wu_id(Integer pds_wu_id);
+
+    /**
+     * 添加用户积分变更记录
+     * */
+    Integer insertPointegers_details(Pointegers_details pointegers_details);
+
+    /**
+     * 查询门店积分规则 (消费)
+     * */
+    Integeregral_rule getIntegeregral_ruleByLr_siteid(Integer lr_siteid);
 }

@@ -483,4 +483,24 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         return wechatUsersDao.findGrowthvalue_recordByGvr_wu_id(gvr_wu_id);
     }
 
+    @Override
+    public List<Recharge> getAllRecharge(Integer rech_site_id) {
+        return wechatUsersDao.findAllRecharge(rech_site_id);
+    }
+
+    @Override
+    public List<Pointegers_details> getPoIntegers_detailsByPds_wu_id(Integer pds_wu_id) {
+        return wechatUsersDao.findPoIntegers_detailsByPds_wu_id(pds_wu_id);
+    }
+
+    @Override
+    public Integer insertPointegers_details(Pointegers_details pointegers_details) {
+        return wechatUsersDao.insertPointegers_details(pointegers_details);
+    }
+
+    @Override
+    public Integeregral_rule getIntegeregral_ruleByLr_siteid(Integer lr_siteid) {
+        return wechatUsersDao.findIntegeregral_ruleByLr_siteid(lr_siteid);
+    }
+
 }

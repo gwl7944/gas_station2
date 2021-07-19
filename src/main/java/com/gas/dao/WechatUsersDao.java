@@ -243,6 +243,8 @@ public interface WechatUsersDao {
     Integeregral_rule findIntegeregral_ruleByLr_siteid(Integer lr_siteid);
 
 
+
+
 }
 
 

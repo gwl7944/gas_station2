@@ -31,5 +31,7 @@ public class Pointegers_details {
 
     private Integer pds_num;//	变化数值
 
+    private Integer pds_write_off;  //核销值
+
     private Integer pds_wu_id;//	用户外键
 }
