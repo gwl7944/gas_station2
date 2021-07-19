@@ -22,10 +22,10 @@ import java.util.Map;
  * Description: No Description
  */
 @RestController
+@CrossOrigin
 public class UserController {
 
-    @Resource
-    AuthorityService authorityService;
+
     @Resource
     UserService userService;
 
@@ -218,7 +218,7 @@ public class UserController {
      * 查询全部会员等级
      */
     @GetMapping("/user/membershipLevel")
-    public JSON membershipLevel(@RequestBody Membership_level membershipLevel){
+    public JSON membershipLevel(@ModelAttribute Membership_level membershipLevel){
 
         List<Membership_level> membershipLevels =  userService.findMembershipLevel(membershipLevel);
         if (membershipLevels.size()>0){
@@ -241,7 +241,7 @@ public class UserController {
 
     /*---------------------------   积分规则   系统设置固定 2.0新增  ------------------------------*/
     /**
-     * 根据站点查询会员等级
+     * 根据站点查询积分规则
      */
     @GetMapping("/user/integeregralRule/{lr_siteid}")
     public JSON integeregralRule(@PathVariable("lr_siteid") Integer lr_siteid){
@@ -255,7 +255,7 @@ public class UserController {
     }
 
     /**
-     * 修改会员等级
+     * 修改积分规则
      */
     @PostMapping("/user/editIntegeregralRule")
     public JSON editIntegeregralRule(@RequestBody Integeregral_rule integeregralRule){
@@ -351,6 +351,7 @@ public class UserController {
         }
         return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
     }
+
 
     /**
      * 根据类型查看图片

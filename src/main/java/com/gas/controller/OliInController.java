@@ -20,6 +20,7 @@ import javax.annotation.Resource;
  */
 
 @RestController
+@CrossOrigin
 public class OliInController {
 
     @Resource

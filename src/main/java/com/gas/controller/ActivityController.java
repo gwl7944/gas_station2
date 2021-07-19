@@ -18,6 +18,7 @@ import javax.annotation.Resource;
  * Description: No Description
  */
 @RestController
+@CrossOrigin
 public class ActivityController {
 
     @Resource

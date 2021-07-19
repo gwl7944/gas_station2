@@ -20,6 +20,7 @@ import java.util.List;
  * Description: 站点
  */
 @RestController
+@CrossOrigin
 public class SiteController {
 
     @Resource

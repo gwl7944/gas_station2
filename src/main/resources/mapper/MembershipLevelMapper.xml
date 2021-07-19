@@ -38,7 +38,7 @@
         <if test="ml_level!=null">
             and ml_level =#{ml_level}
         </if>
-        <if test="ml_sitecode!=null">
+        <if test="ml_sitecode!=null and ml_sitecode!=0 ">
             and ml_sitecode =#{ml_sitecode}
         </if>
     </select>
@@ -49,9 +49,9 @@
     </update>
 
     <!-- 查询积分规则 -->
-    <select id="findIntegeregralRule" resultType="Integeregral_rule">
+    <select id="findIntegeregralRule" parameterType="Integer" resultType="Integeregral_rule">
         select * from integeregral_rule where 1=1
-        <if test="lr_siteid!=null and lr_siteid!=0">
+        <if test="lr_siteid !=null and lr_siteid !=0 ">
           and lr_siteid=#{lr_siteid}
         </if>
     </select>
@@ -76,7 +76,7 @@
     </update>
 
     <!-- 查询会员积分规则 -->
-    <select id="findMembershipRules" resultType="Membership_rules">
+    <select id="findMembershipRules" parameterType="Integer" resultType="Membership_rules">
         select * from membership_rules where mr_ml_id=#{mr_ml_id}
     </select>
 
@@ -107,6 +107,6 @@
 
     <!-- 根据id查询会员等级 -->
     <select id="findMembershipLevelById" parameterType="Integer" resultType="Membership_level">
-        select * from membership_level where mr_id = #{mr_ml_id} and ml_sitecode=#{ml_sitecode}
+        select * from membership_level where ml_id = #{mr_ml_id} and ml_sitecode=#{ml_sitecode}
     </select>
 </mapper>

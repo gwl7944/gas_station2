@@ -4,6 +4,7 @@ import com.gas.pojo.Integeregral_rule;
 import com.gas.pojo.Membership_level;
 import com.gas.pojo.Membership_rules;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -40,12 +41,12 @@ public interface MembershipLevelDao {
     /**
      * 查询积分规则
      */
-    List<Integeregral_rule> findIntegeregralRule(Integer lr_siteid);
+    List<Integeregral_rule> findIntegeregralRule(@Param("lr_siteid") Integer lr_siteid);
 
     /**
      * 修改积分规则
      */
-    int updateIntegeregralRule(Integeregral_rule integeregralRule);
+    int updateIntegeregralRule(@Param("integeregralRule") Integeregral_rule integeregralRule);
 
     /**
      * 查询会员积分规则

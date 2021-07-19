@@ -5,6 +5,7 @@ import com.gas.pojo.Pointegers_Item;
 import com.gas.pojo.ResultCode;
 import com.gas.pojo.ResultData;
 import com.gas.service.IntegralService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +20,7 @@ import javax.annotation.Resource;
  * Description: 积分业务  2.0新增
  */
 @RestController
+@CrossOrigin
 public class IntegralController {
 
     @Resource
