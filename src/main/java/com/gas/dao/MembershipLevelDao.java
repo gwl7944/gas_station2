@@ -46,7 +46,7 @@ public interface MembershipLevelDao {
     /**
      * 修改积分规则
      */
-    int updateIntegeregralRule(@Param("integeregralRule") Integeregral_rule integeregralRule);
+    int updateIntegeregralRule(Integeregral_rule integeregralRule);
 
     /**
      * 查询会员积分规则
