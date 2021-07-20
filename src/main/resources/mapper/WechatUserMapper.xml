@@ -53,6 +53,27 @@
         </association>
     </resultMap>
 
+    <!--findAllPointegers_item-->
+    <resultMap id="findAllPointegers_itemMap" type="Pointegers_item">
+        <id column="pim_id" property="pim_id"/>
+        <result column="pim_name" property="pim_name"/>
+        <result column="pim_describe" property="pim_describe"/>
+        <result column="pim_poIntegers_number" property="pim_poIntegers_number"/>
+        <result column="pim_stock" property="pim_stock"/>
+        <result column="pim_site_id" property="pim_site_id"/>
+        <result column="pim_state" property="pim_state"/>
+        <result column="pim_del" property="pim_del"/>
+        <collection property="pictureList" ofType="Product_picture">
+            <id column="ppe_id" property="ppe_id"/>
+            <result column="ppe_type" property="ppe_type"/>
+            <result column="ppe_type" property="ppe_type"/>
+            <result column="ppe_url" property="ppe_url"/>
+            <result column="ppe_pim_id" property="ppe_pim_id"/>
+            <result column="ppe_siteid" property="ppe_siteid"/>
+            <result column="ppe_default" property="ppe_default"/>
+        </collection>
+    </resultMap>
+    
 
     <select id="findWechat_usersByOpenId" parameterType="String" resultType="Wechat_users">
           select * from wechat_users where wu_openid=#{wu_openid}
@@ -342,10 +363,8 @@
     </insert>
 
     <!--查询全部充值额度-->
-    <select id="findAllRecharge" parameterType="Integer" resultMap="findAllRechargeMap">
-        select re.*,co.coupon_name
-        from recharge re,coupon co
-        where  re.rech_coupons_id=co.coupon_id and re.rech_site_id=#{rech_site_id} order by rech_quota asc
+    <select id="findAllRecharge" parameterType="Integer" resultType="Recharge">
+        select * from recharge where rech_site_id=#{rech_site_id} order by rech_quota asc
     </select>
 
     <!--查询用户的积分详情-->
@@ -358,6 +377,11 @@
         insert into pointegers_details (pds_type,pds_operation,pds_project,pds_date,pds_num,pds_wu_id)
         value(#{pds_type},#{pds_operation},#{pds_project},now(),#{pds_num},#{pds_wu_id})
     </insert>
+
+    <!--扣除用户积分值-->
+    <update id="updateWechat_usersByWu_current_points" parameterType="Integer">
+        update wechat_users set wu_current_points=wu_current_points+#{param2} where wu_id=#{param1}
+    </update>
 
     <!--查询门店积分规则-->
     <select id="findIntegeregral_ruleByLr_siteid" parameterType="Integer" resultType="Integeregral_rule">
@@ -372,6 +396,17 @@
         </if>
     </select>
 
+    <!--查询门店积分商品信息-->
+    <select id="findAllPointegers_item" parameterType="Integer" resultMap="findAllPointegers_itemMap">
+        select pp.*,pi.*
+        from product_picture pp,pointegers_item pi
+        where pi.pim_site_id=#{pim_site_id} and pi.pim_del=1 and pi.pim_id=pp.ppe_pim_id
+    </select>
+
+    <!--查询全部奖池奖品-->
+    <select id="findAllPoints_lottery" resultType="Points_lottery">
+        select * from points_lottery where pl_site_id=#{pl_site_id}
+    </select>
 
 
 </mapper>

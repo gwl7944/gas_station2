@@ -1,7 +1,7 @@
 package com.gas.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.gas.pojo.Pointegers_Item;
+import com.gas.pojo.Pointegers_item;
 import com.gas.pojo.ResultCode;
 import com.gas.pojo.ResultData;
 import com.gas.service.IntegralService;
@@ -27,7 +27,7 @@ public class IntegralController {
      * 积分商品 新增
      */
     @PostMapping("/integral/addIntegralProduct")
-    public JSON addIntegralProduct(@RequestBody Pointegers_Item pointegersItem){
+    public JSON addIntegralProduct(@RequestBody Pointegers_item pointegersItem){
 
         Integer i = integralService.insertIntegralProduct(pointegersItem);
         if (i>0){
@@ -40,7 +40,7 @@ public class IntegralController {
      * 积分商品修改
      */
     @RequestMapping(value = "/integral/editIntegralProduct",method = RequestMethod.POST)
-    public String editIntegralProduct(@RequestBody Pointegers_Item pointegersItem){
+    public String editIntegralProduct(@RequestBody Pointegers_item pointegersItem){
         if (integralService.updateIntegralProduct(pointegersItem)>0){
             return ResultData.getResponseData(null,ResultCode.UPDATE_SUCCESS).toString();
         }else {

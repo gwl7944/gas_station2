@@ -1,6 +1,6 @@
 package com.gas.service;
 
-import com.gas.pojo.Pointegers_Item;
+import com.gas.pojo.Pointegers_item;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,9 +13,9 @@ public interface IntegralService {
     /**
      * 新增积分商品
      */
-    Integer insertIntegralProduct(Pointegers_Item pointegersItem);
+    Integer insertIntegralProduct(Pointegers_item pointegersItem);
     /**
      * 修改积分商品
      */
-    Integer  updateIntegralProduct(Pointegers_Item pointegersItem);
+    Integer  updateIntegralProduct(Pointegers_item pointegersItem);
 }

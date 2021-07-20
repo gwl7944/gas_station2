@@ -179,4 +179,24 @@ public interface WechatUsersService {
      * 查询用户消费记录
      * */
     List<Records_consumption> getRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type);
+
+    /**
+     * 查询门店积分商品信息
+     * */
+    List<Pointegers_item> getAllPointegers_item(Integer pim_site_id);
+
+    /**
+     * 查询全部奖池奖品
+     * */
+    List<Points_lottery> getAllPoints_lottery(Integer pl_site_id);
+
+    /**
+     * 点击抽奖
+     * */
+    Integer getLuck_Draw(Integer pl_site_id);
+
+    /**
+     * 充值成功
+     * */
+    Integer Recharge_success(Records_consumption records_consumption);
 }

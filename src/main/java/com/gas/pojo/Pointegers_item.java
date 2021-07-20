@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pointegers_Item {
+public class Pointegers_item {
 
     private Integer pim_id;//	主键
 
@@ -26,7 +26,7 @@ public class Pointegers_Item {
 
     private Integer pim_poIntegers_number;//	所需积分
 
-    private Integer pim_default_picture;//	缺省产品图  废弃
+    //private Integer pim_default_picture;//	缺省产品图  废弃
 
     private Integer pim_stock;//	库存
 

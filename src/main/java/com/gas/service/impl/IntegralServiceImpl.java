@@ -2,7 +2,7 @@ package com.gas.service.impl;
 
 import com.gas.dao.IntegralDao;
 import com.gas.dao.PictureDao;
-import com.gas.pojo.Pointegers_Item;
+import com.gas.pojo.Pointegers_item;
 import com.gas.pojo.Product_picture;
 import com.gas.service.IntegralService;
 import com.gas.util.OOS_Util;
@@ -29,7 +29,7 @@ public class IntegralServiceImpl implements IntegralService {
 
     @Override
     @Transactional
-    public Integer insertIntegralProduct(Pointegers_Item pointegersItem) {
+    public Integer insertIntegralProduct(Pointegers_item pointegersItem) {
         int i = integralDao.insertIntegralProduct(pointegersItem);
         if (i>0){
             if (pointegersItem.getPictureList()!=null){
@@ -44,7 +44,7 @@ public class IntegralServiceImpl implements IntegralService {
 
     @Override
     @Transactional
-    public Integer updateIntegralProduct(Pointegers_Item pointegersItem) {
+    public Integer updateIntegralProduct(Pointegers_item pointegersItem) {
         try {
             int i = integralDao.updateIntegralProduct(pointegersItem);
             if (pointegersItem.getPictureList().size()>0){

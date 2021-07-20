@@ -3,6 +3,8 @@ package com.gas.dao;
 import com.gas.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.omg.CORBA.INTERNAL;
+
 import java.util.List;
 
 /**
@@ -243,6 +245,11 @@ public interface WechatUsersDao {
     Integer insertPointegers_details(Pointegers_details pointegers_details);
 
     /**
+     * 扣除用户积分值
+     * */
+    Integer updateWechat_usersByWu_current_points(Integer wu_id,Integer wu_current_points);
+
+    /**
      * 查询门店积分规则 (消费)
      * */
     Integeregral_rule findIntegeregral_ruleByLr_siteid(Integer lr_siteid);
@@ -251,6 +258,20 @@ public interface WechatUsersDao {
      * 查询用户消费记录
      * */
     List<Records_consumption> findRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type);
+
+    /**
+     * 查询门店积分商品信息
+     * */
+    List<Pointegers_item> findAllPointegers_item(Integer pim_site_id);
+
+    /**
+     * 查询全部奖池奖品
+     * */
+    List<Points_lottery> findAllPoints_lottery(Integer pl_site_id);
+
+
+
+
 
 
 

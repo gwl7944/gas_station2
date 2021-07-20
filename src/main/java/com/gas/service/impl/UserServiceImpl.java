@@ -275,7 +275,7 @@ public class UserServiceImpl implements UserService {
         int i = membershipLevelDao.insertMembershipLevel(membershipLevel);
         if (i>0){
             //新增规则
-            Membership_rules membershipRules = membershipLevel.getMembershipRules();
+            Membership_rules membershipRules = membershipLevel.getMembership_rules();
             membershipRules.setMr_ml_id(membershipLevel.getMl_id());
             log.info("会员规则》》》"+membershipRules);
             i =  membershipLevelDao.insertMembershipRules(membershipRules);

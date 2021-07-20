@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @ProjectName: gas_station
@@ -45,6 +47,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     OliInDao oliInDao;
     @Resource
     UserDao userDao;
+    @Resource
+    CouponDao couponDao;
+
 
     @Override
     public Wechat_users getWechat_usersByOpenId(String wu_openid) {
@@ -488,7 +493,14 @@ public class WechatUsersServiceImpl implements WechatUsersService {
 
     @Override
     public List<Recharge> getAllRecharge(Integer rech_site_id) {
-        return wechatUsersDao.findAllRecharge(rech_site_id);
+        List<Recharge> allRecharge = wechatUsersDao.findAllRecharge(rech_site_id);
+        for (Recharge rec:allRecharge){
+            if (rec.getRech_coupons_id()!=null && rec.getRech_coupons_id()!=0){
+                Coupon couponById = couponDao.findCouponById(rec.getRech_coupons_id());
+                rec.setCoupon(couponById);
+            }
+        }
+        return allRecharge;
     }
 
     @Override
@@ -497,8 +509,15 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
     @Override
+    @Transactional
     public Integer insertPointegers_details(Pointegers_details pointegers_details) {
-        return wechatUsersDao.insertPointegers_details(pointegers_details);
+        Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(pointegers_details.getPds_wu_id(), pointegers_details.getPds_num());
+        Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
+        if (integer+integer1>1){
+            return 1;
+        }else {
+            return 0;
+        }
     }
 
     @Override
@@ -510,5 +529,39 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     public List<Records_consumption> getRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type) {
         return wechatUsersDao.findRecords_consumptionByRc_wu_id2(rc_wu_id,rc_type);
     }
+
+    @Override
+    public List<Pointegers_item> getAllPointegers_item(Integer pim_site_id) {
+        return wechatUsersDao.findAllPointegers_item(pim_site_id);
+    }
+
+    @Override
+    public List<Points_lottery> getAllPoints_lottery(Integer pl_site_id) {
+        return wechatUsersDao.findAllPoints_lottery(pl_site_id);
+    }
+
+    @Override
+    public Integer getLuck_Draw(Integer pl_site_id){
+        List<Points_lottery> allPoints_lottery = wechatUsersDao.findAllPoints_lottery(pl_site_id);
+        int a = 0;
+        int i = (int) (Math.random() * 100);
+        for (Points_lottery pl:allPoints_lottery){
+            if(i>=a && i<a + (int) (pl.getPl_probability() * 100)){
+                return pl.getPl_id();
+            }else {
+                a+=(int) (pl.getPl_probability() * 100);
+                continue;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Integer Recharge_success(Records_consumption records_consumption) {
+
+
+        return null;
+    }
+
 
 }

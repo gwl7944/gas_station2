@@ -1,7 +1,6 @@
 package com.gas.dao;
 
-import com.gas.pojo.Pointegers_Item;
-import com.gas.pojo.Product_Picture;
+import com.gas.pojo.Pointegers_item;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -17,10 +16,10 @@ public interface IntegralDao {
     /**
      * 新增积分商品
      */
-    int insertIntegralProduct(Pointegers_Item pointegersItem);
+    int insertIntegralProduct(Pointegers_item pointegersItem);
 
     /**
      * 修改积分商品
      */
-    int updateIntegralProduct(Pointegers_Item pointegersItem);
+    int updateIntegralProduct(Pointegers_item pointegersItem);
 }

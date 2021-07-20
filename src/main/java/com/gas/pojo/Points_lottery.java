@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Points_Lottery {
+public class Points_lottery {
 
     private Integer pl_id;//	主键
 
@@ -27,7 +27,20 @@ public class Points_Lottery {
 
     private Integer pl_growth_value;//	成长值
 
-    private Integer pl_coupon;//	优惠券
+    private Integer pl_coupon;//	优惠券外键
+
+    private Coupon coupon;  //优惠券对象
 
     private Double pl_balance;//	余额值
+
+    private Integer pl_site_id;  //门店主键
+
+    /*---------------------------------------------------*/
+
+    /**
+     * 计算抽奖概率
+     * */
+    private Integer probability_value1;
+
+    private Integer probability_value2;
 }

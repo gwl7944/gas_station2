@@ -96,6 +96,8 @@ public class WechatUserController {
      */
     @PostMapping("/WechatUserController/getOpenId")
     public JSON getOpenId(@ModelAttribute Open open) {
+        System.out.println(open.toString());
+
         Map<String, String> map = WeChatPushUtil.weChatGetOpenid(open);
         if (map != null && !"".equals(map)) {
             return ResultData.getResponseData(map, ResultCode.QUERY_SUCCESS);
@@ -517,6 +519,7 @@ public class WechatUserController {
 
     /**
      * 查询用户的积分详情
+     * @param pds_wu_id 用户主键
      * */
     @GetMapping("/WechatUserController/getPoIntegers_detailsByPds_wu_id/{pds_wu_id}")
     public JSON getPoIntegers_detailsByPds_wu_id(@PathVariable("pds_wu_id") Integer pds_wu_id){
@@ -525,6 +528,7 @@ public class WechatUserController {
 
     /**
      * 查询门店积分规则 (消费)
+     * @param lr_siteid 门店主键
      * */
     @GetMapping("/WechatUserController/getIntegeregral_ruleByLr_siteid/{lr_siteid}")
     public JSON getIntegeregral_ruleByLr_siteid(Integer lr_siteid){
@@ -533,18 +537,54 @@ public class WechatUserController {
 
     /**
      * 添加用户积分变更记录
+     * @param pointegers_details
      * */
     @PostMapping("/WechatUserController/insertPointegers_details")
-    public JSON insertPointegers_details(Pointegers_details pointegers_details){
-        return  ResultData.getResponseData(wechatUsersService.insertPointegers_details(pointegers_details), ResultCode.QUERY_SUCCESS);
+    public JSON insertPointegers_details(@ModelAttribute Pointegers_details pointegers_details) {
+        if (wechatUsersService.insertPointegers_details(pointegers_details) > 0) {
+            return ResultData.getResponseData(null, ResultCode.SYS_SUCCESS);
+        } else {
+            return ResultData.getResponseData(null, ResultCode.SYS_ERROR);
+        }
     }
 
     /**
      * 查询用户消费记录
+     * @param rc_wu_id  用户主键
+     * @param rc_type  消费类型  0-全部  1-充值   2-消费
      * */
     @GetMapping("/WechatUserController/findRecords_consumptionByRc_wu_id2/{rc_wu_id}/{rc_type}")
     public JSON findRecords_consumptionByRc_wu_id2(@PathVariable("rc_wu_id") Integer rc_wu_id,@PathVariable("rc_type") Integer rc_type){
         return  ResultData.getResponseData(wechatUsersService.getRecords_consumptionByRc_wu_id2(rc_wu_id,rc_type), ResultCode.QUERY_SUCCESS);
     }
+
+    /**
+     * 查询门店积分商品信息
+     * @param pim_site_id  门店主键
+     * */
+    @GetMapping("/WechatUserController/findAllPointegers_item/{pim_site_id}")
+    public JSON findAllPointegers_item(@PathVariable("pim_site_id") Integer pim_site_id){
+        return  ResultData.getResponseData(wechatUsersService.getAllPointegers_item(pim_site_id), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 查询全部奖池奖品
+     * @param pl_site_id 门店主键
+     * */
+    @GetMapping("/WechatUserController/findAllPoints_lottery/{pl_site_id}")
+    public JSON findAllPoints_lottery(@PathVariable("pl_site_id") Integer pl_site_id){
+        return  ResultData.getResponseData(wechatUsersService.getAllPoints_lottery(pl_site_id), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 点击抽奖
+     * @param pl_site_id 门店主键
+     * */
+    @GetMapping("/WechatUserController/getLuck_Draw/{pl_site_id}")
+    public JSON getLuck_Draw(@PathVariable("pl_site_id") Integer pl_site_id){
+        return  ResultData.getResponseData(wechatUsersService.getLuck_Draw(pl_site_id), ResultCode.QUERY_SUCCESS);
+    }
+
+
 
 }
