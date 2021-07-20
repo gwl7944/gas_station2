@@ -49,21 +49,16 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Override
     public Wechat_users getWechat_usersByOpenId(String wu_openid) {
         Wechat_users wechat_usersByOpenId = wechatUsersDao.findWechat_usersByOpenId(wu_openid);
-        /*if (wechat_usersByOpenId!= null) {
-            if (wechat_usersByOpenId.getWu_birthday()!=null){
-                wechat_usersByOpenId.setWu_birthday_str(DateTO.getStringDate(wechat_usersByOpenId.getWu_birthday()));
-            }
-        }*/
         if (wechat_usersByOpenId != null) {
-            Integer wci_numberByWci_wu_id =null;
-            if (wechat_usersByOpenId.getWu_id()!=null){
-                 wci_numberByWci_wu_id = wechatUsersDao.findWci_numberByWci_wu_id(wechat_usersByOpenId.getWu_id());
-            }
-            if (wci_numberByWci_wu_id != null) {
-                wechat_usersByOpenId.setWu_coupon_num(wci_numberByWci_wu_id);
-                return wechat_usersByOpenId;
-            } else {
-                wechat_usersByOpenId.setWu_coupon_num(0);
+            //获取用户优惠券数量
+            wechat_usersByOpenId.setWu_coupon_num(wechatUsersDao.findWci_numberByWci_wu_id(wechat_usersByOpenId.getWu_id()));
+            if(wechat_usersByOpenId.getWu_ml_id()!=null && wechat_usersByOpenId.getWu_ml_id()!=0){
+                //查询用户会员等级信息
+                Membership_level membership_levelById = wechatUsersDao.findMembership_levelById(wechat_usersByOpenId.getWu_ml_id());
+                //查询会员特权信息
+                Membership_rules membership_rulesByMl_id = wechatUsersDao.findMembership_rulesByMl_id(membership_levelById.getMl_id());
+                membership_levelById.setMembership_rules(membership_rulesByMl_id);
+                wechat_usersByOpenId.setMembership_level(membership_levelById);
             }
         }
         return wechat_usersByOpenId;
@@ -71,28 +66,17 @@ public class WechatUsersServiceImpl implements WechatUsersService {
 
     @Override
     public int insertWechat_users(Wechat_users wechat_users) {
-        /*if(wechat_users.getWu_birthday_str()!=null){
-            wechat_users.setWu_birthday(DateTO.getDate(wechat_users.getWu_birthday_str()));
-        }*/
         return wechatUsersDao.insertWechat_users(DataCompletion.getWechat_usersData(wechat_users));
     }
 
     @Override
     public int updateWechat_users(Wechat_users wechat_users) {
-        /*if (wechat_users.getWu_birthday_str() != null && wechat_users.getWu_birthday_str() != "") {
-            wechat_users.setWu_birthday(DateTO.getDate(wechat_users.getWu_birthday_str()));
-        }*/
         return wechatUsersDao.updateWechat_users(wechat_users);
     }
 
     @Override
     public List<Coupon> getCouponByWci_wu_id(Integer wci_wu_id) {
-        List<Coupon> couponList = wechatUsersDao.findCouponByWci_wu_id(wci_wu_id);
-        for (Coupon coupon : couponList) {
-            coupon.setCoupon_term_validity_str(DateTO.getStringDate(coupon.getCoupon_term_validity()));
-            coupon.setCoupon_enddate_str(DateTO.getStringDate(coupon.getCoupon_enddate()));
-        }
-        return couponList;
+        return wechatUsersDao.findCouponByWci_wu_id(wci_wu_id);
     }
 
     @Override
@@ -147,10 +131,10 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Override
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public int CouponExchange(Wu_coupon_information wu_coupon_information, Integer coupon_integralnum) {
-        Integer wcIcount = wechatUsersDao.findWCIcount(wu_coupon_information.getWci_wu_id(), wu_coupon_information.getWci_coupon_type());
+        //Integer wcIcount = wechatUsersDao.findWCIcount(wu_coupon_information.getWci_wu_id(),wu_coupon_information.getWci_coupon_type());
         Coupon coupon = new Coupon();
         Wechat_users wechat_users = new Wechat_users();
-        if (wcIcount > 0) {
+        /*if (wcIcount > 0) {
             //客户已有此优惠卷 查询此优惠卷是否用完
             Integer wcIcountUseNum = wechatUsersDao.findWCIcountUseNum(wu_coupon_information.getWci_wu_id(), wu_coupon_information.getWci_coupon_type());
             if (wcIcountUseNum>0){
@@ -185,7 +169,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                     return 1;
                 }
             }
-        }
+        }*/
         return 0;
     }
 
@@ -195,8 +179,8 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
     @Override
-    public Site findSiteByAppId(Site site) {
-        return wechatUsersDao.findSiteByAppId(site);
+    public Site findSiteByAppId(String site_appid) {
+        return wechatUsersDao.findSiteByAppId(site_appid);
     }
 
     @Override
@@ -278,7 +262,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         if (recordsConsumption.getRc_coupon() != null) {
             Wu_coupon_information wuCouponInformation = new Wu_coupon_information();
             wuCouponInformation.setWci_wu_id(recordsConsumption.getRc_wu_id());  //客户id
-            wuCouponInformation.setWci_coupon_type(recordsConsumption.getRc_coupon());  //优惠券id
+            //wuCouponInformation.setWci_coupon_type(recordsConsumption.getRc_coupon());  //优惠券id
             int i2 = wechatUsersDao.updateWuCouponNum(wuCouponInformation);
             if (i2 < 1) {
                 return 0;
@@ -462,15 +446,34 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         return page;
     }
 
+
+
     /**------------------------------------------------ 2.0 新增 -----------------------------------------------------------*/
+
+
+    @Override
+    public Carousel getCarouselByCal_id(Integer cal_id, Integer ppe_siteid) {
+        return wechatUsersDao.findCarouselByCal_id(cal_id,ppe_siteid);
+    }
+
     @Override
     public List<Membership_rules> getAllMembership_rules(Integer site_id) {
         return wechatUsersDao.findAllMembership_rules(site_id);
     }
 
     @Override
+    @Transactional
     public Integer getTheCard(Wechat_users wechat_users) {
-        return wechatUsersDao.getTheCard(wechat_users);
+        Growthvalue_record growthvalue_record = new Growthvalue_record();
+        growthvalue_record.setGvr_valuenum(wechat_users.getWu_membership_card_growth());
+        growthvalue_record.setGvr_type(3);growthvalue_record.setGvr_date(new Date());growthvalue_record.setGvr_wu_id(wechat_users.getWu_id());
+        Integer integer = wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+        Integer theCard = wechatUsersDao.getTheCard(wechat_users);
+        if (integer+theCard>1){
+            return 1;
+        }else {
+            return 0;
+        }
     }
 
     @Override
@@ -501,6 +504,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Override
     public Integeregral_rule getIntegeregral_ruleByLr_siteid(Integer lr_siteid) {
         return wechatUsersDao.findIntegeregral_ruleByLr_siteid(lr_siteid);
+    }
+
+    @Override
+    public List<Records_consumption> getRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type) {
+        return wechatUsersDao.findRecords_consumptionByRc_wu_id2(rc_wu_id,rc_type);
     }
 
 }

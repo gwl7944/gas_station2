@@ -340,22 +340,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int insertProductPicture(Product_Picture productPicture) {
+    public int insertProductPicture(Product_picture productPicture) {
         productPicture.setPpe_default(0);
         return pictureDao.insertProductPicture(productPicture);
     }
 
     @Override
-    public Page<Product_Picture> findProductPicture(Integer ppe_type, Integer ppe_siteid, Integer currentpage, Integer currentnumber) {
+    public Page<Product_picture> findProductPicture(Integer ppe_type, Integer ppe_siteid, Integer currentpage, Integer currentnumber) {
 
-        Page<Product_Picture> page = new Page<>();
+        Page<Product_picture> page = new Page<>();
         PageHelper.startPage(currentpage, currentnumber);
-        List<Product_Picture> productPictures = pictureDao.findProductPicture(ppe_type,ppe_siteid);
-        for (Product_Picture productPicture : productPictures) {
+        List<Product_picture> productPictures = pictureDao.findProductPicture(ppe_type,ppe_siteid);
+        for (Product_picture productPicture : productPictures) {
             productPicture.setSite(siteDao.findSiteById(productPicture.getPpe_siteid()));
             productPicture.setCarousel(pictureDao.findCarouselById(productPicture.getPpe_carousel_id()));
         }
-        PageInfo<Product_Picture> info = new PageInfo<>(productPictures);
+        PageInfo<Product_picture> info = new PageInfo<>(productPictures);
         page.setCurrentnumber(info.getPageNum());
         page.setCurrentpage(currentpage);
         page.setPagecount(info.getPages());

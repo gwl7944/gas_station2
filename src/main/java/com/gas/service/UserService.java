@@ -114,12 +114,12 @@ public interface UserService {
     /**
      * 新增图片
      */
-    int insertProductPicture(Product_Picture productPicture);
+    int insertProductPicture(Product_picture productPicture);
 
     /**
      * 查询图片
      */
-    Page<Product_Picture> findProductPicture(Integer ppe_type, Integer ppe_siteid, Integer currentpage, Integer currentnumber);
+    Page<Product_picture> findProductPicture(Integer ppe_type, Integer ppe_siteid, Integer currentpage, Integer currentnumber);
 
     /**
      * 查询轮播位

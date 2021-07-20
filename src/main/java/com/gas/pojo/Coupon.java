@@ -28,11 +28,13 @@ public class Coupon {
 
     /*private String coupon_describe;*/   //描述
 
+    private Integer coupon_type;// 类型   1-额度优惠 2-折扣优惠
+
     private Double coupon_discount;  //折扣
 
-    private Double coupon_money;//	金额
+    private Double coupon_money;//	额度
 
-    private Integer coupon_number;//数量
+    private Integer coupon_number;//发行数量
 
     private Date coupon_term_validity;//	开始日期
 

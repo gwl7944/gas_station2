@@ -3,7 +3,7 @@ package com.gas.service.impl;
 import com.gas.dao.IntegralDao;
 import com.gas.dao.PictureDao;
 import com.gas.pojo.Pointegers_Item;
-import com.gas.pojo.Product_Picture;
+import com.gas.pojo.Product_picture;
 import com.gas.service.IntegralService;
 import com.gas.util.OOS_Util;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class IntegralServiceImpl implements IntegralService {
         int i = integralDao.insertIntegralProduct(pointegersItem);
         if (i>0){
             if (pointegersItem.getPictureList()!=null){
-                for (Product_Picture product_picture : pointegersItem.getPictureList()) {
+                for (Product_picture product_picture : pointegersItem.getPictureList()) {
                     product_picture.setPpe_pim_id(pointegersItem.getPim_id());
                     i = pictureDao.insertProductPicture(product_picture);
                 }

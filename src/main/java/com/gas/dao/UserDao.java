@@ -1,6 +1,6 @@
 package com.gas.dao;
 
-import com.gas.pojo.Product_Picture;
+import com.gas.pojo.Product_picture;
 import com.gas.pojo.Records_consumption;
 import com.gas.pojo.User;
 import com.gas.pojo.Wechat_users;
@@ -66,6 +66,8 @@ public interface UserDao {
     int updateWcUserById(Wechat_users wechatUsers);
 
     int updateReByRcNum(String rc_number, String data);
+
+    int insertProductPicture(Product_picture product_picture);
 
 
 

@@ -18,25 +18,64 @@
         </association>
     </resultMap>
 
+    <!--findCarouselByCal_id-->
+    <resultMap id="findCarouselByCal_idMap" type="Carousel">
+        <id column="cal_id" property="cal_id"/>
+        <result column="cal_code" property="cal_code"/>
+        <result column="cal_name" property="cal_name"/>
+        <result column="cal_describe" property="cal_describe"/>
+        <collection property="product_pictureList" ofType="Product_picture">
+            <id column="ppe_id" property="ppe_id"/>
+            <result column="ppe_type" property="ppe_type"/>
+            <result column="ppe_url" property="ppe_url"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="findCouponByWci_wu_idMap" type="Wu_coupon_information">
+        <id column="wci_id" property="wci_id"/>
+        <result column="wci_coupon_id" property="wci_coupon_id"/>
+        <result column="wci_wu_id" property="wci_wu_id"/>
+        <result column="wci_state" property="wci_state"/>
+        <association property="coupon" javaType="Coupon">
+            <id column="coupon_id" property="coupon_id"/>
+            <result column="coupon_name" property="coupon_name"/>
+            <result column="coupon_type" property="coupon_type"/>
+            <result column="coupon_money" property="coupon_money"/>
+            <result column="coupon_discount" property="coupon_discount"/>
+            <result column="coupon_number" property="coupon_number"/>
+            <result column="coupon_threshold" property="coupon_threshold"/>
+            <result column="coupon_term_validity" property="coupon_term_validity"/>
+            <result column="coupon_enddate" property="coupon_enddate"/>
+            <result column="coupon_site_id" property="coupon_site_id"/>
+            <result column="coupon_exchange_code" property="coupon_exchange_code"/>
+            <result column="coupon_state" property="coupon_state"/>
+            <result column="coupon_del" property="coupon_del"/>
+        </association>
+    </resultMap>
+
 
     <select id="findWechat_usersByOpenId" parameterType="String" resultType="Wechat_users">
           select * from wechat_users where wu_openid=#{wu_openid}
     </select>
 
-    <insert id="insertWechat_users" parameterType="Wechat_users" useGeneratedKeys="true" keyProperty="wu_id">
+    <insert id="insertWechat_users1" parameterType="Wechat_users" useGeneratedKeys="true" keyProperty="wu_id">
         insert into wechat_users (wu_name,wu_fullname,wu_telephone,wu_gender,wu_birthday,wu_id_number,wu_qr_code,wu_bar_code,wu_integral,wu_current_points,wu_remainder,
         wu_Invitation_code,wu_openid,wu_membership_card_number,wu_membership_card_growth,wu_sitecode,wu_recommend_num,wu_state,wu_del,wu_remarks)
         value (#{wu_name},#{wu_fullname},#{wu_telephone},#{wu_gender},#{wu_birthday},#{wu_id_number},#{wu_qr_code},#{wu_bar_code},#{wu_integral},#{wu_integral},
         #{wu_remainder},#{wu_membership_card_number},#{wu_openid},#{wu_membership_card_number},#{wu_membership_card_growth},
         (select site_id from site where site_appid=#{wu_appid}),#{wu_recommend_num},1,1,#{wu_remarks})
     </insert>
-    
+
+    <!--添加新注册的用户-->
+    <insert id="insertWechat_users" parameterType="Wechat_users" useGeneratedKeys="true" keyProperty="wu_id">
+        insert into wechat_users (wu_name,wu_current_points,wu_remainder,wu_openid,wu_sitecode,wu_state,wu_del)
+        values (#{wu_name},0,0,#{wu_openid},#{wu_sitecode},1,1);
+    </insert>
+
+    <!--微信用户完善信息-->
     <update id="updateWechat_users" parameterType="Wechat_users">
         update wechat_users
         <set>
-            <if test='wu_name!=null and wu_name!=""'>
-                wu_name=#{wu_name},
-            </if>
             <if test='wu_fullname!=null and wu_fullname!=""'>
                 wu_fullname=#{wu_fullname},
             </if>
@@ -45,27 +84,6 @@
             </if>
             <if test="wu_gender!=0 and wu_gender!=null">
                 wu_gender=#{wu_gender},
-            </if>
-            <if test="wu_birthday!=null">
-                wu_birthday=#{wu_birthday},
-            </if>
-            <if test='wu_id_number!=null and wu_id_number!=""'>
-                wu_id_number=#{wu_id_number},
-            </if>
-            <if test="wu_current_points!=0 and wu_current_points!=null">
-                wu_current_points=#{wu_current_points},
-            </if>
-            <if test="wu_integral!=0 and wu_integral!=null">
-                wu_integral=wu_integral+#{wu_integral},
-            </if>
-            <if test="wu_remainder!=0 and wu_remainder!=null">
-                wu_remainder=#{wu_remainder},
-            </if>
-            <if test="wu_membership_card_growth !=0 and wu_membership_card_growth !=null">
-                wu_membership_card_growth =#{wu_membership_card_growth},
-            </if>
-            <if test="wu_recommend_num !=0 and wu_recommend_num !=null">
-                wu_recommend_num =#{wu_recommend_num},
             </if>
             <if test="wu_state !=0 and wu_state !=null">
                 wu_state =#{wu_state},
@@ -78,12 +96,14 @@
     </update>
 
     <select id="findWci_numberByWci_wu_id" parameterType="Integer" resultType="Integer">
-        select SUM(wci_number) from wu_coupon_information where wci_wu_id=#{wci_wu_id}
+        select count(*) from user_coupons where ucs_wu_id=#{ucs_wu_id}
     </select>
 
-    <select id="findCouponByWci_wu_id" parameterType="Integer" resultType="Coupon">
-        select c.*,wci.wci_number coupon_wxuser_number from wu_coupon_information wci,coupon c
-        where wci.wci_coupon_type=c.coupon_id and wci.wci_wu_id=#{wci_wu_id}
+    <!--查询用户优惠券列表-->
+    <select id="findCouponByWci_wu_id" parameterType="Integer" resultMap="findCouponByWci_wu_idMap">
+        select  wi.*,c.*
+        from wu_coupon_information wi,coupon c
+        where wi.wci_wu_id=#{ucs_wu_id} and wi.wci_coupon_id=c.coupon_id and c.coupon_del=1
     </select>
 
     <select id="findRecords_consumptionByRc_wu_id" parameterType="Records_consumption" resultType="Records_consumption">
@@ -171,7 +191,7 @@
     </select>
 
     <!--根据AppID 查询站点 -->
-    <select id="findSiteByAppId" resultType="Site">
+    <select id="findSiteByAppId" parameterType="String" resultType="Site">
         select * from site where site_appid=#{site_appid}
     </select>
 
@@ -272,6 +292,13 @@
 
     <!--   ~~~~~~~~~~~~~~~~~~~~~~~~~~ 2.0 新增 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~      -->
 
+    <!--查询轮播图-->
+    <select id="findCarouselByCal_id" parameterType="Integer" resultMap="findCarouselByCal_idMap">
+        select car.*,ppe.ppe_id,ppe.ppe_type,ppe.ppe_url
+        from carousel car,product_picture ppe
+        where car.cal_id=ppe.ppe_carousel_id and car.cal_id=#{param1} and ppe.ppe_siteid=#{param2}
+    </select>
+
     <!--根据ID 查询会员等级-->
     <select id="findMembership_levelById" parameterType="Integer" resultType="Membership_level">
         select * from membership_level where ml_id=#{ml_id} and ml_del=1
@@ -291,11 +318,11 @@
     <update id="getTheCard" parameterType="Wechat_users">
         update wechat_users
         set wu_qr_code= (SELECT MD5(RAND() * 10000)),
-        wu_growth_value=wu_growth_value+#{wu_growth_value},
+        wu_membership_card_growth =wu_membership_card_growth +#{wu_membership_card_growth },
         wu_ml_id=(select ml_id from membership_level where ml_level=1 and ml_sitecode=#{wu_sitecode}),
         wu_membership_card_number=CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
-        wu_balance=wu_balance+#{wu_balance},
-        wu_integeregral=wu_integeregral+#{wu_integeregral}
+        wu_remainder=wu_remainder+#{wu_remainder},
+        wu_current_points=wu_current_points+#{wu_current_points}
         where wu_id=#{wu_id}
     </update>
 
@@ -322,7 +349,7 @@
     </select>
 
     <!--查询用户的积分详情-->
-    <select id="findPointegers_detailsByPds_wu_id" parameterType="Integer" resultType="Pointegers_details">
+    <select id="findPoIntegers_detailsByPds_wu_id" parameterType="Integer" resultType="Pointegers_details">
         select * from pointegers_details  where pds_wu_id=#{pds_wu_id}
     </select>
 
@@ -335,6 +362,14 @@
     <!--查询门店积分规则-->
     <select id="findIntegeregral_ruleByLr_siteid" parameterType="Integer" resultType="Integeregral_rule">
         select * from integeregral_rule where lr_siteid=#{lr_siteid}
+    </select>
+
+    <!-- 查询用户消费记录 -->
+    <select id="findRecords_consumptionByRc_wu_id2" parameterType="Integer" resultType="Records_consumption">
+        select * from records_consumption where rc_wu_id=#{param1}
+        <if test="rc_type!=0 and rc_type!=null">
+            and rc_type=#{param2}
+        </if>
     </select>
 
 

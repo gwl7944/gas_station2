@@ -63,7 +63,7 @@ public interface WechatUsersService {
     /**
      * 通过appId查询站点
      * */
-    Site findSiteByAppId(Site site);
+    Site findSiteByAppId(String site_appid);
 
     /**
      * 余额充值
@@ -131,6 +131,11 @@ public interface WechatUsersService {
     /**----------------------------------------------- 2.0 新增 --------------------------------------------*/
 
     /**
+     * 查询轮播图
+     * */
+    Carousel getCarouselByCal_id(Integer cal_id,Integer ppe_siteid);
+
+    /**
      * 查询全部会员权益  站点
      * */
     List<Membership_rules> getAllMembership_rules(Integer site_id);
@@ -150,12 +155,10 @@ public interface WechatUsersService {
      * */
     List<Growthvalue_record> getGrowthvalue_recordByGvr_wu_id(Integer gvr_wu_id);
 
-
     /**
      * 查询全部充值额度
      * */
     List<Recharge> getAllRecharge(Integer rech_site_id);
-
 
     /**
      * 查询用户的积分详情
@@ -171,4 +174,9 @@ public interface WechatUsersService {
      * 查询门店积分规则 (消费)
      * */
     Integeregral_rule getIntegeregral_ruleByLr_siteid(Integer lr_siteid);
+
+    /**
+     * 查询用户消费记录
+     * */
+    List<Records_consumption> getRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type);
 }

@@ -24,9 +24,9 @@ public class Records_consumption {
 
     private Integer rc_id;//	主键
 
-    private String rc_consumer_projects;//	消费项目  油价名称
+    private String rc_consumer_projects; //消费项目  油价名称
 
-    private Integer rc_consumer_projects_code;//	消费项目编号  油价id
+    private Integer rc_consumer_projects_code;  //消费项目编号  油价id
 
     private Double rc_oil_price; //油品单价
 
@@ -35,6 +35,10 @@ public class Records_consumption {
     private Date rc_datetime;//	消费时间
 
     private String rc_Date_str; //消费时间
+
+
+    private Integer rc_type;  //消费类型
+
 
     private Double rc_actual_amount;//	应收金额
 
@@ -52,15 +56,22 @@ public class Records_consumption {
 
     private Site site;   //站点对象
 
-    private Integer rc_activity;  //活动主键
 
-    private Activity activity;  //活动
 
-    private Integer rc_coupon;  //优惠券主键
 
-    private Coupon coupon;  //优惠卷
+
+    private Double rc_activity;  //活动优惠金额
+
+    private Double rc_coupon;  //优惠券优惠金额
+
+    private Double rc_integral;  //积分抵扣金额
+
+    private Double rc_member;  //会员优惠金额
+
 
     private Integer rc_user_id;  //打印员id
+
+    private User user;
 
     private String rc_number; //单号
 

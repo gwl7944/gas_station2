@@ -345,7 +345,7 @@ public class UserController {
      * 新增图片
      */
     @PostMapping("/user/addProductPicture")
-    public JSON addProductPicture(@RequestBody Product_Picture productPicture){
+    public JSON addProductPicture(@RequestBody Product_picture productPicture){
         int i = userService.insertProductPicture(productPicture);
         if (i>0){
             return ResultData.getResponseData(i,ResultCode.INSERT_SUCCESS);
@@ -360,7 +360,7 @@ public class UserController {
     @GetMapping("/user/getProductPicture/{ppe_type}/{ppe_siteid}")
     public JSON getProductPicture(@PathVariable("ppe_type") Integer ppe_type,@PathVariable("ppe_siteid") Integer ppe_siteid,@Param("currentpage") Integer currentpage, @Param("currentnumber") Integer currentnumber){
 
-        Page<Product_Picture> productPicturePage = userService.findProductPicture(ppe_type,ppe_siteid,currentpage,currentnumber);
+        Page<Product_picture> productPicturePage = userService.findProductPicture(ppe_type,ppe_siteid,currentpage,currentnumber);
 
         if (productPicturePage!=null){
             return ResultData.getResponseData(productPicturePage,ResultCode.QUERY_SUCCESS);

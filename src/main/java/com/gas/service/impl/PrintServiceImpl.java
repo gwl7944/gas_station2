@@ -55,15 +55,15 @@ public class PrintServiceImpl implements PrintService {
         recordsConsumption.setOilPrice(oilPrice);
 
         //查询活动信息
-        if (recordsConsumption.getRc_activity() != null) {
+        /*if (recordsConsumption.getRc_activity() != null) {
             Activity activity = activityDao.findActivityById(recordsConsumption.getRc_activity());
             recordsConsumption.setActivity(activity);
-        }
+        }*/
         //查询优惠卷信息
-        if (recordsConsumption.getRc_coupon() != null) {
+       /* if (recordsConsumption.getRc_coupon() != null) {
             Coupon coupon = couponDao.findCouponById(recordsConsumption.getRc_coupon());
             recordsConsumption.setCoupon(coupon);
-        }
+        }*/
 
         return recordsConsumption;
     }

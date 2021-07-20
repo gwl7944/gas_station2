@@ -50,12 +50,12 @@ public class WechatUserController {
     AuthorityService authorityService;
 
     /**
-     * 根据AppId查询站点
+     * 根据AppId查询站点  重复
      */
     @PostMapping("/WechatUserController/getSiteByAppId")
     public JSON getSiteByAppId(@ModelAttribute Site site) {
 
-        Site site1 = wechatUsersService.findSiteByAppId(site);
+        Site site1 = wechatUsersService.findSiteByAppId(site.getSite_appid());
         if (site1 != null) {
             return ResultData.getResponseData(site1, ResultCode.QUERY_SUCCESS);
         }
@@ -66,9 +66,9 @@ public class WechatUserController {
     /**
      * 获取站点信息
      * */
-    @PostMapping("/WechatUserController/getSite")
-    public JSON getSite(@ModelAttribute Site site) {
-        Site site1 = wechatUsersService.findSiteByAppId(site);
+    @GetMapping("/WechatUserController/getSite/{site_appid}")
+    public JSON getSite(@PathVariable("site_appid") String site_appid) {
+        Site site1 = wechatUsersService.findSiteByAppId(site_appid);
         if (site1 != null) {
             return ResultData.getResponseData(site1, ResultCode.QUERY_SUCCESS);
         }
@@ -461,6 +461,16 @@ public class WechatUserController {
     /**------------------------------------------ 2.0 新增 ----------------------------------------------*/
 
     /**
+     * 查询轮播图
+     * @param cal_id 轮播位id
+     * @param ppe_siteid 门店ID
+     * */
+    @GetMapping("/WechatUserController/findCarouselByCal_id/{cal_id}/{ppe_siteid}")
+    public JSON findCarouselByCal_id(@PathVariable("cal_id") Integer cal_id,@PathVariable("ppe_siteid") Integer ppe_siteid){
+        return ResultData.getResponseData(wechatUsersService.getCarouselByCal_id(cal_id,ppe_siteid), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
      * 查询全部会员权益  站点
      * */
     @GetMapping("/WechatUserController/getAllMembership_rules/{site_id}")
@@ -527,6 +537,14 @@ public class WechatUserController {
     @PostMapping("/WechatUserController/insertPointegers_details")
     public JSON insertPointegers_details(Pointegers_details pointegers_details){
         return  ResultData.getResponseData(wechatUsersService.insertPointegers_details(pointegers_details), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 查询用户消费记录
+     * */
+    @GetMapping("/WechatUserController/findRecords_consumptionByRc_wu_id2/{rc_wu_id}/{rc_type}")
+    public JSON findRecords_consumptionByRc_wu_id2(@PathVariable("rc_wu_id") Integer rc_wu_id,@PathVariable("rc_type") Integer rc_type){
+        return  ResultData.getResponseData(wechatUsersService.getRecords_consumptionByRc_wu_id2(rc_wu_id,rc_type), ResultCode.QUERY_SUCCESS);
     }
 
 }

@@ -35,7 +35,7 @@ public interface WechatUsersDao {
     /**
      * 查询用户优惠券数量
      * */
-    Integer findWci_numberByWci_wu_id(Integer wci_wu_id);
+    Integer findWci_numberByWci_wu_id(Integer ucs_wu_id);
 
     /**
      * 查询用户优惠券列表
@@ -100,7 +100,7 @@ public interface WechatUsersDao {
     /**
      * 查询站点
      * */
-    Site findSiteByAppId(Site site);
+    Site findSiteByAppId(String site_appid);
 
     /**
      * 查询活动
@@ -184,6 +184,11 @@ public interface WechatUsersDao {
 
     /**-------------------------------- 2.0 新增 ------------------------------------------------*/
 
+    /**
+     * 查询轮播图
+     * */
+    Carousel findCarouselByCal_id(Integer cal_id,Integer ppe_siteid);
+
 
     /**
      * 根据ID 查询会员等级
@@ -241,6 +246,13 @@ public interface WechatUsersDao {
      * 查询门店积分规则 (消费)
      * */
     Integeregral_rule findIntegeregral_ruleByLr_siteid(Integer lr_siteid);
+
+    /**
+     * 查询用户消费记录
+     * */
+    List<Records_consumption> findRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type);
+
+
 
 
 

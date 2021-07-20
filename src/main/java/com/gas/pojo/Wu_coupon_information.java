@@ -26,11 +26,11 @@ public class Wu_coupon_information {
 
     private Wechat_users wechat_users;  //微信用户对象
 
-    private Integer wci_coupon_type;//	优惠券外键
+    private Integer wci_coupon_id;//	优惠券外键
 
     private Coupon coupon;   //优惠券对象
 
-    private Integer wci_number;//	数量
+    private Integer wci_state;  //状态
 
 
 }

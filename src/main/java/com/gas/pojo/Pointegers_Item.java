@@ -36,5 +36,5 @@ public class Pointegers_Item {
 
     private Integer pim_del;//	删除
 
-    private List<Product_Picture> pictureList;  //商品图片
+    private List<Product_picture> pictureList;  //商品图片
 }

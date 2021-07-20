@@ -1,7 +1,7 @@
 package com.gas.dao;
 
 import com.gas.pojo.Carousel;
-import com.gas.pojo.Product_Picture;
+import com.gas.pojo.Product_picture;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,12 +19,12 @@ public interface PictureDao {
     /**
      * 新增图片
      */
-    int insertProductPicture(Product_Picture productPicture);
+    int insertProductPicture(Product_picture productPicture);
 
     /**
      * 查询图片
      */
-    List<Product_Picture> findProductPicture(Integer ppe_type, Integer ppe_siteid);
+    List<Product_picture> findProductPicture(Integer ppe_type, Integer ppe_siteid);
 
     /**
      * 根据id查询轮播位

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ywj
@@ -30,6 +32,4 @@ public class Membership_level {
     private Integer ml_del;//	删除
 
     private Site site; //站点
-
-    private Membership_rules membershipRules;
 }

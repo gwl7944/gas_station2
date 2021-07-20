@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ywj
@@ -24,4 +26,6 @@ public class Carousel {
     private String cal_name;//	名称
 
     private String cal_describe;//	描述
+
+    private List<Product_picture> product_pictureList;  //图片集合
 }
