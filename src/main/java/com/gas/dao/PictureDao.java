@@ -41,5 +41,13 @@ public interface PictureDao {
      */
     int deleteProductPictureById(Integer ppe_id);
 
+    /**
+     * 更新商品默认
+     */
+    int updatePictureDefault(Integer pim_id);
 
+    /**
+     * 根据商品id查询图片
+     */
+    List<Product_picture> findProductPictureByPpePimId(Integer pim_id);
 }

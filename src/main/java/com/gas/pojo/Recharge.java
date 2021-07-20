@@ -23,7 +23,7 @@ public class Recharge {
 
     private Integer rech_quota;    //充值额度
 
-    private Integer rech_Integeregral_value;    //积分值
+    private Integer rech_Integral_value;  //积分值
 
     private Integer rech_balance_value;    //余额值
 

@@ -130,4 +130,24 @@ public interface UserService {
      * 删除图片
      */
     int deleteProductPicture(Integer ppe_id, String ppe_url);
+
+    /**
+     * 新增充值金额信息
+     */
+    int insertRecharge(Recharge recharge);
+
+    /**
+     * 更新充值金额信息
+     */
+    int updateRecharge(Recharge recharge);
+
+    /**
+     * 查询充值金额信息
+     */
+    Page<Recharge> findRecharge(Integer rech_site_id, Integer currentpage, Integer currentnumber);
+
+    /**
+     * 删除充值金额信息
+     */
+    int deleteRecharge(Integer rech_id);
 }

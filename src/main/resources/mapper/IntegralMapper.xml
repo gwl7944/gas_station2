@@ -3,12 +3,40 @@
 <mapper namespace="com.gas.dao.IntegralDao">
 
     <!-- 新增积分商品 -->
-    <insert id="insertIntegralProduct" parameterType="Pointegers_Item" useGeneratedKeys="true" keyProperty="pim_id">
+    <insert id="insertIntegralProduct" parameterType="Pointegers_item" useGeneratedKeys="true" keyProperty="pim_id">
         insert into pointegers_item(pim_name,pim_describe,pim_poIntegers_number,pim_default_picture,pim_stock,pim_site_id,pim_state,pim_del)
         values (#{pim_name},#{pim_describe},#{pim_poIntegers_number},#{pim_default_picture},#{pim_stock},#{pim_site_id},1,1)
     </insert>
     <!-- 修改积分商品基本信息 -->
-    <update id="updateIntegralProduct" parameterType="Pointegers_Item">
-        update
+    <update id="updateIntegralProduct" parameterType="Pointegers_item">
+        update pointegers_item
+        <set>
+            <if test="pim_name!=null and pim_name!=''">
+                pim_name =#{pim_name},
+            </if>
+            <if test="pim_describe!=null and pim_describe!=''">
+                pim_describe =#{pim_describe},
+            </if>
+            <if test="pim_poIntegers_number!=null">
+                pim_poIntegers_number =#{pim_poIntegers_number},
+            </if>
+            <if test="pim_stock!=null">
+                pim_stock =#{pim_stock},
+            </if>
+            <if test="pim_state!=null">
+                pim_state =#{pim_state}
+            </if>
+        </set> where pim_id =#{pim_id}
     </update>
+
+    <!-- 查询积分商品 -->
+    <select id="findIntegralProduct" parameterType="Pointegers_item" resultType="Pointegers_item">
+        select * from pointegers_item where pim_del =1
+        <if test="pim_name !=null and pim_name!=''">
+           and pim_name = #{pim_name}
+        </if>
+        <if test="pim_site_id !=null and pim_site_id!=0">
+            and pim_site_id = #{pim_site_id}
+        </if>
+    </select>
 </mapper>

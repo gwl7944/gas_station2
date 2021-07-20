@@ -66,9 +66,9 @@ public class WechatUserController {
     /**
      * 获取站点信息
      * */
-    @GetMapping("/WechatUserController/getSite/{site_appid}")
-    public JSON getSite(@PathVariable("site_appid") String site_appid) {
-        Site site1 = wechatUsersService.findSiteByAppId(site_appid);
+    @PostMapping("/WechatUserController/getSite")
+    public JSON getSite(@ModelAttribute Site site) {
+        Site site1 = wechatUsersService.findSiteByAppId(site.getSite_appid());
         if (site1 != null) {
             return ResultData.getResponseData(site1, ResultCode.QUERY_SUCCESS);
         }
@@ -99,6 +99,7 @@ public class WechatUserController {
         System.out.println(open.toString());
 
         Map<String, String> map = WeChatPushUtil.weChatGetOpenid(open);
+        System.out.println("map>>"+map);
         if (map != null && !"".equals(map)) {
             return ResultData.getResponseData(map, ResultCode.QUERY_SUCCESS);
         } else {

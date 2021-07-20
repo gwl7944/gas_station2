@@ -3,14 +3,18 @@ package com.gas.service.impl;
 import com.gas.dao.IntegralDao;
 import com.gas.dao.PictureDao;
 import com.gas.pojo.Pointegers_item;
+import com.gas.pojo.Page;
 import com.gas.pojo.Product_picture;
 import com.gas.service.IntegralService;
 import com.gas.util.OOS_Util;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,6 +56,9 @@ public class IntegralServiceImpl implements IntegralService {
                     if (picture.getPpe_id()==null){
                         //System.out.println("picture》》》"+picture);
                         picture.setPpe_pim_id(pointegersItem.getPim_id());
+                        if (picture.getPpe_default()==1){
+                            i = pictureDao.updatePictureDefault(pointegersItem.getPim_id());
+                        }
                         i = pictureDao.insertProductPicture(picture);
                     }else {
                         //删除
@@ -72,6 +79,25 @@ public class IntegralServiceImpl implements IntegralService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();  //失败回滚
             return 0;
         }
+    }
+
+    @Override
+    public Page<Pointegers_item> findIntegralProduct(Pointegers_item pointegersItem, Integer currentpage, Integer currentnumber) {
+
+        Page<Pointegers_item> page = new Page<>();
+        PageHelper.startPage(currentpage, currentnumber);
+        List<Pointegers_item> pointegers_items = integralDao.findIntegralProduct(pointegersItem);
+        System.out.println("pointegers_items>>"+pointegers_items);
+        for (Pointegers_item pointegers_item : pointegers_items) {
+                pointegers_item.setPictureList(pictureDao.findProductPictureByPpePimId(pointegers_item.getPim_id()));
+        }
+        PageInfo<Pointegers_item> info = new PageInfo<>(pointegers_items);
+        page.setCurrentnumber(info.getPageNum());
+        page.setCurrentpage(currentpage);
+        page.setPagecount(info.getPages());
+        page.setTotalnumber((int) info.getTotal());
+        page.setDatalist(info.getList());
+        return page;
     }
 
 

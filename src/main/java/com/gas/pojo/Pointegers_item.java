@@ -38,3 +38,6 @@ public class Pointegers_item {
 
     private List<Product_picture> pictureList;  //商品图片
 }
+
+
+

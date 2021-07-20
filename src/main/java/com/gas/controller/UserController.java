@@ -391,4 +391,56 @@ public class UserController {
         }
         return ResultData.getResponseData(i,ResultCode.DELETE_ERROR);
     }
+
+    /*---------------------------   充值金额 2.0新增  ------------------------------*/
+
+    /**
+     * 充值金额新增
+     */
+    @PostMapping("/user/addRecharge")
+    public JSON addRecharge(@RequestBody Recharge recharge){
+        int i = userService.insertRecharge(recharge);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.INSERT_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
+    }
+
+    /**
+     * 充值金额修改
+     */
+    @PostMapping("/user/editRecharge")
+    public JSON editRecharge(@RequestBody Recharge recharge){
+        int i = userService.updateRecharge(recharge);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
+
+    /**
+     * 查询充值金额信息
+     */
+    @GetMapping("/user/getRecharge/{rech_site_id}")
+    public JSON getRecharge(@PathVariable("rech_site_id") Integer rech_site_id,@Param("currentpage") Integer currentpage, @Param("currentnumber") Integer currentnumber){
+
+        Page<Recharge> rechargePage = userService.findRecharge(rech_site_id,currentpage,currentnumber);
+
+        if (rechargePage!=null){
+            return ResultData.getResponseData(rechargePage,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(rechargePage,ResultCode.QUERY_ERROR);
+    }
+
+    /**
+     * 删除充值信息
+     */
+    @DeleteMapping("/user/recharge/{rech_id}")
+    public JSON recharge(@PathVariable("rech_id") Integer rech_id){
+        int i = userService.deleteRecharge(rech_id);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.DELETE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.DELETE_ERROR);
+    }
 }

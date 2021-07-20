@@ -41,6 +41,10 @@ public class UserServiceImpl implements UserService {
     MembershipLevelDao membershipLevelDao;
     @Resource
     PictureDao pictureDao;
+    @Resource
+    RechargeDao rechargeDao;
+    @Resource
+    CouponDao couponDao;
 
     @Override
     public User login(User user) {
@@ -381,6 +385,41 @@ public class UserServiceImpl implements UserService {
             }
         }
         return i;
+    }
+
+    @Override
+    public int insertRecharge(Recharge recharge) {
+
+        return rechargeDao.insertRecharge(recharge);
+    }
+
+    @Override
+    public int updateRecharge(Recharge recharge) {
+        return rechargeDao.updateRecharge(recharge);
+    }
+
+    @Override
+    public Page<Recharge> findRecharge(Integer rech_site_id, Integer currentpage, Integer currentnumber) {
+
+        Page<Recharge> page = new Page<>();
+        PageHelper.startPage(currentpage, currentnumber);
+        List<Recharge> recharges = rechargeDao.findRecharge(rech_site_id);
+        for (Recharge recharge : recharges) {
+            recharge.setSite(siteDao.findSiteById(recharge.getRech_site_id()));
+            recharge.setCoupon(couponDao.findCouponById(recharge.getRech_coupons_id()));
+        }
+        PageInfo<Recharge> info = new PageInfo<>(recharges);
+        page.setCurrentnumber(info.getPageNum());
+        page.setCurrentpage(currentpage);
+        page.setPagecount(info.getPages());
+        page.setTotalnumber((int) info.getTotal());
+        page.setDatalist(info.getList());
+        return page;
+    }
+
+    @Override
+    public int deleteRecharge(Integer rech_id) {
+        return rechargeDao.deleteRecharge(rech_id);
     }
 
 

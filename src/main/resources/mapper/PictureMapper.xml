@@ -3,12 +3,12 @@
 <mapper namespace="com.gas.dao.PictureDao">
 
     <!-- 新增图片 -->
-    <insert id="insertProductPicture" parameterType="Product_Picture">
+    <insert id="insertProductPicture" parameterType="Product_picture">
         insert into product_picture(ppe_type,ppe_url,ppe_pim_id,ppe_carousel_id,ppe_siteid,ppe_del,ppe_default) values (#{ppe_type},#{ppe_url},#{ppe_pim_id},#{ppe_carousel_id},#{ppe_siteid},1,#{ppe_default})
     </insert>
 
     <!-- 查询图片 -->
-    <select id="findProductPicture" parameterType="Integer" resultType="Product_Picture">
+    <select id="findProductPicture" parameterType="Integer" resultType="Product_picture">
         select * from product_picture where ppe_del =1
         <if test="ppe_type!=null">
             and ppe_type=#{ppe_type}
@@ -26,5 +26,20 @@
     <!-- 查询轮播位 -->
     <select id="findCarousel" resultType="Carousel">
         select * from carousel
+    </select>
+
+    <!-- 图片删除 -->
+    <update id="deleteProductPictureById" parameterType="Integer">
+        update product_picture set ppe_del=2 where ppe_id=#{ppe_id}
+    </update>
+
+    <!-- 更新商品默认 -->
+    <update id="updatePictureDefault" parameterType="Integer">
+        update product_picture set ppe_default=0 where ppe_type=1 and ppe_pim_id=#{pim_id}
+    </update>
+
+    <!-- 根据商品id查询图片 -->
+    <select id="findProductPictureByPpePimId" parameterType="Integer" resultType="Product_picture">
+        select * from product_picture where ppe_pim_id = #{pim_id}
     </select>
 </mapper>

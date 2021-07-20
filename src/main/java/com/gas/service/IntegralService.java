@@ -1,5 +1,6 @@
 package com.gas.service;
 
+import com.gas.pojo.Page;
 import com.gas.pojo.Pointegers_item;
 
 /**
@@ -18,4 +19,6 @@ public interface IntegralService {
      * 修改积分商品
      */
     Integer  updateIntegralProduct(Pointegers_item pointegersItem);
+
+    Page<Pointegers_item> findIntegralProduct(Pointegers_item pointegersItem, Integer currentpage, Integer currentnumber);
 }

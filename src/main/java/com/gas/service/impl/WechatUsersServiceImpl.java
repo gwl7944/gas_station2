@@ -62,7 +62,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 Membership_level membership_levelById = wechatUsersDao.findMembership_levelById(wechat_usersByOpenId.getWu_ml_id());
                 //查询会员特权信息
                 Membership_rules membership_rulesByMl_id = wechatUsersDao.findMembership_rulesByMl_id(membership_levelById.getMl_id());
-                membership_levelById.setMembership_rules(membership_rulesByMl_id);
+                //membership_levelById.setMembership_rules(membership_rulesByMl_id);
                 wechat_usersByOpenId.setMembership_level(membership_levelById);
             }
         }

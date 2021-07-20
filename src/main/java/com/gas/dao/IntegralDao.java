@@ -3,6 +3,8 @@ package com.gas.dao;
 import com.gas.pojo.Pointegers_item;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ywj
@@ -22,4 +24,9 @@ public interface IntegralDao {
      * 修改积分商品
      */
     int updateIntegralProduct(Pointegers_item pointegersItem);
+
+    /**
+     * 查询积分商品
+     */
+    List<Pointegers_item> findIntegralProduct(Pointegers_item pointegersItem);
 }

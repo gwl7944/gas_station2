@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gas.dao.RechargeDao">
+
+    <!-- 新增充值金额信息 -->
+    <insert id="insertRecharge" parameterType="Recharge">
+        insert into recharge(rech_quota,rech_Integral_value,rech_balance_value,rech_coupons_id,rech_site_id,rech_del)
+        values (#{rech_quota},#{rech_Integral_value},#{rech_balance_value},#{rech_coupons_id},#{rech_site_id},1)
+    </insert>
+
+    <!-- 修改充值金额信息 -->
+    <update id="updateRecharge" parameterType="Recharge">
+        update recharge
+        <set>
+            <if test="rech_quota!=null">
+                rech_quota =#{rech_quota},
+            </if>
+            <if test="rech_Integral_value!=null">
+                rech_Integral_value =#{rech_Integral_value},
+            </if>
+            <if test="rech_balance_value!=null">
+                rech_balance_value =#{rech_balance_value},
+            </if>
+            <if test="rech_coupons_id!=null">
+                rech_coupons_id =#{rech_coupons_id}
+            </if>
+        </set> where rech_id=#{rech_id}
+    </update>
+
+    <!-- 查询充值金额信息 -->
+    <select id="findRecharge" parameterType="Integer" resultType="Recharge">
+        select * from recharge where rech_del =1 and rech_site_id=#{rech_site_id}
+    </select>
+
+    <!-- 删除充值金额信息 -->
+    <update id="deleteRecharge" parameterType="Integer">
+        update recharge set rech_del =2 where rech_id = #{rech_id}
+    </update>
+</mapper>
