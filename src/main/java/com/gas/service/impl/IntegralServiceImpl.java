@@ -48,7 +48,7 @@ public class IntegralServiceImpl implements IntegralService {
         try {
             int i = integralDao.updateIntegralProduct(pointegersItem);
             if (pointegersItem.getPictureList().size()>0){
-                for (Product_Picture picture : pointegersItem.getPictureList()) {
+                for (Product_picture picture : pointegersItem.getPictureList()) {
                     if (picture.getPpe_id()==null){
                         //System.out.println("picture》》》"+picture);
                         picture.setPpe_pim_id(pointegersItem.getPim_id());
