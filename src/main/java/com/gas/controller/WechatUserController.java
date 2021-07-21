@@ -391,13 +391,11 @@ public class WechatUserController {
     /**
      * 查询会员日所有油价
      */
-    @PostMapping("/WechatUserController/findMemberDayOilPrice")
-    public JSON findMemberDayOilPrice(@RequestParam("op_sitecode") String op_sitecode) {
+    @GetMapping("/WechatUserController/findMemberDayOilPrice/{op_sitecode}")
+    public JSON findMemberDayOilPrice(@PathVariable("op_sitecode") String op_sitecode) {
 
         Calendar c = Calendar.getInstance();
-
         c.setTime(new Date(System.currentTimeMillis()));
-
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
 
         List<Oil_price> oil_prices = wechatUsersService.findMemberDayOilPrice(op_sitecode, dayOfWeek);
@@ -580,11 +578,24 @@ public class WechatUserController {
     /**
      * 点击抽奖
      * @param pl_site_id 门店主键
+     * @param pim_poIntegers_number 积分值
      * */
-    @GetMapping("/WechatUserController/getLuck_Draw/{pl_site_id}")
-    public JSON getLuck_Draw(@PathVariable("pl_site_id") Integer pl_site_id){
-        return  ResultData.getResponseData(wechatUsersService.getLuck_Draw(pl_site_id), ResultCode.QUERY_SUCCESS);
+    @GetMapping("/WechatUserController/getLuck_Draw/{pl_site_id}/{pim_poIntegers_number}/{wu_id}")
+    public JSON getLuck_Draw(@PathVariable("pl_site_id") Integer pl_site_id,
+                             @PathVariable("pim_poIntegers_number") Integer pim_poIntegers_number,
+                             @PathVariable("wu_id") Integer wu_id){
+        return  ResultData.getResponseData(wechatUsersService.getLuck_Draw(pl_site_id,pim_poIntegers_number,wu_id), ResultCode.QUERY_SUCCESS);
     }
+
+    /**
+     * 拉取全部油枪信息
+     * */
+    @GetMapping("/WechatUserController/findAllOilGun/{oil_gun_sitecode}/{oil_op_id}")
+    public JSON findAllOilGun(@PathVariable("oil_gun_sitecode") Integer oil_gun_sitecode,@PathVariable("oil_op_id") Integer oil_op_id){
+        return  ResultData.getResponseData(wechatUsersService.getAllOilGun(oil_gun_sitecode,oil_op_id), ResultCode.QUERY_SUCCESS);
+    }
+
+
 
 
 

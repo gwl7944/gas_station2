@@ -195,8 +195,10 @@
         update wu_coupon_information set wci_number=wci_number+#{wci_number} where wci_wu_id=#{wci_wu_id} and wci_coupon_type=#{wci_coupon_type}
     </update>
 
+    <!--新增用户优惠券-->
     <insert id="insertWCI" parameterType="Wu_coupon_information">
-        insert into wu_coupon_information (wci_wu_id,wci_coupon_type,wci_number) value(#{wci_wu_id},#{wci_coupon_type},#{wci_number})
+        insert into wu_coupon_information (wci_coupon_id,wci_wu_id,wci_state)
+        value(#{wci_coupon_id},#{wci_wu_id},1)
     </insert>
 
     <update id="updateWechat_usersWu_current_points" parameterType="Wechat_users">
@@ -207,8 +209,9 @@
         update coupon set coupon_number=coupon_number+#{coupon_number} where coupon_id=#{coupon_id}
     </update>
 
+    <!--查询油价价格-->
     <select id="findAllOil_price" parameterType="String" resultType="Oil_price">
-        select * from oil_price where op_del=1 and op_sitecode=(select site_id from site where site_appid=#{op_sitecode})
+        select * from oil_price where op_del=1 and op_sitecode=#{op_sitecode}
     </select>
 
     <!--根据AppID 查询站点 -->
@@ -223,7 +226,8 @@
 
     <!-- 更新用户充值信息 -->
     <update id="updateWechatTopUpInfo" parameterType="Wechat_users">
-        update wechat_users set wu_integral=wu_integral+#{wu_integral},wu_current_points=wu_current_points+#{wu_current_points},wu_remainder=wu_remainder+#{wu_remainder},wu_membership_card_growth=wu_membership_card_growth+#{wu_membership_card_growth}
+        update wechat_users set wu_integral=wu_integral+#{wu_integral},wu_current_points=wu_current_points+#{wu_current_points},
+        wu_remainder=wu_remainder+#{wu_remainder},wu_membership_card_growth=wu_membership_card_growth+#{wu_membership_card_growth}
         where wu_id=#{wu_id}
     </update>
 
@@ -352,6 +356,11 @@
         select * from development_welfare where dwe_siteid=#{dwe_siteid}
     </select>
 
+    <!--变更用户信息 成长值-->
+    <update id="updateWechat_usersByWu_membership_card_growth" parameterType="Integer">
+        update wechat_users set wu_membership_card_growth = wu_membership_card_growth+#{param2} where wu_id=#{param1}
+    </update>
+
     <!--查询用户会员成长值变动记录-->
     <select id="findGrowthvalue_recordByGvr_wu_id" parameterType="Integer" resultType="Growthvalue_record">
         select * from growthvalue_record where gvr_wu_id=#{gvr_wu_id}
@@ -359,13 +368,20 @@
 
     <!--添加会员成长值变更记录-->
     <insert id="insertGrowthvalue_record" parameterType="Growthvalue_record">
-        insert into growthvalue_record (gvr_valuenum,gvr_date,gvr_type,gvr_wu_id) values(#{gvr_valuenum},now(),#{gvr_type},#{gvr_wu_id})
+        insert into growthvalue_record (gvr_valuenum,gvr_date,gvr_type,gvr_wu_id)
+        values(#{gvr_valuenum},now(),#{gvr_type},#{gvr_wu_id})
     </insert>
 
     <!--查询全部充值额度-->
     <select id="findAllRecharge" parameterType="Integer" resultType="Recharge">
         select * from recharge where rech_site_id=#{rech_site_id} order by rech_quota asc
     </select>
+
+    <!--添加充值信息-->
+    <insert id="insertRecharge_information" parameterType="Records_consumption">
+        insert into records_consumption (rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,)
+        values (NOW(),1,#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode})
+    </insert>
 
     <!--查询用户的积分详情-->
     <select id="findPoIntegers_detailsByPds_wu_id" parameterType="Integer" resultType="Pointegers_details">
@@ -396,6 +412,11 @@
         </if>
     </select>
 
+    <!--变更用户余额信息-->
+    <update id="updateWechat_usersByWu_remainder" parameterType="Integer">
+        update wechat_users set wu_remainder=wu_remainder+#{param2} where wu_id=#{wu_id}
+    </update>
+
     <!--查询门店积分商品信息-->
     <select id="findAllPointegers_item" parameterType="Integer" resultMap="findAllPointegers_itemMap">
         select pp.*,pi.*
@@ -406,6 +427,11 @@
     <!--查询全部奖池奖品-->
     <select id="findAllPoints_lottery" resultType="Points_lottery">
         select * from points_lottery where pl_site_id=#{pl_site_id}
+    </select>
+
+    <!--拉取全部油枪信息-->
+    <select id="findAllOilGun" parameterType="Integer" resultType="OilGun">
+        select * from oil_gun where oil_gun_sitecode=#{param1} and oil_op_id=#{param2}
     </select>
 
 

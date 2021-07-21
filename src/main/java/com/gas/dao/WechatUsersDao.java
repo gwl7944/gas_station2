@@ -145,7 +145,6 @@ public interface WechatUsersDao {
      * */
     Records_consumption findRecordsByRcNum(String out_trade_no);
 
-
     /**
      * 查询全部会员日
      * */
@@ -218,6 +217,11 @@ public interface WechatUsersDao {
     Development_welfare findDevelopment_welfareById(Integer dwe_siteid);
 
     /**
+     * 变更用户信息 成长值
+     * */
+    Integer updateWechat_usersByWu_membership_card_growth(Integer wu_id,Integer wu_membership_card_growth);
+
+    /**
      * 查询用户会员成长值变动记录
      * */
     List<Growthvalue_record> findGrowthvalue_recordByGvr_wu_id(Integer gvr_wu_id);
@@ -233,6 +237,10 @@ public interface WechatUsersDao {
      * */
     List<Recharge> findAllRecharge(Integer rech_site_id);
 
+    /**
+     * 添加充值信息
+     * */
+    Integer insertRecharge_information(Records_consumption records_consumption);
 
     /**
      * 查询用户的积分详情
@@ -260,6 +268,11 @@ public interface WechatUsersDao {
     List<Records_consumption> findRecords_consumptionByRc_wu_id2(Integer rc_wu_id,Integer rc_type);
 
     /**
+     * 变更用户余额信息
+     * */
+    Integer updateWechat_usersByWu_remainder(Integer wu_id,Double wu_remainder);
+
+    /**
      * 查询门店积分商品信息
      * */
     List<Pointegers_item> findAllPointegers_item(Integer pim_site_id);
@@ -268,6 +281,11 @@ public interface WechatUsersDao {
      * 查询全部奖池奖品
      * */
     List<Points_lottery> findAllPoints_lottery(Integer pl_site_id);
+
+    /**
+     * 拉取全部油枪信息
+     * */
+    List<OilGun> findAllOilGun(Integer oil_gun_sitecode,Integer oil_op_id);
 
 
 

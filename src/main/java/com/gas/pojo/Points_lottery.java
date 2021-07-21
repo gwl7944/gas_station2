@@ -35,12 +35,6 @@ public class Points_lottery {
 
     private Integer pl_site_id;  //门店主键
 
-    /*---------------------------------------------------*/
 
-    /**
-     * 计算抽奖概率
-     * */
-    private Integer probability_value1;
 
-    private Integer probability_value2;
 }

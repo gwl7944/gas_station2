@@ -37,4 +37,5 @@ public class Recharge {
 
     private Integer rech_del;    //删除
 
+
 }

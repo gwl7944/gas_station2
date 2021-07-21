@@ -117,7 +117,7 @@ public interface WechatUsersService {
     Integer updateMember_day(Member_day member_day);
 
     /**
-     *
+     * 拉取油价
      */
     List<Oil_price> findMemberDayOilPrice(String op_sitecode,Integer med_weekday);
 
@@ -193,10 +193,15 @@ public interface WechatUsersService {
     /**
      * 点击抽奖
      * */
-    Integer getLuck_Draw(Integer pl_site_id);
+    Integer getLuck_Draw(Integer pl_site_id,Integer pim_poIntegers_number,Integer wu_id);
 
     /**
      * 充值成功
      * */
-    Integer Recharge_success(Records_consumption records_consumption);
+    Integer Recharge_success(Recharge recharge,Integer wu_id);
+
+    /**
+     * 拉取全部油枪信息
+     * */
+    List<OilGun> getAllOilGun(Integer oil_gun_sitecode,Integer oil_op_id);
 }

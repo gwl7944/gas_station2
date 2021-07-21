@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
@@ -530,6 +531,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         return wechatUsersDao.findRecords_consumptionByRc_wu_id2(rc_wu_id,rc_type);
     }
 
+
     @Override
     public List<Pointegers_item> getAllPointegers_item(Integer pim_site_id) {
         return wechatUsersDao.findAllPointegers_item(pim_site_id);
@@ -541,26 +543,130 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
     @Override
-    public Integer getLuck_Draw(Integer pl_site_id){
-        List<Points_lottery> allPoints_lottery = wechatUsersDao.findAllPoints_lottery(pl_site_id);
-        int a = 0;
-        int i = (int) (Math.random() * 100);
-        for (Points_lottery pl:allPoints_lottery){
-            if(i>=a && i<a + (int) (pl.getPl_probability() * 100)){
-                return pl.getPl_id();
-            }else {
-                a+=(int) (pl.getPl_probability() * 100);
-                continue;
+    @Transactional
+    public Integer getLuck_Draw(Integer pl_site_id,Integer pim_poIntegers_number,Integer wu_id){
+        try {
+            //扣除积分
+            Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(wu_id, -pim_poIntegers_number);
+            Pointegers_details pointegers_details = new Pointegers_details();
+            pointegers_details.setPds_type(3);pointegers_details.setPds_operation(2);
+            pointegers_details.setPds_project("积分抽奖");pointegers_details.setPds_num(pim_poIntegers_number);
+            pointegers_details.setPds_wu_id(wu_id);
+            Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
+
+            //抽奖
+            List<Points_lottery> allPoints_lottery = wechatUsersDao.findAllPoints_lottery(pl_site_id);
+            int a = 0;
+            Points_lottery pointsLottery = null;
+            int i = (int) (Math.random() * 100);
+            for (Points_lottery pl:allPoints_lottery){
+                if(i>=a && i<a + (int) (pl.getPl_probability() * 100)){
+                    pointsLottery = pl;
+                    break;
+                }else {
+                    a+=(int) (pl.getPl_probability() * 100);
+                    continue;
+                }
             }
+
+            //变更信息
+            if (pointsLottery!=null){
+                switch (pointsLottery.getPl_type()){
+                    //成长值
+                    case 1:
+                        wechatUsersDao.updateWechat_usersByWu_membership_card_growth(wu_id, pointsLottery.getPl_growth_value());
+                        Growthvalue_record growthvalue_record = new Growthvalue_record();
+                        growthvalue_record.setGvr_valuenum(pointsLottery.getPl_growth_value());
+                        growthvalue_record.setGvr_type(4);growthvalue_record.setGvr_wu_id(wu_id);
+                        wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+                        break;
+                    //优惠券
+                    case 2:
+                        Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
+                        wu_coupon_information.setWci_coupon_id(pointsLottery.getPl_coupon());
+                        wu_coupon_information.setWci_wu_id(wu_id);
+                        wechatUsersDao.insertWCI(wu_coupon_information);
+                        break;
+                    //余额
+                    case 3:
+                        wechatUsersDao.updateWechat_usersByWu_remainder(wu_id,pointsLottery.getPl_balance());
+                        Records_consumption records_consumption = new Records_consumption();
+                        records_consumption.setRc_amount_payable(pointsLottery.getPl_balance());
+                        records_consumption.setRc_actual_amount(pointsLottery.getPl_balance());
+                        records_consumption.setRc_wu_id(wu_id);
+                        records_consumption.setRc_sitecode(pl_site_id);
+                        wechatUsersDao.insertRecharge_information(records_consumption);
+                        break;
+                }
+                return 1;
+            }
+            return null;
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override
-    public Integer Recharge_success(Records_consumption records_consumption) {
+    @Transactional
+    public Integer Recharge_success(Recharge recharge,Integer wu_id) {
 
+        try {
+            //添加积分信息
+            if (recharge.getRech_Integral_value()!=null && recharge.getRech_Integral_value()!=0){
+                wechatUsersDao.updateWechat_usersByWu_current_points(wu_id,recharge.getRech_Integral_value());
+                Pointegers_details pointegers_details = new Pointegers_details();
+                pointegers_details.setPds_type(1);pointegers_details.setPds_operation(1);pointegers_details.setPds_project("充值赠送");
+                pointegers_details.setPds_num(recharge.getRech_Integral_value());
+                pointegers_details.setPds_wu_id(wu_id);
+                wechatUsersDao.insertPointegers_details(pointegers_details);
+            }
 
-        return null;
+            //添加优惠券信息
+            if (recharge.getRech_coupons_id()!=null && recharge.getRech_coupons_id()!=0){
+                Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
+                wu_coupon_information.setWci_coupon_id(recharge.getRech_coupons_id());
+                wu_coupon_information.setWci_wu_id(wu_id);
+                wechatUsersDao.insertWCI(wu_coupon_information);
+            }
+
+            //成长值变更
+            Membership_rules membership_rulesByMl_id = wechatUsersDao.findMembership_rulesByMl_id(userDao.findWcUserById(wu_id).getWu_ml_id());
+            wechatUsersDao.updateWechat_usersByWu_membership_card_growth(wu_id,(int) (recharge.getRech_quota()* membership_rulesByMl_id.getMr_recharge_growthvalue()));
+            Growthvalue_record growthvalue_record = new Growthvalue_record();
+            growthvalue_record.setGvr_valuenum((int) (recharge.getRech_quota()* membership_rulesByMl_id.getMr_recharge_growthvalue()));
+            growthvalue_record.setGvr_type(1);growthvalue_record.setGvr_wu_id(wu_id);
+            wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+
+            //变更用户余额信息
+            Records_consumption records_consumption = new Records_consumption();
+            //实收
+            records_consumption.setRc_amount_payable(Double.valueOf(recharge.getRech_quota()));
+            int a = recharge.getRech_quota();
+            if (recharge.getRech_balance_value()!=null && recharge.getRech_balance_value()!=0){
+                a += recharge.getRech_balance_value();
+                //应收
+                records_consumption.setRc_actual_amount(Double.valueOf(recharge.getRech_quota()+recharge.getRech_balance_value()));
+            }else {
+                records_consumption.setRc_actual_amount(Double.valueOf(recharge.getRech_quota()));
+            }
+            wechatUsersDao.updateWechat_usersByWu_remainder(wu_id,Double.valueOf(a));
+            records_consumption.setRc_wu_id(wu_id);records_consumption.setRc_sitecode(recharge.getRech_site_id());
+
+            //添加消费记录
+            wechatUsersDao.insertRecharge_information(records_consumption);
+
+            return 1;
+        }catch (Exception e){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return 0;
+        }
+    }
+
+    @Override
+    public List<OilGun> getAllOilGun(Integer oil_gun_sitecode, Integer oil_op_id) {
+        return wechatUsersDao.findAllOilGun(oil_gun_sitecode,oil_op_id);
     }
 
 
