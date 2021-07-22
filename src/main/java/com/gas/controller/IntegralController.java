@@ -1,14 +1,12 @@
 package com.gas.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.gas.pojo.Page;
-import com.gas.pojo.Pointegers_item;
-import com.gas.pojo.ResultCode;
-import com.gas.pojo.ResultData;
+import com.gas.pojo.*;
 import com.gas.service.IntegralService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,7 +58,43 @@ public class IntegralController {
         return ResultData.getResponseData(pointegersItemPage, ResultCode.SYS_SUCCESS);
     }
 
+    /*---------------------------  积分抽奖  2.0新增  ------------------------------*/
+    /**
+     * 新增积分抽奖
+     */
+    @PostMapping("/integral/addPointsLottery")
+    public JSON addPointsLottery(@RequestBody Points_lottery pointsLottery){
 
+        int i = integralService.insertPointsLottery(pointsLottery);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.INSERT_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
+    }
 
+    /**
+     * 修改积分抽奖
+     */
+    @PostMapping("/integral/editPointsLottery")
+    public JSON editPointsLottery(@RequestBody Points_lottery pointsLottery){
+
+        int i = integralService.updatePointsLottery(pointsLottery);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
+
+    /**
+     * 查询积分抽奖
+     */
+    @PostMapping("/integral/getPointsLottery")
+    public JSON getPointsLottery(@ModelAttribute Points_lottery pointsLottery){
+        List<Points_lottery> lotteryList = integralService.findPointsLottery(pointsLottery);
+        if (lotteryList.size()>0){
+            return ResultData.getResponseData(lotteryList,ResultCode.QUERY_SUCCESS);
+        }
+        return ResultData.getResponseData(lotteryList,ResultCode.QUERY_ERROR);
+    }
 
 }

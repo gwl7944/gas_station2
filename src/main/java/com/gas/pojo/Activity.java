@@ -36,7 +36,7 @@ public class Activity {
 
     private Double activity_discount_value;  //折扣值
 
-    private Integer activity_sitecode;  //站点编号
+    private Integer activity_siteid;  //站点编号
 
     private Site site;   //站点对象
 

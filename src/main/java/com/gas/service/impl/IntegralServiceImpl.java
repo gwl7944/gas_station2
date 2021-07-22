@@ -1,9 +1,12 @@
 package com.gas.service.impl;
 
+import com.gas.dao.CouponDao;
 import com.gas.dao.IntegralDao;
 import com.gas.dao.PictureDao;
+import com.gas.dao.SiteDao;
 import com.gas.pojo.Pointegers_item;
 import com.gas.pojo.Page;
+import com.gas.pojo.Points_lottery;
 import com.gas.pojo.Product_picture;
 import com.gas.service.IntegralService;
 import com.gas.util.OOS_Util;
@@ -30,6 +33,10 @@ public class IntegralServiceImpl implements IntegralService {
     IntegralDao integralDao;
     @Resource
     PictureDao pictureDao;
+    @Resource
+    CouponDao couponDao;
+    @Resource
+    SiteDao siteDao;
 
     @Override
     @Transactional
@@ -100,5 +107,28 @@ public class IntegralServiceImpl implements IntegralService {
         return page;
     }
 
+    @Override
+    public int insertPointsLottery(Points_lottery pointsLottery) {
+
+        return integralDao.insertPointsLottery(pointsLottery);
+    }
+
+    @Override
+    public int updatePointsLottery(Points_lottery pointsLottery) {
+        return integralDao.updatePointsLottery(pointsLottery);
+    }
+
+    @Override
+    public List<Points_lottery> findPointsLottery(Points_lottery pointsLottery) {
+
+        List<Points_lottery> lotteryList = integralDao.findPointsLottery(pointsLottery);
+        for (Points_lottery points_lottery : lotteryList) {
+            if (points_lottery.getPl_type()==2){
+                points_lottery.setCoupon(couponDao.findCouponById(points_lottery.getPl_coupon()));
+            }
+            points_lottery.setSite(siteDao.findSiteById(points_lottery.getPl_site_id()));
+        }
+        return lotteryList;
+    }
 
 }

@@ -4,10 +4,10 @@
 
     <!-- 新增活动 -->
     <insert id="insertActivity" parameterType="com.gas.pojo.Activity">
-        insert into activity(activity_name,activity_start_date,activity_end_date,activity_discount_value,
-        activity_sitecode,activity_state,activity_remarks,activity_del,activity_condition)
-        values (#{activity_name},#{activity_start_date},#{activity_end_date},#{activity_discount_value},
-        #{activity_sitecode},1,#{activity_remarks},1,#{activity_condition})
+        insert into activity(activity_name,activity_start_date,activity_end_date,activity_discount_value,activity_full_impairment,
+        activity_siteid,activity_state,activity_del,activity_condition)
+        values (#{activity_name},#{activity_start_date},#{activity_end_date},#{activity_discount_value},#{activity_full_impairment},
+        #{activity_siteid},1,1,#{activity_condition})
     </insert>
 
     <!-- 修改活动 -->
@@ -22,14 +22,14 @@
             <if test="activity_discount_value!=null">
                 activity_discount_value=#{activity_discount_value},
             </if>
-            <if test="activity_sitecode!=0 and activity_sitecode!=null">
-                activity_sitecode=#{activity_sitecode},
+            <if test="activity_siteid!=0 and activity_siteid!=null">
+                activity_siteid=#{activity_siteid},
             </if>
             <if test="activity_state!=0 and activity_state!=null">
                 activity_state=#{activity_state},
             </if>
-            <if test="activity_remarks!='' and activity_remarks!=null">
-                activity_remarks=#{activity_remarks},
+            <if test="activity_full_impairment!=null">
+                activity_full_impairment=#{activity_full_impairment},
             </if>
             <if test="activity_condition!=0 and activity_condition!=null">
                 activity_condition=#{activity_condition}
@@ -41,8 +41,8 @@
     <!-- 查询当前站点下的所有活动 -->
     <select id="findAllActivityBySite" parameterType="com.gas.pojo.Activity" resultType="com.gas.pojo.Activity">
         select * from activity where activity_del=1
-        <if test="activity_sitecode!=0 and activity_sitecode!=null">
-            and activity_sitecode=#{activity_sitecode}
+        <if test="activity_siteid!=0 and activity_siteid!=null">
+            and activity_siteid=#{activity_siteid}
         </if>
         <if test="activity_name!=''and activity_name!=null">
             and activity_name=#{activity_name}

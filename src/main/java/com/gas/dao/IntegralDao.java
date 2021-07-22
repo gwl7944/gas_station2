@@ -1,6 +1,7 @@
 package com.gas.dao;
 
 import com.gas.pojo.Pointegers_item;
+import com.gas.pojo.Points_lottery;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.List;
  */
 @Mapper
 public interface IntegralDao {
+
+
 
     /**
      * 新增积分商品
@@ -29,4 +32,17 @@ public interface IntegralDao {
      * 查询积分商品
      */
     List<Pointegers_item> findIntegralProduct(Pointegers_item pointegersItem);
+
+    /**
+     * 新增积分抽奖
+     */
+    int insertPointsLottery(Points_lottery pointsLottery);
+    /**
+     * 更新积分抽奖
+     */
+    int updatePointsLottery(Points_lottery pointsLottery);
+    /**
+     * 查询积分抽奖
+     */
+    List<Points_lottery> findPointsLottery(Points_lottery pointsLottery);
 }

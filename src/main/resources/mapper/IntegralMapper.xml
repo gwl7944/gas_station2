@@ -4,8 +4,8 @@
 
     <!-- 新增积分商品 -->
     <insert id="insertIntegralProduct" parameterType="Pointegers_item" useGeneratedKeys="true" keyProperty="pim_id">
-        insert into pointegers_item(pim_name,pim_describe,pim_poIntegers_number,pim_default_picture,pim_stock,pim_site_id,pim_state,pim_del)
-        values (#{pim_name},#{pim_describe},#{pim_poIntegers_number},#{pim_default_picture},#{pim_stock},#{pim_site_id},1,1)
+        insert into pointegers_item(pim_name,pim_describe,pim_poIntegers_number,pim_stock,pim_site_id,pim_state,pim_del)
+        values (#{pim_name},#{pim_describe},#{pim_poIntegers_number},#{pim_stock},#{pim_site_id},1,1)
     </insert>
     <!-- 修改积分商品基本信息 -->
     <update id="updateIntegralProduct" parameterType="Pointegers_item">
@@ -38,5 +38,41 @@
         <if test="pim_site_id !=null and pim_site_id!=0">
             and pim_site_id = #{pim_site_id}
         </if>
+    </select>
+
+    <!-- 新增积分抽奖 -->
+    <insert id="insertPointsLottery" parameterType="Points_lottery">
+        insert into points_lottery(pl_name,pl_type,pl_probability,pl_growth_value,pl_coupon,pl_balance,pl_site_id)
+        values (#{pl_name},#{pl_type},#{pl_probability},#{pl_growth_value},#{pl_coupon},#{pl_balance},#{pl_site_id})
+    </insert>
+
+    <!-- 修改积分抽奖 -->
+    <update id="updatePointsLottery" parameterType="Points_lottery">
+        update points_lottery
+        <set>
+            <if test="pl_name!=null and pl_name!=null">
+                pl_name =#{pl_name},
+            </if>
+            <if test="pl_type!=null">
+                pl_type =#{pl_type},
+            </if>
+            <if test="pl_probability!=null">
+                pl_probability =#{pl_probability},
+            </if>
+            <if test="pl_growth_value!=null">
+                pl_growth_value =#{pl_growth_value},
+            </if>
+            <if test="pl_coupon!=null">
+                pl_coupon =#{pl_coupon},
+            </if>
+            <if test="pl_balance!=null">
+                pl_balance =#{pl_balance}
+            </if>
+        </set> where pl_id=#{pl_id}
+    </update>
+
+    <!-- 查询积分抽奖 -->
+    <select id="findPointsLottery" parameterType="Points_lottery" resultType="Points_lottery">
+        select * from points_lottery
     </select>
 </mapper>

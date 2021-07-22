@@ -19,7 +19,7 @@ import java.util.List;
  * User: ywj
  * Date: 2021/7/14
  * Time: 16:48
- * Description: No Description
+ * Description: 活动相关
  */
 @Service
 public class ActivityServiceImpl implements ActivityService {
@@ -75,7 +75,7 @@ public class ActivityServiceImpl implements ActivityService {
                 activity1.setActivity_end_date_str(DateTO.getStringDate(activity1.getActivity_end_date()));
             }
             //查询所属站点
-            Site site = siteDao.findSiteById(activity1.getActivity_sitecode());
+            Site site = siteDao.findSiteById(activity1.getActivity_siteid());
             activity1.setSite(site);
         }
         PageInfo<Activity> info = new PageInfo<>(activityList);

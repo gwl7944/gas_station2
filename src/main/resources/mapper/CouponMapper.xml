@@ -4,15 +4,15 @@
 
     <!-- 新增优惠卷 -->
     <insert id="insertCoupon" parameterType="com.gas.pojo.Coupon">
-        insert into coupon(coupon_name,coupon_describe,coupon_money,coupon_number,coupon_term_validity,coupon_enddate,coupon_threshold,coupon_sitecode,coupon_integralnum,coupon_state,coupon_del,coupon_remarks)
-        values(#{coupon_name},#{coupon_describe},#{coupon_money},#{coupon_number},#{coupon_term_validity},#{coupon_enddate},#{coupon_threshold},#{coupon_sitecode},#{coupon_integralnum},1,1,#{coupon_remarks})
+        insert into coupon(coupon_name,coupon_type,coupon_discount,coupon_money,coupon_number,coupon_term_validity,coupon_enddate,coupon_threshold,coupon_site_id,coupon_exchange_code,coupon_state,coupon_del)
+        values(#{coupon_name},#{coupon_type},#{coupon_discount},#{coupon_money},#{coupon_number},#{coupon_term_validity},#{coupon_enddate},#{coupon_threshold},#{coupon_site_id},#{coupon_exchange_code},1,1)
     </insert>
 
     <!-- 查询当前站点下的所有优惠卷 -->
     <select id="findAllCouponBySite" parameterType="com.gas.pojo.Coupon" resultType="com.gas.pojo.Coupon">
         select * from coupon where coupon_del=1
-        <if test="coupon_sitecode!=0 and coupon_sitecode!=null">
-            and coupon_sitecode =#{coupon_sitecode}
+        <if test=" coupon_site_id!=null">
+            and  coupon_site_id =#{coupon_site_id}
         </if>
         <if test="coupon_term_validity!=null">
             and coupon_term_validity =#{coupon_term_validity}
@@ -34,14 +34,20 @@
             <if test="coupon_name!='' and coupon_name!=null">
                 coupon_name=#{coupon_name},
             </if>
-            <if test="coupon_describe!='' and coupon_describe!=null">
-                coupon_describe=#{coupon_describe},
+            <if test="coupon_type!=null">
+                coupon_type=#{coupon_type},
             </if>
             <if test="coupon_money!=0 and coupon_money!=null">
                 coupon_money=#{coupon_money},
             </if>
-            <if test="coupon_number!=0 and coupon_number!=null">
+            <if test="coupon_discount!=null">
+                coupon_discount=#{coupon_discount},
+            </if>
+            <if test="coupon_number!=null">
                 coupon_number=#{coupon_number},
+            </if>
+            <if test="coupon_threshold!=null">
+                coupon_threshold=#{coupon_threshold},
             </if>
             <if test="coupon_term_validity!=null">
                 coupon_term_validity=#{coupon_term_validity},
@@ -52,17 +58,14 @@
             <if test="coupon_threshold!=0 and coupon_threshold!=null">
                 coupon_threshold=#{coupon_threshold},
             </if>
-            <if test="coupon_sitecode!=null">
-                coupon_sitecode=#{coupon_sitecode},
+            <if test="coupon_site_id!=null">
+                coupon_site_id=#{coupon_site_id},
             </if>
-            <if test="coupon_integralnum!=null">
-                coupon_integralnum=#{coupon_integralnum},
+            <if test="coupon_exchange_code!=null and coupon_exchange_code!=''">
+                coupon_exchange_code=#{coupon_exchange_code},
             </if>
             <if test="coupon_state!=0 and coupon_state!=null">
-                coupon_state=#{coupon_state},
-            </if>
-            <if test="coupon_remarks!='' and coupon_remarks!=null">
-                coupon_remarks=#{coupon_remarks}
+                coupon_state=#{coupon_state}
             </if>
         </set>
         where coupon_id=#{coupon_id}

@@ -422,7 +422,6 @@ public class UserServiceImpl implements UserService {
         return rechargeDao.deleteRecharge(rech_id);
     }
 
-
     // ------------------------- 公共方法 -------------------------------------------
     public List<Wechat_users> findAllWcUserPu(Wechat_users wechatUsers) {
         List<Wechat_users> wechat_users = userDao.findWcUser(wechatUsers);

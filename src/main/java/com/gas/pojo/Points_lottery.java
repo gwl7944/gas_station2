@@ -35,6 +35,6 @@ public class Points_lottery {
 
     private Integer pl_site_id;  //门店主键
 
-
+    private Site site; //门店对象
 
 }

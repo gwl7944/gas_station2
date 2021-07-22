@@ -11,6 +11,7 @@ import com.gas.util.DataCompletion;
 import com.gas.util.DateTO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @Date: 2021/3/22 16:18
  * @Version: 1.0
  */
-
+@Slf4j
 @Service
 public class WechatUsersServiceImpl implements WechatUsersService {
 
@@ -238,7 +239,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         return null;
     }
 
-
+    /**
+     *  会员消费（余额）
+     */
     @Override
     @Transactional(rollbackFor = {RuntimeException.class, Error.class})
     public int insertConsumeInfo(Records_consumption recordsConsumption) {
@@ -298,6 +301,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         //更新当前消费记录的打印单号
                         String data = jsonObject.getString("data");
                         int i3 =  userDao.updateReByRcNum(recordsConsumption.getRc_number(),data);
+                        log.info("【更新打印单号】--->"+i3);
                     }
                 }
             }catch (Exception e){
@@ -313,6 +317,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         return wechatUsersDao.insertJlOrder(jlOrder);
     }
 
+    /**
+     *  直接消费（无卡--->微信）
+     */
     @Override
     public int insertConsumeReco(String out_trade_no) {
         //查询当前单号的待支付信息
@@ -346,6 +353,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         //更新当前消费记录的打印单号
                         String data = jsonObject.getString("data");
                         int i3 =  userDao.updateReByRcNum(records_consumption.getRc_number(),data);
+
                     }
                 }
             }catch (Exception e){

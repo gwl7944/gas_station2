@@ -7,7 +7,6 @@ import com.gas.pojo.ResultCode;
 import com.gas.pojo.ResultData;
 import com.gas.service.CouponService;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 
 /**

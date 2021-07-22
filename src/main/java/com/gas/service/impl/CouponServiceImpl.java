@@ -31,7 +31,6 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public int insertCoupon(Coupon coupon) {
-        System.out.println("coupon>>>>"+coupon);
         coupon.setCoupon_term_validity(DateTO.getDate(coupon.getCoupon_term_validity_str())); //开始日期
         coupon.setCoupon_enddate(DateTO.getDate(coupon.getCoupon_enddate_str()));  //截至日期
         return couponDao.insertCoupon(coupon);

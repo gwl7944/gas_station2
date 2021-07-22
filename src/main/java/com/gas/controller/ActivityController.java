@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * User: ywj
  * Date: 2021/7/14
  * Time: 16:46
- * Description: No Description
+ * Description: 活动相关
  */
 @RestController
 @CrossOrigin
