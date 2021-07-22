@@ -44,7 +44,7 @@ public class Activity {
 
     private Integer activity_del;  //删除（默认为1   删除为2）
 
-    private String activity_remarks;  //备注
+    //private String activity_remarks;  //备注
 
     private Double activity_condition;  //活动条件
 
@@ -55,5 +55,7 @@ public class Activity {
     private Integer activity_type;  //活动类型  1-折扣 2满减
 
     private Double activity_full_impairment; //满减值
+
+    private Oil_price oilPrice;
 
 }

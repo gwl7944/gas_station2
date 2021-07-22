@@ -120,4 +120,38 @@
     <insert id="insertIntegeregralRule" parameterType="Integeregral_rule">
         insert into integeregral_rule (lr_name,lr_recharge_ratio,lr_consumption_ratio,lr_siteid) values (#{lr_name},#{lr_recharge_ratio},#{lr_consumption_ratio},#{lr_siteid})
     </insert>
+
+    <!-- 开卡活动新增 -->
+    <insert id="insertDevelopmentWelfare" parameterType="Development_welfare">
+        insert into development_welfare(dwe_startdate,dwe_enddate,dwe_growth_value,dwe_balance,dwe_coupon_id,dwe_integral,dwe_description,dwe_siteid)
+        values (#{dwe_startdate},#{dwe_enddate},#{dwe_growth_value},#{dwe_balance},#{dwe_coupon_id},#{dwe_integral},#{dwe_description},#{dwe_siteid})
+    </insert>
+
+    <!-- 开卡活动-修改 -->
+    <update id="updateDevelopmentWelfare" parameterType="Development_welfare">
+        update development_welfare
+        <set>
+            <if test="dwe_startdate!=null">
+                dwe_startdate = #{dwe_startdate},
+            </if>
+            <if test="dwe_enddate!=null">
+                dwe_enddate = #{dwe_enddate},
+            </if>
+            <if test="dwe_growth_value!=null">
+                dwe_growth_value = #{dwe_growth_value},
+            </if>
+            <if test="dwe_balance!=null">
+                dwe_balance = #{dwe_balance},
+            </if>
+            <if test="dwe_coupon_id!=null">
+                dwe_coupon_id = #{dwe_coupon_id},
+            </if>
+            <if test="dwe_integral!=null">
+                dwe_integral = #{dwe_integral},
+            </if>
+            <if test="dwe_description!=null and dwe_description!=''">
+                dwe_description = #{dwe_description}
+            </if>
+        </set> where dwe_id=#{dwe_id}
+    </update>
 </mapper>

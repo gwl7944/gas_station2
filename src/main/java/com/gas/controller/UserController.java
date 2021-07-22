@@ -444,7 +444,31 @@ public class UserController {
         return ResultData.getResponseData(i,ResultCode.DELETE_ERROR);
     }
 
+    /*---------------------------   开卡活动 2.0新增  ------------------------------*/
 
+    /**
+     * 开卡活动-新增
+     */
+    @PostMapping("/user/addDevelopmentWelfare")
+    public JSON addDevelopmentWelfare(@RequestBody Development_welfare developmentWelfare){
+        int i = userService.insertDevelopmentWelfare(developmentWelfare);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.INSERT_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.INSERT_ERROR);
+    }
+
+    /**
+     * 开卡活动-修改
+     */
+    @PostMapping("/user/editDevelopmentWelfare")
+    public JSON editDevelopmentWelfare(@RequestBody Development_welfare developmentWelfare){
+        int i = userService.updateDevelopmentWelfare(developmentWelfare);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
 
 
 }

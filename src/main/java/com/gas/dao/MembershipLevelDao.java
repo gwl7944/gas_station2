@@ -1,5 +1,6 @@
 package com.gas.dao;
 
+import com.gas.pojo.Development_welfare;
 import com.gas.pojo.Integeregral_rule;
 import com.gas.pojo.Membership_level;
 import com.gas.pojo.Membership_rules;
@@ -72,4 +73,14 @@ public interface MembershipLevelDao {
      * 新增积分规则
      */
     int insertIntegeregralRule(Integeregral_rule integeregralRule);
+
+    /**
+     * 开卡活动-新增
+     */
+    int insertDevelopmentWelfare(Development_welfare developmentWelfare);
+
+    /**
+     * 开卡活动-修改
+     */
+    int updateDevelopmentWelfare(Development_welfare developmentWelfare);
 }

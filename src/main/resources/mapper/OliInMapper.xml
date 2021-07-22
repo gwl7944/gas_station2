@@ -37,6 +37,6 @@
 
     <!-- 根据id查询油价信息 -->
     <select id="findOliInfoById" parameterType="Integer" resultType="com.gas.pojo.Oil_price">
-        select * from oil_price where op_id=#{oil_id} and op_del =1
+        select * from oil_price where op_id=#{oil_id}
     </select>
 </mapper>

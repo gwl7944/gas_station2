@@ -375,7 +375,7 @@ public class Api_java_demo {
             }
         }
         //System.out.println("oil_price>>>>" + oil_price);
-
+        DecimalFormat df = new DecimalFormat("0.00");
 
         //加油数
         Double rc_oil_num = recordsConsumption.getRc_oil_num();
@@ -384,7 +384,6 @@ public class Api_java_demo {
         //实付金额
         Double rc_amount_payable = recordsConsumption.getRc_amount_payable();
 
-        DecimalFormat df = new DecimalFormat("0.00");
         //优惠金额
         Double rc_coupon_amount = Double.parseDouble(df.format(rc_actual_amount - rc_amount_payable));
 
@@ -413,6 +412,7 @@ public class Api_java_demo {
         content += "油枪:" + rc_oil_gun + "<BR>";
         content += "油品:" + rc_consumer_projects + "<BR>";
         content += "单价:" + oil_price + "<BR>";
+        content += "数量:" + rc_oil_num +"L"+ "<BR>";
         content += "应付金额:" + rc_actual_amount + "<BR>";
         content += "优惠金额:" + rc_coupon_amount + "<BR>";
         content += "实收金额:" + rc_amount_payable + "<BR>";

@@ -1,8 +1,10 @@
 package com.gas.service.impl;
 
 import com.gas.dao.ActivityDao;
+import com.gas.dao.OliInDao;
 import com.gas.dao.SiteDao;
 import com.gas.pojo.Activity;
+import com.gas.pojo.Oil_price;
 import com.gas.pojo.Page;
 import com.gas.pojo.Site;
 import com.gas.service.ActivityService;
@@ -28,6 +30,8 @@ public class ActivityServiceImpl implements ActivityService {
     ActivityDao activityDao;
     @Resource
     SiteDao siteDao;
+    @Resource
+    OliInDao oliInDao;
 
 
     @Override
@@ -38,7 +42,7 @@ public class ActivityServiceImpl implements ActivityService {
         if (activity.getActivity_end_date_str()!=""&&activity.getActivity_end_date_str()!=null){
             activity.setActivity_end_date(DateTO.getDate(activity.getActivity_end_date_str()));
         }
-
+        System.out.println("activity>>"+activity);
         return activityDao.insertActivity(activity);
     }
 
@@ -77,6 +81,9 @@ public class ActivityServiceImpl implements ActivityService {
             //查询所属站点
             Site site = siteDao.findSiteById(activity1.getActivity_siteid());
             activity1.setSite(site);
+            //查询所属油品
+            Oil_price oilPrice = oliInDao.findOliInfoById(activity1.getActivity_oil_price());
+            activity1.setOilPrice(oilPrice);
         }
         PageInfo<Activity> info = new PageInfo<>(activityList);
         page.setCurrentnumber(info.getPageNum());

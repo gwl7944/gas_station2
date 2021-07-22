@@ -265,7 +265,7 @@ public interface WechatUsersDao {
     /**
      * 扣除用户积分值
      * */
-    Integer updateWechat_usersByWu_current_points(Integer wu_id,Integer wu_current_points);
+    Integer updateWechat_usersByWu_current_points(Integer wu_id,Integer pds_num);
 
     /**
      * 查询门店积分规则 (消费)

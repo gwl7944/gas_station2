@@ -422,6 +422,18 @@ public class UserServiceImpl implements UserService {
         return rechargeDao.deleteRecharge(rech_id);
     }
 
+    @Override
+    public int insertDevelopmentWelfare(Development_welfare developmentWelfare) {
+
+        return membershipLevelDao.insertDevelopmentWelfare(developmentWelfare);
+    }
+
+    @Override
+    public int updateDevelopmentWelfare(Development_welfare developmentWelfare) {
+
+        return membershipLevelDao.updateDevelopmentWelfare(developmentWelfare);
+    }
+
     // ------------------------- 公共方法 -------------------------------------------
     public List<Wechat_users> findAllWcUserPu(Wechat_users wechatUsers) {
         List<Wechat_users> wechat_users = userDao.findWcUser(wechatUsers);

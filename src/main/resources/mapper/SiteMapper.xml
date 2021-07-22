@@ -3,7 +3,7 @@
 <mapper namespace="com.gas.dao.SiteDao">
 
     <select id="findSite" resultType="com.gas.pojo.Site">
-        select * from site where site_del =1
+        select site_name,site_appid,site_state,site_del from site where site_del =1
     </select>
 
     <!-- 新增站点 -->
@@ -43,6 +43,6 @@
 
     <!-- 根据id查询站点 -->
     <select id="findSiteById" parameterType="Integer" resultType="com.gas.pojo.Site">
-        select * from site where site_id=#{rc_sitecode}
+        select site_name,site_appid,site_state from site where site_id=#{rc_sitecode}
     </select>
 </mapper>

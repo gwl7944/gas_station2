@@ -37,4 +37,6 @@ public class Development_welfare {
     private String dwe_description;//	详细说明
 
     private Integer dwe_siteid;//	门店ID
+
+    private Coupon coupon; //优惠券
 }

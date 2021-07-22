@@ -5,9 +5,9 @@
     <!-- 新增活动 -->
     <insert id="insertActivity" parameterType="com.gas.pojo.Activity">
         insert into activity(activity_name,activity_start_date,activity_end_date,activity_discount_value,activity_full_impairment,
-        activity_siteid,activity_state,activity_del,activity_condition)
+        activity_siteid,activity_state,activity_del,activity_condition,activity_oil_price,activity_type)
         values (#{activity_name},#{activity_start_date},#{activity_end_date},#{activity_discount_value},#{activity_full_impairment},
-        #{activity_siteid},1,1,#{activity_condition})
+        #{activity_siteid},1,1,#{activity_condition},#{activity_oil_price},#{activity_type})
     </insert>
 
     <!-- 修改活动 -->
@@ -17,8 +17,6 @@
             <if test="activity_name!='' and activity_name!=null">
                 activity_name=#{activity_name},
             </if>
-            activity_start_date=#{activity_start_date},
-            activity_end_date=#{activity_end_date},
             <if test="activity_discount_value!=null">
                 activity_discount_value=#{activity_discount_value},
             </if>
@@ -32,7 +30,10 @@
                 activity_full_impairment=#{activity_full_impairment},
             </if>
             <if test="activity_condition!=0 and activity_condition!=null">
-                activity_condition=#{activity_condition}
+                activity_condition=#{activity_condition},
+            </if>
+            <if test="activity_oil_price!=null">
+                activity_oil_price=#{activity_oil_price}
             </if>
         </set>
         where activity_id=#{activity_id}

@@ -151,5 +151,13 @@ public interface UserService {
      */
     int deleteRecharge(Integer rech_id);
 
+    /**
+     * 开卡活动-新增
+     */
+    int insertDevelopmentWelfare(Development_welfare developmentWelfare);
 
+    /**
+     * 开卡活动-修改
+     */
+    int updateDevelopmentWelfare(Development_welfare developmentWelfare);
 }

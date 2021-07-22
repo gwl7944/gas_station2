@@ -69,9 +69,6 @@
     <!-- 查询微信用户 -->
     <select id="findWcUser"  parameterType="com.gas.pojo.Wechat_users" resultType="com.gas.pojo.Wechat_users">
         select * from wechat_users where wu_del=1
-        <if test="wu_id_number!=null and wu_id_number!=''">
-            and wu_id_number =#{wu_id_number}
-        </if>
         <if test="wu_membership_card_number!=null and wu_membership_card_number!=''">
             and wu_membership_card_number =#{wu_membership_card_number}
         </if>

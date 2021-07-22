@@ -80,9 +80,9 @@
     </select>
 
     <insert id="insertWechat_users1" parameterType="Wechat_users" useGeneratedKeys="true" keyProperty="wu_id">
-        insert into wechat_users (wu_name,wu_fullname,wu_telephone,wu_gender,wu_birthday,wu_id_number,wu_qr_code,wu_bar_code,wu_integral,wu_current_points,wu_remainder,
+        insert into wechat_users (wu_name,wu_fullname,wu_telephone,wu_gender,wu_birthday,wu_qr_code,wu_bar_code,wu_integral,wu_current_points,wu_remainder,
         wu_Invitation_code,wu_openid,wu_membership_card_number,wu_membership_card_growth,wu_sitecode,wu_recommend_num,wu_state,wu_del,wu_remarks)
-        value (#{wu_name},#{wu_fullname},#{wu_telephone},#{wu_gender},#{wu_birthday},#{wu_id_number},#{wu_qr_code},#{wu_bar_code},#{wu_integral},#{wu_integral},
+        value (#{wu_name},#{wu_fullname},#{wu_telephone},#{wu_gender},#{wu_birthday},#{wu_qr_code},#{wu_bar_code},#{wu_integral},#{wu_integral},
         #{wu_remainder},#{wu_membership_card_number},#{wu_openid},#{wu_membership_card_number},#{wu_membership_card_growth},
         (select site_id from site where site_appid=#{wu_appid}),#{wu_recommend_num},1,1,#{wu_remarks})
     </insert>
@@ -117,7 +117,7 @@
     </update>
 
     <select id="findWci_numberByWci_wu_id" parameterType="Integer" resultType="Integer">
-        select count(*) from user_coupons where ucs_wu_id=#{ucs_wu_id}
+        select count(*) from wu_coupon_information where wci_wu_id=#{ucs_wu_id}
     </select>
 
     <!--查询用户优惠券列表-->
@@ -346,8 +346,7 @@
         wu_membership_card_growth =wu_membership_card_growth +#{wu_membership_card_growth },
         wu_ml_id=(select ml_id from membership_level where ml_level=1 and ml_sitecode=#{wu_sitecode}),
         wu_membership_card_number=CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
-        wu_remainder=wu_remainder+#{wu_remainder},
-        wu_current_points=wu_current_points+#{wu_current_points}
+        wu_remainder=wu_remainder+#{wu_remainder}
         where wu_id=#{wu_id}
     </update>
 
@@ -395,7 +394,7 @@
 
     <!--扣除用户积分值-->
     <update id="updateWechat_usersByWu_current_points" parameterType="Integer">
-        update wechat_users set wu_current_points=wu_current_points+#{param2} where wu_id=#{param1}
+        update wechat_users set wu_current_points=wu_current_points+#{pds_num} where wu_id=#{wu_id}
     </update>
 
     <!--查询门店积分规则-->

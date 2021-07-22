@@ -96,10 +96,7 @@ public class WechatUserController {
      */
     @PostMapping("/WechatUserController/getOpenId")
     public JSON getOpenId(@ModelAttribute Open open) {
-        System.out.println(open.toString());
-
         Map<String, String> map = WeChatPushUtil.weChatGetOpenid(open);
-        System.out.println("map>>"+map);
         if (map != null && !"".equals(map)) {
             return ResultData.getResponseData(map, ResultCode.QUERY_SUCCESS);
         } else {
@@ -122,7 +119,6 @@ public class WechatUserController {
 
     /**
      * 小程序登录
-     *
      * @param wechat_users -->wu_name,wu_openid,wu_sitecode(appID)
      */
     @PostMapping("/WechatUserController/WxLogin")
