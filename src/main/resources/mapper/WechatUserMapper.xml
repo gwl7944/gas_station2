@@ -484,5 +484,10 @@
         select * from activity where activity_oil_price=#{param1} and activity_siteid=#{param2} and (NOW() BETWEEN activity_start_date and activity_end_date)
     </select>
 
+    <!--校验优惠券是否重复-->
+    <select id="findCouponExperimentalRepetition" parameterType="Integer" resultType="Wu_coupon_information">
+        select * from wu_coupon_information where wci_coupon_id=#{param1} and wci_wu_id=#{param2}
+    </select>
+
 
 </mapper>

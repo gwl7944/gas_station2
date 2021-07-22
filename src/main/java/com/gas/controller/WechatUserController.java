@@ -483,8 +483,8 @@ public class WechatUserController {
      * 领取会员卡
      * */
     @PostMapping("/WechatUserController/getTheCard")
-    public JSON getTheCard(@ModelAttribute Wechat_users wechat_users){
-        if (wechatUsersService.getTheCard(wechat_users)>0){
+    public JSON getTheCard(@ModelAttribute Wechat_users wechat_users,@Param("coupon_id") Integer coupon_id){
+        if (wechatUsersService.getTheCard(wechat_users,coupon_id)>0){
             return ResultData.getResponseData(null, ResultCode.INSERT_SUCCESS);
         }else {
             return ResultData.getResponseData(null, ResultCode.INSERT_ERROR);
@@ -608,7 +608,11 @@ public class WechatUserController {
      * */
     @PostMapping("/WechatUserController/insertWCI")
     public JSON insertWCI(@ModelAttribute Wu_coupon_information wu_coupon_information){
-        return  ResultData.getResponseData(wechatUsersService.insertWCI(wu_coupon_information),ResultCode.QUERY_SUCCESS);
+        int i = wechatUsersService.insertWCI(wu_coupon_information);
+        if (i<0){
+            return ResultData.getResponseData(null,ResultCode.REPEAT_ERROR);
+        }
+        return  ResultData.getResponseData(null,ResultCode.QUERY_SUCCESS);
     }
 
 

@@ -102,7 +102,12 @@ public enum ResultCode {
     /**
      * 服务熔断降级
      */
-    SERVICE_EXCEPTION(603,"服务暂不可用！请稍后尝试或联系管理员！！");
+    SERVICE_EXCEPTION(603,"服务暂不可用！请稍后尝试或联系管理员！！"),
+
+    /**
+     * 其它问题
+     * */
+    REPEAT_ERROR(901,"重复领取！");
 
 
     ResultCode(int resCode, String resMsg) {

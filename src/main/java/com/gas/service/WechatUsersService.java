@@ -148,7 +148,7 @@ public interface WechatUsersService {
     /**
      * 领取会员卡
      * */
-    Integer getTheCard(Wechat_users wechat_users);
+    Integer getTheCard(Wechat_users wechat_users,Integer coupon_id);
 
     /**
      * 查询门店开卡福利

@@ -470,9 +470,17 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         return wechatUsersDao.findCarouselByCal_id(cal_id,ppe_siteid);
     }
 
+    //首页领取优惠券
     @Override
     public int insertWCI(Wu_coupon_information wu_coupon_information) {
-        return wechatUsersDao.insertWCI(wu_coupon_information);
+        //优惠券重复校验
+        Wu_coupon_information couponExperimentalRepetition = wechatUsersDao.findCouponExperimentalRepetition(wu_coupon_information.getWci_coupon_id(), wu_coupon_information.getWci_wu_id());
+        if (couponExperimentalRepetition==null){
+            return wechatUsersDao.insertWCI(wu_coupon_information);
+        }else {
+            return -1;
+        }
+
     }
 
     @Override
@@ -485,11 +493,46 @@ public class WechatUsersServiceImpl implements WechatUsersService {
      * */
     @Override
     @Transactional
-    public Integer getTheCard(Wechat_users wechat_users) {
-        Growthvalue_record growthvalue_record = new Growthvalue_record();
-        growthvalue_record.setGvr_valuenum(wechat_users.getWu_membership_card_growth());
-        growthvalue_record.setGvr_type(3);growthvalue_record.setGvr_date(new Date());growthvalue_record.setGvr_wu_id(wechat_users.getWu_id());
-        Integer integer = wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+    public Integer getTheCard(Wechat_users wechat_users,Integer coupon_id) {
+        Integer integer=0;
+
+        //添加成长值记录
+        if (wechat_users.getWu_membership_card_growth()!=null && wechat_users.getWu_membership_card_growth()!=0){
+            Growthvalue_record growthvalue_record = new Growthvalue_record();
+            growthvalue_record.setGvr_valuenum(wechat_users.getWu_membership_card_growth());
+            growthvalue_record.setGvr_type(3);growthvalue_record.setGvr_date(new Date());growthvalue_record.setGvr_wu_id(wechat_users.getWu_id());
+            integer = wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+        }
+        //添加用户积分记录
+        if(wechat_users.getWu_current_points()!=0 && wechat_users.getWu_current_points()!=null){
+            Pointegers_details pointegers_details = new Pointegers_details();
+            pointegers_details.setPds_wu_id(wechat_users.getWu_id());pointegers_details.setPds_num(wechat_users.getWu_current_points());
+            pointegers_details.setPds_type(4); pointegers_details.setPds_operation(1);pointegers_details.setPds_project("会员卡领取");
+            Boolean aBoolean = this.PointsChange(pointegers_details);
+        }
+        //添加用户和优惠劵
+        if(coupon_id!=null && coupon_id!=0){
+            //优惠券去重
+            Wu_coupon_information couponExperimentalRepetition = wechatUsersDao.findCouponExperimentalRepetition(coupon_id, wechat_users.getWu_id());
+            if(couponExperimentalRepetition==null){
+                Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
+                wu_coupon_information.setWci_coupon_id(coupon_id);
+                wu_coupon_information.setWci_wu_id(wechat_users.getWu_id());
+                int i = wechatUsersDao.insertWCI(wu_coupon_information);
+            }
+        }
+        //添加用户月变更记录
+        if (wechat_users.getWu_remainder()!=null && wechat_users.getWu_remainder()!=0){
+            Records_consumption records_consumption = new Records_consumption();
+            records_consumption.setRc_amount_payable(wechat_users.getWu_remainder());
+            records_consumption.setRc_actual_amount(wechat_users.getWu_remainder());
+            records_consumption.setRc_wu_id(wechat_users.getWu_id());
+            records_consumption.setRc_sitecode(wechat_users.getWu_sitecode());
+            records_consumption.setRc_type(3);records_consumption.setRc_datetime(new Date());
+            wechatUsersDao.insertRecharge_information(records_consumption);
+        }
+
+
         Integer theCard = wechatUsersDao.getTheCard(wechat_users);
         if (integer+theCard>1){
             return 1;
@@ -602,10 +645,14 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         break;
                     //优惠券
                     case 2:
-                        Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
-                        wu_coupon_information.setWci_coupon_id(pointsLottery.getPl_coupon());
-                        wu_coupon_information.setWci_wu_id(wu_id);
-                        wechatUsersDao.insertWCI(wu_coupon_information);
+                        //优惠券去重
+                        Wu_coupon_information couponExperimentalRepetition = wechatUsersDao.findCouponExperimentalRepetition(pointsLottery.getPl_coupon(), wu_id);
+                        if (couponExperimentalRepetition==null){
+                            Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
+                            wu_coupon_information.setWci_coupon_id(pointsLottery.getPl_coupon());
+                            wu_coupon_information.setWci_wu_id(wu_id);
+                            wechatUsersDao.insertWCI(wu_coupon_information);
+                        }
                         break;
                     //余额
                     case 3:
@@ -615,6 +662,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         records_consumption.setRc_actual_amount(pointsLottery.getPl_balance());
                         records_consumption.setRc_wu_id(wu_id);
                         records_consumption.setRc_sitecode(pl_site_id);
+                        records_consumption.setRc_type(3);records_consumption.setRc_datetime(new Date());
                         wechatUsersDao.insertRecharge_information(records_consumption);
                         break;
                 }
@@ -648,10 +696,14 @@ public class WechatUsersServiceImpl implements WechatUsersService {
 
             //添加优惠券信息
             if (recharge.getRech_coupons_id()!=null && recharge.getRech_coupons_id()!=0){
-                Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
-                wu_coupon_information.setWci_coupon_id(recharge.getRech_coupons_id());
-                wu_coupon_information.setWci_wu_id(wu_id);
-                wechatUsersDao.insertWCI(wu_coupon_information);
+                //优惠券去重
+                Wu_coupon_information couponExperimentalRepetition = wechatUsersDao.findCouponExperimentalRepetition(recharge.getRech_coupons_id(), wu_id);
+                if (couponExperimentalRepetition==null){
+                    Wu_coupon_information wu_coupon_information = new Wu_coupon_information();
+                    wu_coupon_information.setWci_coupon_id(recharge.getRech_coupons_id());
+                    wu_coupon_information.setWci_wu_id(wu_id);
+                    wechatUsersDao.insertWCI(wu_coupon_information);
+                }
             }
 
             //成长值变更
@@ -722,7 +774,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 pointegers_details.setPds_wu_id(records_consumption.getRc_wu_id());
                 wechatUsersDao.insertPointegers_details(pointegers_details);
             }
-            //添加优惠券信息
+            //添加优惠券  使用信息
             if (records_consumption.getRc_coupon_id()!=null && records_consumption.getRc_coupon_id()!=0){
                 wechatUsersDao.updateCouponState(records_consumption.getRc_coupon_id(),records_consumption.getRc_wu_id());
             }
@@ -791,8 +843,22 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             e.printStackTrace();
             return false;
         }
+    }
 
-
+    /**
+     * 用户积分变更 封装
+     * */
+    @Transactional
+    public Boolean PointsChange(Pointegers_details pointegers_details){
+        //修改用户积分记录
+        Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(pointegers_details.getPds_wu_id(), pointegers_details.getPds_num());
+        //添加积分变更记录
+        Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
+        if (integer+integer1>1){
+            return true;
+        }else {
+            return false;
+        }
     }
 
 }

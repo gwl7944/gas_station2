@@ -327,6 +327,11 @@ public interface WechatUsersDao {
      * */
     Activity findActivityNow(Integer activity_oil_price,Integer activity_siteid);
 
+    /**
+     * 校验优惠券是否重复
+     * */
+    Wu_coupon_information findCouponExperimentalRepetition(Integer wci_coupon_id,Integer wci_wu_id);
+
 
 
 
