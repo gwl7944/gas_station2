@@ -38,6 +38,7 @@ public class WeChatPushUtil {
     public static Map<String,String> weChatGetOpenid(Open open){
         //微信公众号获取openID
         String str = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token","appid="+open.getAppId()+"&secret="+open.getSecret()+"&code="+open.getCode()+"&grant_type=authorization_code");
+        System.out.println("str----"+str);
         if (str!=null && "".equals(str)){
             JSONObject jsonObject = JSONObject.parseObject(str);
             String openid = jsonObject.getString("openid");

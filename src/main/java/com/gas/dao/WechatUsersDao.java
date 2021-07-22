@@ -332,6 +332,16 @@ public interface WechatUsersDao {
      * */
     Wu_coupon_information findCouponExperimentalRepetition(Integer wci_coupon_id,Integer wci_wu_id);
 
+    /**
+     * 依据消费记录ID查询
+     * */
+    Records_consumption findRecords_consumptionById(Integer rc_id);
+
+    /**
+     * 依据单号查询消费记录
+     * */
+    Property_change findRecords_consumptionByRc_number(String pce_code);
+
 
 
 

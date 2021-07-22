@@ -615,6 +615,14 @@ public class WechatUserController {
         return  ResultData.getResponseData(null,ResultCode.QUERY_SUCCESS);
     }
 
+    /**
+     * 待支付整合
+     * */
+    @PostMapping("/WechatUserController/ToBePaid")
+    public JSON ToBePaid(@ModelAttribute Records_consumption records_consumption){
+        return  ResultData.getResponseData(wechatUsersService.ToBePaid(records_consumption),ResultCode.SYS_SUCCESS);
+    }
+
 
 
 

@@ -1,6 +1,7 @@
 package com.gas.service;
 
 import com.gas.pojo.*;
+import org.omg.CORBA.INTERNAL;
 
 import java.util.List;
 
@@ -229,4 +230,14 @@ public interface WechatUsersService {
      * 查询是否符合活动
      * */
     Activity findActivityNow(Integer activity_oil_price,Integer activity_siteid);
+
+    /**
+     * 待支付整合
+     * */
+    String ToBePaid(Records_consumption records_consumption);
+
+    /**
+     * 支付成功
+     * **/
+    Integer PaymentSuccessful(String rc_number);
 }
