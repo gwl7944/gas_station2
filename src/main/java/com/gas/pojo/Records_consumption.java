@@ -64,9 +64,15 @@ public class Records_consumption {
 
     private Double rc_coupon;  //优惠券优惠金额
 
+    private Integer rc_coupon_id;  //优惠券外键  实体
+
     private Double rc_integral;  //积分抵扣金额
 
+    private Integer rc_integral_num;  //积分值  实体
+
     private Double rc_member;  //会员优惠金额
+
+    private Double rc_balance_deduction;  //余额抵扣金额
 
 
     private Integer rc_user_id;  //打印员id

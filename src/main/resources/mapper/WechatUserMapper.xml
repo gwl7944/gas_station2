@@ -379,9 +379,21 @@
 
     <!--添加充值信息-->
     <insert id="insertRecharge_information" parameterType="Records_consumption">
-        insert into records_consumption (rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,)
-        values (NOW(),1,#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode})
+        insert into records_consumption (rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,rc_number)
+        values (#{rc_datetime},#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode},#{rc_number})
     </insert>
+
+    <!--添加充值  待支付  信息-->
+    <insert id="insertRecharge_informationToBePaid" parameterType="Records_consumption">
+        insert into records_consumption_wait (rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,rc_number)
+        values (NOW(),1,#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode},
+        CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))))
+    </insert>
+
+    <!--查询待支付订单-->
+    <select id="findRecharge_informationToBePaid" parameterType="String" resultType="Records_consumption">
+        select * from records_consumption_wait where rc_number=#{rc_number}
+    </select>
 
     <!--查询用户的积分详情-->
     <select id="findPoIntegers_detailsByPds_wu_id" parameterType="Integer" resultType="Pointegers_details">
@@ -414,7 +426,7 @@
 
     <!--变更用户余额信息-->
     <update id="updateWechat_usersByWu_remainder" parameterType="Integer">
-        update wechat_users set wu_remainder=wu_remainder+#{param2} where wu_id=#{wu_id}
+        update wechat_users set wu_remainder=wu_remainder+#{param2} where wu_id=#{param1}
     </update>
 
     <!--查询门店积分商品信息-->
@@ -432,6 +444,44 @@
     <!--拉取全部油枪信息-->
     <select id="findAllOilGun" parameterType="Integer" resultType="OilGun">
         select * from oil_gun where oil_gun_sitecode=#{param1} and oil_op_id=#{param2}
+    </select>
+
+    <!--依据会员等级查询会员信息-->
+    <select id="findMembership_levelByMl_level" parameterType="Integer" resultType="Membership_level">
+        select * from membership_level where ml_level=#{param1} and ml_sitecode=#{param2}
+    </select>
+
+    <!--用户会员你等级提升-->
+    <update id="updateWechat_usersByUpgrade" parameterType="Integer">
+        update wechat_users set wu_ml_id=#{param2} where wu_id=#{param1}
+    </update>
+
+    <!--消费支付成功信息添加-->
+    <insert id="insertRecords_consumptionByConsumption" parameterType="Records_consumption">
+        insert into records_consumption (rc_consumer_projects,rc_consumer_projects_code,rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,
+        rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num)
+        values(#{rc_consumer_projects},#{rc_consumer_projects_code},#{rc_datetime},#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
+        #{rc_coupon},#{rc_integral},#{rc_member},#{rc_number},#{rc_oil_gun},#{rc_oil_num})
+    </insert>
+
+    <!--消费  待支付  信息添加-->
+    <insert id="insertRecords_consumptionByConsumptionToBePaid" parameterType="Records_consumption">
+        insert into records_consumption_wait (rc_consumer_projects,rc_consumer_projects_code,rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,
+        rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num)
+        values(#{rc_consumer_projects},#{rc_consumer_projects_code},NOW(),2,#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
+        #{rc_coupon},#{rc_integral},#{rc_member},
+        CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
+        #{rc_oil_gun},#{rc_oil_num})
+    </insert>
+
+    <!--优惠券使用-->
+    <update id="updateCouponState" parameterType="Integer">
+        update wu_coupon_information set wci_state=2 where wci_coupon_id=#{param1} and wci_wu_id=#{param2}
+    </update>
+
+    <!--查询是否符合活动-->
+    <select id="findActivityNow" parameterType="Activity" resultType="Activity">
+        select * from activity where activity_oil_price=#{param1} and activity_siteid=#{param2} and (NOW() BETWEEN activity_start_date and activity_end_date)
     </select>
 
 

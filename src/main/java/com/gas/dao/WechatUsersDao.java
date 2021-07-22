@@ -243,6 +243,16 @@ public interface WechatUsersDao {
     Integer insertRecharge_information(Records_consumption records_consumption);
 
     /**
+     * 添加充值  待支付  信息
+     * */
+    Integer insertRecharge_informationToBePaid(Records_consumption records_consumption);
+
+    /**
+     * 查询待支付订单
+     * */
+    Records_consumption findRecharge_informationToBePaid(String rc_number);
+
+    /**
      * 查询用户的积分详情
      * */
     List<Pointegers_details> findPoIntegers_detailsByPds_wu_id(Integer pds_wu_id);
@@ -286,6 +296,38 @@ public interface WechatUsersDao {
      * 拉取全部油枪信息
      * */
     List<OilGun> findAllOilGun(Integer oil_gun_sitecode,Integer oil_op_id);
+
+    /**
+     * 依据会员等级查询会员信息
+     * */
+    Membership_level findMembership_levelByMl_level(Integer ml_level,Integer ml_sitecode);
+
+    /**
+     * 用户会员你等级提升
+     * */
+    Integer updateWechat_usersByUpgrade(Integer wu_id,Integer wu_ml_id);
+
+    /**
+     * 消费支付成功信息添加
+     * */
+    Integer insertRecords_consumptionByConsumption(Records_consumption records_consumption);
+
+    /**
+     * 消费--待支付--信息添加
+     * */
+    Integer insertRecords_consumptionByConsumptionToBePaid(Records_consumption records_consumption);
+
+    /**
+     * 优惠券使用
+     * */
+    Integer updateCouponState(Integer wci_coupon_id,Integer wci_wu_id);
+
+    /**
+     * 查询是否符合活动
+     * */
+    Activity findActivityNow(Integer activity_oil_price,Integer activity_siteid);
+
+
 
 
 

@@ -64,7 +64,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 Membership_level membership_levelById = wechatUsersDao.findMembership_levelById(wechat_usersByOpenId.getWu_ml_id());
                 //查询会员特权信息
                 Membership_rules membership_rulesByMl_id = wechatUsersDao.findMembership_rulesByMl_id(membership_levelById.getMl_id());
-                //membership_levelById.setMembership_rules(membership_rulesByMl_id);
+                membership_levelById.setMembership_rules(membership_rulesByMl_id);
                 wechat_usersByOpenId.setMembership_level(membership_levelById);
             }
         }
@@ -471,10 +471,18 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
     @Override
+    public int insertWCI(Wu_coupon_information wu_coupon_information) {
+        return wechatUsersDao.insertWCI(wu_coupon_information);
+    }
+
+    @Override
     public List<Membership_rules> getAllMembership_rules(Integer site_id) {
         return wechatUsersDao.findAllMembership_rules(site_id);
     }
 
+    /**
+     * 开卡
+     * */
     @Override
     @Transactional
     public Integer getTheCard(Wechat_users wechat_users) {
@@ -587,6 +595,10 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         growthvalue_record.setGvr_valuenum(pointsLottery.getPl_growth_value());
                         growthvalue_record.setGvr_type(4);growthvalue_record.setGvr_wu_id(wu_id);
                         wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+                        boolean b = this.VerificationMember(wu_id);
+                        if(!b){
+                            System.err.println("会员升级失败！！！");
+                        }
                         break;
                     //优惠券
                     case 2:
@@ -616,9 +628,12 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         }
     }
 
+    /**
+     * 充值成功调用----用户信息变更及消费记录添加
+     * */
     @Override
     @Transactional
-    public Integer Recharge_success(Recharge recharge,Integer wu_id) {
+    public Integer Recharge_success(Recharge recharge,Integer wu_id,String rc_number) {
 
         try {
             //添加积分信息
@@ -646,25 +661,16 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             growthvalue_record.setGvr_valuenum((int) (recharge.getRech_quota()* membership_rulesByMl_id.getMr_recharge_growthvalue()));
             growthvalue_record.setGvr_type(1);growthvalue_record.setGvr_wu_id(wu_id);
             wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
-
-            //变更用户余额信息
-            Records_consumption records_consumption = new Records_consumption();
-            //实收
-            records_consumption.setRc_amount_payable(Double.valueOf(recharge.getRech_quota()));
-            int a = recharge.getRech_quota();
-            if (recharge.getRech_balance_value()!=null && recharge.getRech_balance_value()!=0){
-                a += recharge.getRech_balance_value();
-                //应收
-                records_consumption.setRc_actual_amount(Double.valueOf(recharge.getRech_quota()+recharge.getRech_balance_value()));
-            }else {
-                records_consumption.setRc_actual_amount(Double.valueOf(recharge.getRech_quota()));
+            boolean b = this.VerificationMember(wu_id);
+            if(!b){
+                System.err.println("会员升级失败！！！");
             }
-            wechatUsersDao.updateWechat_usersByWu_remainder(wu_id,Double.valueOf(a));
-            records_consumption.setRc_wu_id(wu_id);records_consumption.setRc_sitecode(recharge.getRech_site_id());
-
+            //查询待支付消费信息
+            Records_consumption recharge_informationToBePaid = wechatUsersDao.findRecharge_informationToBePaid(rc_number);
             //添加消费记录
-            wechatUsersDao.insertRecharge_information(records_consumption);
-
+            wechatUsersDao.insertRecharge_information(recharge_informationToBePaid);
+            //变更用户余额信息
+            wechatUsersDao.updateWechat_usersByWu_remainder(wu_id,recharge_informationToBePaid.getRc_actual_amount());
             return 1;
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -672,10 +678,121 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         }
     }
 
+    /**
+     * 充值 --- 添加待支付消费信息调用
+     * */
+    @Override
+    public Integer Recharge_ToBePaid(Recharge recharge, Integer wu_id) {
+        Records_consumption records_consumption = new Records_consumption();
+        //实收
+        records_consumption.setRc_amount_payable(Double.valueOf(recharge.getRech_quota()));
+        int a = recharge.getRech_quota();
+        if (recharge.getRech_balance_value()!=null && recharge.getRech_balance_value()!=0){
+            a += recharge.getRech_balance_value();
+            //应收
+            records_consumption.setRc_actual_amount(Double.valueOf(recharge.getRech_quota()+recharge.getRech_balance_value()));
+        }else {
+            records_consumption.setRc_actual_amount(Double.valueOf(recharge.getRech_quota()));
+        }
+        records_consumption.setRc_wu_id(wu_id);records_consumption.setRc_sitecode(recharge.getRech_site_id());
+        //添加待支付消费记录
+        Integer integer = wechatUsersDao.insertRecharge_informationToBePaid(records_consumption);
+        return integer;
+    }
+
     @Override
     public List<OilGun> getAllOilGun(Integer oil_gun_sitecode, Integer oil_op_id) {
         return wechatUsersDao.findAllOilGun(oil_gun_sitecode,oil_op_id);
     }
 
+    /**
+     * 消费   支付成功
+     * */
+    @Override
+    public Integer insertRecords_consumptionByConsumption(Records_consumption records_consumption,String rc_number) {
+
+        try {
+
+            //扣除积分信息
+            if (records_consumption.getRc_integral_num()!=null && records_consumption.getRc_integral_num()!=0){
+                wechatUsersDao.updateWechat_usersByWu_current_points(records_consumption.getRc_wu_id(),-records_consumption.getRc_integral_num());
+                Pointegers_details pointegers_details = new Pointegers_details();
+                pointegers_details.setPds_type(2);pointegers_details.setPds_operation(2);pointegers_details.setPds_project("消费抵扣");
+                pointegers_details.setPds_num(records_consumption.getRc_integral_num());
+                pointegers_details.setPds_wu_id(records_consumption.getRc_wu_id());
+                wechatUsersDao.insertPointegers_details(pointegers_details);
+            }
+            //添加优惠券信息
+            if (records_consumption.getRc_coupon_id()!=null && records_consumption.getRc_coupon_id()!=0){
+                wechatUsersDao.updateCouponState(records_consumption.getRc_coupon_id(),records_consumption.getRc_wu_id());
+            }
+            //成长值变更
+            Membership_rules membership_rulesByMl_id = wechatUsersDao.findMembership_rulesByMl_id(userDao.findWcUserById(records_consumption.getRc_wu_id()).getWu_ml_id());
+            wechatUsersDao.updateWechat_usersByWu_membership_card_growth(records_consumption.getRc_wu_id(),(int) (records_consumption.getRc_amount_payable()* membership_rulesByMl_id.getMr_consumption_growthvalue()));
+            Growthvalue_record growthvalue_record = new Growthvalue_record();
+            growthvalue_record.setGvr_valuenum((int) (records_consumption.getRc_amount_payable()* membership_rulesByMl_id.getMr_consumption_growthvalue()));
+            growthvalue_record.setGvr_type(2);growthvalue_record.setGvr_wu_id(records_consumption.getRc_wu_id());
+            wechatUsersDao.insertGrowthvalue_record(growthvalue_record);
+            boolean b = this.VerificationMember(records_consumption.getRc_wu_id());
+            if(!b){
+                System.err.println("会员升级失败！！！");
+            }
+            //余额抵扣变更
+            if(records_consumption.getRc_balance_deduction()!=null){
+                //变更用户余额信息
+                wechatUsersDao.updateWechat_usersByWu_remainder(records_consumption.getRc_wu_id(),-records_consumption.getRc_balance_deduction());
+            }
+            //查询待支付消费信息
+            Records_consumption recharge_informationToBePaid = wechatUsersDao.findRecharge_informationToBePaid(rc_number);
+            //添加消费记录
+            wechatUsersDao.insertRecharge_information(recharge_informationToBePaid);
+            return 1;
+        }catch (Exception e){
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return 0;
+        }
+
+    }
+
+    /**
+     * 消费   待支付支付成功
+     * */
+    @Override
+    public Integer insertRecords_consumptionByConsumptionToBePaid(Records_consumption records_consumption) {
+        Integer integer = wechatUsersDao.insertRecords_consumptionByConsumptionToBePaid(records_consumption);
+        return integer;
+    }
+
+    @Override
+    public Activity findActivityNow(Integer activity_oil_price,Integer activity_siteid) {
+        return wechatUsersDao.findActivityNow(activity_oil_price,activity_siteid);
+    }
+
+    /**
+     * 会员等级校验
+     * */
+    public boolean VerificationMember(Integer wu_id){
+
+        try {
+            Wechat_users wcUserById = userDao.findWcUserById(wu_id);
+            if (wcUserById!=null){
+                Membership_level membership_levelById = wechatUsersDao.findMembership_levelById(wcUserById.getWu_ml_id());
+                //成长值达到升级
+                if (wcUserById.getWu_membership_card_growth()>membership_levelById.getMl_upper_limit()){
+                    Membership_level membership_levelByMl_level = wechatUsersDao.findMembership_levelByMl_level(membership_levelById.getMl_level() + 1, wcUserById.getWu_sitecode());
+                    wechatUsersDao.updateWechat_usersByUpgrade(wu_id,membership_levelByMl_level.getMl_id());
+                }
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+
+    }
 
 }

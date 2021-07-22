@@ -530,7 +530,7 @@ public class WechatUserController {
      * @param lr_siteid 门店主键
      * */
     @GetMapping("/WechatUserController/getIntegeregral_ruleByLr_siteid/{lr_siteid}")
-    public JSON getIntegeregral_ruleByLr_siteid(Integer lr_siteid){
+    public JSON getIntegeregral_ruleByLr_siteid(@PathVariable("lr_siteid") Integer lr_siteid){
         return  ResultData.getResponseData(wechatUsersService.getIntegeregral_ruleByLr_siteid(lr_siteid), ResultCode.QUERY_SUCCESS);
     }
 
@@ -593,6 +593,22 @@ public class WechatUserController {
     @GetMapping("/WechatUserController/findAllOilGun/{oil_gun_sitecode}/{oil_op_id}")
     public JSON findAllOilGun(@PathVariable("oil_gun_sitecode") Integer oil_gun_sitecode,@PathVariable("oil_op_id") Integer oil_op_id){
         return  ResultData.getResponseData(wechatUsersService.getAllOilGun(oil_gun_sitecode,oil_op_id), ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 查询是否符合活动
+     * */
+    @GetMapping("/WechatUserController/findActivityNow/{activity_oil_price}/{activity_siteid}")
+    public JSON findActivityNow(@PathVariable("activity_oil_price") Integer activity_oil_price,@PathVariable("activity_siteid") Integer activity_siteid){
+        return  ResultData.getResponseData(wechatUsersService.findActivityNow(activity_oil_price,activity_siteid),ResultCode.QUERY_SUCCESS);
+    }
+
+    /**
+     * 用户领取优惠券
+     * */
+    @PostMapping("/WechatUserController/insertWCI")
+    public JSON insertWCI(@ModelAttribute Wu_coupon_information wu_coupon_information){
+        return  ResultData.getResponseData(wechatUsersService.insertWCI(wu_coupon_information),ResultCode.QUERY_SUCCESS);
     }
 
 

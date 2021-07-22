@@ -136,6 +136,11 @@ public interface WechatUsersService {
     Carousel getCarouselByCal_id(Integer cal_id,Integer ppe_siteid);
 
     /**
+     * 新增用户优惠券
+     * */
+    int insertWCI(Wu_coupon_information wu_coupon_information);
+
+    /**
      * 查询全部会员权益  站点
      * */
     List<Membership_rules> getAllMembership_rules(Integer site_id);
@@ -198,10 +203,30 @@ public interface WechatUsersService {
     /**
      * 充值成功
      * */
-    Integer Recharge_success(Recharge recharge,Integer wu_id);
+    Integer Recharge_success(Recharge recharge,Integer wu_id,String rc_number);
+
+    /**
+     * 充值待支付
+     */
+    Integer Recharge_ToBePaid(Recharge recharge,Integer wu_id);
 
     /**
      * 拉取全部油枪信息
      * */
     List<OilGun> getAllOilGun(Integer oil_gun_sitecode,Integer oil_op_id);
+
+    /**
+     * 消费支付成功信息添加
+     * */
+    Integer insertRecords_consumptionByConsumption(Records_consumption records_consumption,String rc_number);
+
+    /**
+     * 消费--待支付--信息添加
+     * */
+    Integer insertRecords_consumptionByConsumptionToBePaid(Records_consumption records_consumption);
+
+    /**
+     * 查询是否符合活动
+     * */
+    Activity findActivityNow(Integer activity_oil_price,Integer activity_siteid);
 }
