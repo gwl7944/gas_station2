@@ -117,7 +117,7 @@
     </update>
 
     <select id="findWci_numberByWci_wu_id" parameterType="Integer" resultType="Integer">
-        select count(*) from wu_coupon_information where wci_wu_id=#{ucs_wu_id}
+        select count(*) from wu_coupon_information where wci_wu_id=#{wci_wu_id}
     </select>
 
     <!--查询用户优惠券列表-->
@@ -346,7 +346,8 @@
         wu_membership_card_growth =wu_membership_card_growth +#{wu_membership_card_growth },
         wu_ml_id=(select ml_id from membership_level where ml_level=1 and ml_sitecode=#{wu_sitecode}),
         wu_membership_card_number=CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
-        wu_remainder=wu_remainder+#{wu_remainder}
+        wu_remainder=wu_remainder+#{wu_remainder},
+        wu_current_points=wu_current_points+#{wu_current_points}
         where wu_id=#{wu_id}
     </update>
 
@@ -394,7 +395,7 @@
 
     <!--扣除用户积分值-->
     <update id="updateWechat_usersByWu_current_points" parameterType="Integer">
-        update wechat_users set wu_current_points=wu_current_points+#{pds_num} where wu_id=#{wu_id}
+        update wechat_users set wu_current_points=wu_current_points+#{param2} where wu_id=#{param1}
     </update>
 
     <!--查询门店积分规则-->
@@ -411,8 +412,8 @@
     </select>
 
     <!--变更用户余额信息-->
-    <update id="updateWechat_usersByWu_remainder" parameterType="Integer">
-        update wechat_users set wu_remainder=wu_remainder+#{param2} where wu_id=#{param1}
+    <update id="updateWechat_usersByWu_remainder" parameterType="Wechat_users">
+        update wechat_users set wu_remainder=wu_remainder+#{wu_remainder} where wu_id=#{wu_id}
     </update>
 
     <!--查询门店积分商品信息-->
@@ -497,6 +498,12 @@
     <select id="findRecords_consumptionByRc_number" parameterType="String" resultType="Property_change">
         select * from property_change where pce_code=#{pce_code}
     </select>
+
+    <!--添加属性变更信息-->
+    <insert id="insertProperty_change" parameterType="Property_change">
+        insert into property_change (pce_code,pce_integral,pce_coupon,pce_growth_value,pce_balance,pce_wu_id,pce_site_id,pce_type,pce_money)
+        values(#{pce_code},#{pce_integral},#{pce_coupon},#{pce_growth_value},#{pce_balance},#{pce_wu_id},#{pce_site_id},#{pce_type},#{pce_money})
+    </insert>
 
 
 </mapper>

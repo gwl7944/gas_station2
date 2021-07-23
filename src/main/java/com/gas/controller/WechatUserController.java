@@ -619,6 +619,17 @@ public class WechatUserController {
         return  ResultData.getResponseData(wechatUsersService.ToBePaid(records_consumption),ResultCode.SYS_SUCCESS);
     }
 
+    /**
+     * 余额支付
+     * */
+    @PostMapping("/WechatUserController/BalancePayment")
+    public JSON BalancePayment(Records_consumption records_consumption){
+        return  ResultData.getResponseData(wechatUsersService.BalancePayment(records_consumption),ResultCode.SYS_SUCCESS);
+
+    }
+
+
+
 
 
 

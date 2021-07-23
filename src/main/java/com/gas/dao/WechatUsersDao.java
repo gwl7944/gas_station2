@@ -37,7 +37,7 @@ public interface WechatUsersDao {
     /**
      * 查询用户优惠券数量
      * */
-    Integer findWci_numberByWci_wu_id(Integer ucs_wu_id);
+    Integer findWci_numberByWci_wu_id(Integer wci_wu_id);
 
     /**
      * 查询用户优惠券列表
@@ -280,7 +280,7 @@ public interface WechatUsersDao {
     /**
      * 变更用户余额信息
      * */
-    Integer updateWechat_usersByWu_remainder(Integer wu_id,Double wu_remainder);
+    Integer updateWechat_usersByWu_remainder(Wechat_users wechat_users);
 
     /**
      * 查询门店积分商品信息
@@ -341,6 +341,12 @@ public interface WechatUsersDao {
      * 依据单号查询消费记录
      * */
     Property_change findRecords_consumptionByRc_number(String pce_code);
+
+    /**
+     * 添加属性变更信息
+     * */
+    Integer insertProperty_change(Property_change property_change);
+
 
 
 

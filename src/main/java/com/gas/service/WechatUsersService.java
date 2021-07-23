@@ -240,4 +240,10 @@ public interface WechatUsersService {
      * 支付成功
      * **/
     Integer PaymentSuccessful(String rc_number);
+
+    /**
+     * 余额支付
+     * */
+    Integer BalancePayment(Records_consumption records_consumption);
+
 }

@@ -619,10 +619,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
 
             //变更信息
             if (pointsLottery!=null){
+                System.out.println("抽奖前------->"+pointsLottery.toString());
                 switch (pointsLottery.getPl_type()){
                     //成长值
                     case 1:
-                        wechatUsersDao.updateWechat_usersByWu_membership_card_growth(wu_id, pointsLottery.getPl_growth_value());
+                        Integer integer2 = wechatUsersDao.updateWechat_usersByWu_membership_card_growth(wu_id, pointsLottery.getPl_growth_value());
                         Growthvalue_record growthvalue_record = new Growthvalue_record();
                         growthvalue_record.setGvr_valuenum(pointsLottery.getPl_growth_value());
                         growthvalue_record.setGvr_type(4);growthvalue_record.setGvr_wu_id(wu_id);
@@ -645,7 +646,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         break;
                     //余额
                     case 3:
-                        wechatUsersDao.updateWechat_usersByWu_remainder(wu_id,pointsLottery.getPl_balance());
+                        Wechat_users wechat_users = new Wechat_users();
+                        wechat_users.setWu_id(wu_id);wechat_users.setWu_remainder(pointsLottery.getPl_balance());
+                        wechatUsersDao.updateWechat_usersByWu_remainder(wechat_users);
                         Records_consumption records_consumption = new Records_consumption();
                         records_consumption.setRc_amount_payable(pointsLottery.getPl_balance());
                         records_consumption.setRc_actual_amount(pointsLottery.getPl_balance());
@@ -655,7 +658,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         wechatUsersDao.insertRecharge_information(records_consumption);
                         break;
                 }
-                return 1;
+                return pointsLottery.getPl_id();
             }
             return null;
         }catch (Exception e){
@@ -665,8 +668,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         }
     }
 
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
     /**
-     * 充值成功调用----用户信息变更及消费记录添加
+     * 充值成功调用----用户信息变更及消费记录添加 ---废除
      * */
     @Override
     @Transactional
@@ -711,16 +715,20 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             //添加消费记录
             wechatUsersDao.insertRecharge_information(recharge_informationToBePaid);
             //变更用户余额信息
-            wechatUsersDao.updateWechat_usersByWu_remainder(wu_id,recharge_informationToBePaid.getRc_actual_amount());
+            Wechat_users wechat_users = new Wechat_users();
+            wechat_users.setWu_id(wu_id);wechat_users.setWu_remainder(recharge_informationToBePaid.getRc_actual_amount());
+            wechatUsersDao.updateWechat_usersByWu_remainder(wechat_users);
             return 1;
         }catch (Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return 0;
         }
     }
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
 
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
     /**
-     * 充值 --- 添加待支付消费信息调用
+     * 充值 --- 添加待支付消费信息调用  ---废除
      * */
     @Override
     public Integer Recharge_ToBePaid(Recharge recharge, Integer wu_id) {
@@ -740,14 +748,16 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         Integer integer = wechatUsersDao.insertRecharge_informationToBePaid(records_consumption);
         return integer;
     }
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
 
     @Override
     public List<OilGun> getAllOilGun(Integer oil_gun_sitecode, Integer oil_op_id) {
         return wechatUsersDao.findAllOilGun(oil_gun_sitecode,oil_op_id);
     }
 
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
     /**
-     * 消费   支付成功
+     * 消费   支付成功 --废除
      * */
     @Override
     public Integer insertRecords_consumptionByConsumption(Records_consumption records_consumption,String rc_number) {
@@ -780,7 +790,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             //余额抵扣变更
             if(records_consumption.getRc_balance_deduction()!=null){
                 //变更用户余额信息
-                wechatUsersDao.updateWechat_usersByWu_remainder(records_consumption.getRc_wu_id(),-records_consumption.getRc_balance_deduction());
+                Wechat_users wechat_users = new Wechat_users();
+                wechat_users.setWu_id(records_consumption.getRc_wu_id());wechat_users.setWu_remainder(-records_consumption.getRc_balance_deduction());
+                wechatUsersDao.updateWechat_usersByWu_remainder(wechat_users);
             }
             //查询待支付消费信息
             Records_consumption recharge_informationToBePaid = wechatUsersDao.findRecharge_informationToBePaid(rc_number);
@@ -792,17 +804,23 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return 0;
         }
-
     }
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
 
+
+
+
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
     /**
-     * 消费   待支付支付成功
+     * 消费   待支付支付成功  --废除
      * */
     @Override
     public Integer insertRecords_consumptionByConsumptionToBePaid(Records_consumption records_consumption) {
         Integer integer = wechatUsersDao.insertRecords_consumptionByConsumptionToBePaid(records_consumption);
         return integer;
     }
+    /*------------------------------------------------------废除--------------------------------------------------------------------------------*/
+
 
     @Override
     public Activity findActivityNow(Integer activity_oil_price,Integer activity_siteid) {
@@ -828,7 +846,12 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 if (integer>0){
                     Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
                     if (records_consumptionById!=null){
-                        return records_consumptionById.getRc_number();
+                        //添加属性记录
+                        Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
+                        Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                        if (integer1>0){
+                            return records_consumptionById.getRc_number();
+                        }
                     }
                 }
                 return null;
@@ -839,7 +862,12 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 if (integer>0){
                     Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
                     if (records_consumptionById!=null){
-                        return records_consumptionById.getRc_number();
+                        //添加属性记录
+                        Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
+                        Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                        if (integer1>0){
+                            return records_consumptionById.getRc_number();
+                        }
                     }
                 }
                 return null;
@@ -862,8 +890,101 @@ public class WechatUsersServiceImpl implements WechatUsersService {
      * */
     @Override
     public Integer PaymentSuccessful(String rc_number) {
+        //变更记录信息
+        Property_change property_change = wechatUsersDao.findRecords_consumptionByRc_number(rc_number);
+        Integer integer = this.PaymentSuccessful_ChangeInformation(property_change);
+        //查询待支付记录
+        Records_consumption records_consumptionById = wechatUsersDao.findRecharge_informationToBePaid(rc_number);
+        //添加正式消费记录
+        Integer integer1 = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumptionById);
+        return integer1;
+    }
+
+    /**
+     * 余额支付
+     * */
+    @Override
+    public Integer BalancePayment(Records_consumption records_consumption) {
         try {
-            Property_change property_change = wechatUsersDao.findRecords_consumptionByRc_number(rc_number);
+            //充值待支付
+            if(records_consumption.getRc_type()==1){
+                //添加待支付消费记录
+                Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
+                if (integer>0){
+                    //添加属性记录
+                    Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
+                    Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                    return integer1;
+                }
+                return null;
+            }
+            //消费待支付
+            else if (records_consumption.getRc_type()==2){
+                Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
+                if (integer>0){
+                    //添加属性记录
+                    Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
+                    Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                    return integer1;
+                }
+                return null;
+            }else {
+                return null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 会员等级校验
+     * */
+    public boolean VerificationMember(Integer wu_id){
+
+        try {
+            Wechat_users wcUserById = userDao.findWcUserById(wu_id);
+            if (wcUserById!=null){
+                Membership_level membership_levelById = wechatUsersDao.findMembership_levelById(wcUserById.getWu_ml_id());
+                //成长值达到升级
+                if (wcUserById.getWu_membership_card_growth()>membership_levelById.getMl_upper_limit()){
+                    Membership_level membership_levelByMl_level = wechatUsersDao.findMembership_levelByMl_level(membership_levelById.getMl_level() + 1, wcUserById.getWu_sitecode());
+                    if (membership_levelByMl_level!=null){
+                        wechatUsersDao.updateWechat_usersByUpgrade(wu_id, membership_levelByMl_level.getMl_id());
+                    }
+                }
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 用户积分变更 封装
+     * */
+    @Transactional
+    public Boolean PointsChange(Pointegers_details pointegers_details){
+        //修改用户积分记录
+        System.out.println("pointegers_details>>>"+pointegers_details);
+        Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(pointegers_details.getPds_wu_id(), pointegers_details.getPds_num());
+        //添加积分变更记录
+        Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
+        if (integer+integer1>1){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    /**
+     *  支付成功 变更用户信息
+     * */
+    public Integer PaymentSuccessful_ChangeInformation(Property_change property_change){
+        try {
             if (property_change!=null){
                 //充值
                 if(property_change.getPce_type()==1){
@@ -903,7 +1024,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                     //添加消费记录
                     wechatUsersDao.insertRecharge_information(recharge_informationToBePaid);
                     //变更用户余额信息
-                    wechatUsersDao.updateWechat_usersByWu_remainder(property_change.getPce_wu_id(),recharge_informationToBePaid.getRc_actual_amount());
+                    Wechat_users wechat_users = new Wechat_users();
+                    wechat_users.setWu_id(property_change.getPce_wu_id());wechat_users.setWu_remainder(recharge_informationToBePaid.getRc_actual_amount());
+                    wechatUsersDao.updateWechat_usersByWu_remainder(wechat_users);
                     return 1;
                 }
                 //消费
@@ -935,7 +1058,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                     //余额抵扣变更
                     if(property_change.getPce_balance()!=null){
                         //变更用户余额信息
-                        wechatUsersDao.updateWechat_usersByWu_remainder(property_change.getPce_wu_id(),-property_change.getPce_balance());
+                        Wechat_users wechat_users = new Wechat_users();
+                        wechat_users.setWu_id(property_change.getPce_wu_id());wechat_users.setWu_remainder(-property_change.getPce_balance());
+                        wechatUsersDao.updateWechat_usersByWu_remainder(wechat_users);
                     }
                     //查询待支付消费信息
                     Records_consumption recharge_informationToBePaid = wechatUsersDao.findRecharge_informationToBePaid(property_change.getPce_code());
@@ -951,48 +1076,23 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             e.printStackTrace();
             return null;
         }
-
     }
 
     /**
-     * 会员等级校验
+     * 组装实体 Property_change
      * */
-    public boolean VerificationMember(Integer wu_id){
-
-        try {
-            Wechat_users wcUserById = userDao.findWcUserById(wu_id);
-            if (wcUserById!=null){
-                Membership_level membership_levelById = wechatUsersDao.findMembership_levelById(wcUserById.getWu_ml_id());
-                //成长值达到升级
-                if (wcUserById.getWu_membership_card_growth()>membership_levelById.getMl_upper_limit()){
-                    Membership_level membership_levelByMl_level = wechatUsersDao.findMembership_levelByMl_level(membership_levelById.getMl_level() + 1, wcUserById.getWu_sitecode());
-                    wechatUsersDao.updateWechat_usersByUpgrade(wu_id,membership_levelByMl_level.getMl_id());
-                }
-                return true;
-            }else {
-                return false;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    /**
-     * 用户积分变更 封装
-     * */
-    @Transactional
-    public Boolean PointsChange(Pointegers_details pointegers_details){
-        //修改用户积分记录
-        System.out.println("pointegers_details>>>"+pointegers_details);
-        Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(pointegers_details.getPds_wu_id(), pointegers_details.getPds_num());
-        //添加积分变更记录
-        Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
-        if (integer+integer1>1){
-            return true;
-        }else {
-            return false;
-        }
+    public Property_change AssemblyEntityProperty_change(Records_consumption records_consumption){
+        //添加属性记录
+        Property_change property_change = new Property_change();
+        property_change.setPce_code(records_consumption.getRc_number());
+        property_change.setPce_integral(records_consumption.getRc_integral_num());
+        property_change.setPce_coupon(records_consumption.getRc_coupon_id());
+        property_change.setPce_balance(records_consumption.getRc_balance_deduction());
+        property_change.setPce_wu_id(records_consumption.getRc_wu_id());
+        property_change.setPce_site_id(records_consumption.getRc_sitecode());
+        property_change.setPce_type(1);
+        property_change.setPce_money(records_consumption.getRc_amount_payable());
+        return  property_change;
     }
 
 }
