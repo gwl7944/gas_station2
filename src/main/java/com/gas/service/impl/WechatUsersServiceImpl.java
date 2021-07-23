@@ -302,51 +302,52 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
     /**
-     *  直接消费（无卡消费、充值记录--->微信）
+     *  直接消费（无卡消费、充值记录  联合消费--->微信）
      */
     @Override
     public int insertConsumeReco(String out_trade_no) {
-        //查询当前单号的待支付信息
-        Records_consumption records_consumption = wechatUsersDao.findRecordsByRcNum(out_trade_no);
-        //新增到消费记录正式表里
-        int i = insertRecords(records_consumption);    //无卡、充值记录
-
-        if (records_consumption.getRc_consumer_projects_code()!=null){             //无卡消费  飞鹅打印业务
-            //站点信息
-            Site site = siteDao.findSiteById(records_consumption.getRc_sitecode());
-            records_consumption.setRc_sitecode_name(site.getSite_name());
-            //消费时间
-            records_consumption.setRc_Date_str(DateTO.getStringDateTime(records_consumption.getRc_datetime()));
-            //油价
-            Oil_price oilPrice = oliInDao.findOliInfoById(records_consumption.getRc_consumer_projects_code());
-            records_consumption.setOilPrice(oilPrice);
-            //用户信息
-            if (records_consumption.getRc_wu_id() != null) {
-                Wechat_users wcUserById = userDao.findWcUserById(records_consumption.getRc_wu_id());
-                records_consumption.setWechat_users(wcUserById);
-            }
-            try {
-                //查询消费所属站点的打印机信息
-                List<Printer> printerList = printDao.findPrinterBySiteId(records_consumption.getRc_sitecode());
-                for (Printer printer : printerList) {
-                    //调用飞鹅打印
-                    Api_java_demo.queryPrinterStatus2(printer.getPrinter_code());
-                    String s = Api_java_demo.print2(printer, records_consumption);
-                    JSONObject jsonObject = JSON.parseObject(s);
-                    String ret = jsonObject.getString("ret");
-                    if (ret.equals("0")){
-                        //更新当前消费记录的打印单号
-                        String data = jsonObject.getString("data");
-                        int i3 =  userDao.updateReByRcNum(records_consumption.getRc_number(),data);
-                        log.info("【更新打印单号】--->"+i3);
-                    }
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-        return i;
+        Integer integer = PaymentSuccessful(out_trade_no);
+        return integer;
     }
+
+
+    public void publicPrint(String order_num){
+        //查询当前单号的待支付信息
+        Records_consumption records_consumption = wechatUsersDao.findRecordsByRcNum(order_num);
+        //站点信息
+        Site site = siteDao.findSiteById(records_consumption.getRc_sitecode());
+        records_consumption.setRc_sitecode_name(site.getSite_name());
+        //消费时间
+        records_consumption.setRc_Date_str(DateTO.getStringDateTime(records_consumption.getRc_datetime()));
+        //油价
+        Oil_price oilPrice = oliInDao.findOliInfoById(records_consumption.getRc_consumer_projects_code());
+        records_consumption.setOilPrice(oilPrice);
+        //用户信息
+        if (records_consumption.getRc_wu_id() != null) {
+            Wechat_users wcUserById = userDao.findWcUserById(records_consumption.getRc_wu_id());
+            records_consumption.setWechat_users(wcUserById);
+        }
+        try {
+            //查询消费所属站点的打印机信息
+            List<Printer> printerList = printDao.findPrinterBySiteId(records_consumption.getRc_sitecode());
+            for (Printer printer : printerList) {
+                //调用飞鹅打印
+                Api_java_demo.queryPrinterStatus2(printer.getPrinter_code());
+                String s = Api_java_demo.print2(printer, records_consumption);
+                JSONObject jsonObject = JSON.parseObject(s);
+                String ret = jsonObject.getString("ret");
+                if (ret.equals("0")){
+                    //更新当前消费记录的打印单号
+                    String data = jsonObject.getString("data");
+                    int i3 =  userDao.updateReByRcNum(records_consumption.getRc_number(),data);
+                    log.info("【更新打印单号】--->"+i3);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public List<Member_day> getAllMember_day(Integer med_sitecode) {  //,Integer currentpage, Integer currentnumber
@@ -1038,7 +1039,10 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             e.printStackTrace();
             return null;
         }
+
     }
+
+
 
     /**
      * 组装实体 Property_change

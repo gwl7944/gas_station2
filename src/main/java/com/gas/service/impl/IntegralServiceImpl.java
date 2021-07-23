@@ -131,4 +131,9 @@ public class IntegralServiceImpl implements IntegralService {
         return lotteryList;
     }
 
+    @Override
+    public int updateintegralConversion(Integer pds_id) {
+        return integralDao.updateintegralConversion(pds_id);
+    }
+
 }

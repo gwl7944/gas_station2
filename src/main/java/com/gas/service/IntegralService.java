@@ -39,4 +39,9 @@ public interface IntegralService {
      * 查询积分抽奖
      */
     List<Points_lottery> findPointsLottery(Points_lottery pointsLottery);
+
+    /**
+     * 奖品兑换
+     */
+    int updateintegralConversion(Integer pds_id);
 }

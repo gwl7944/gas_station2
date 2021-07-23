@@ -97,4 +97,17 @@ public class IntegralController {
         return ResultData.getResponseData(lotteryList,ResultCode.QUERY_ERROR);
     }
 
+    /**
+     * 确认积分抽奖 是否已兑换
+     */
+    @PostMapping("/integral/integralProductConversion/{pds_id}")
+    public JSON integralProductConversion(@PathVariable("pds_id") Integer pds_id){
+
+        int i  =  integralService.updateintegralConversion(pds_id);
+        if (i>0){
+            return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);
+        }
+        return ResultData.getResponseData(i,ResultCode.UPDATE_ERROR);
+    }
+
 }
