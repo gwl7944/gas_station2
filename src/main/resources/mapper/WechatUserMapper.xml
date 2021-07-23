@@ -444,7 +444,7 @@
     </update>
 
     <!--消费支付成功信息添加-->
-    <insert id="insertRecords_consumptionByConsumption" parameterType="Records_consumption">
+    <insert id="insertRecords_consumptionByConsumption" parameterType="Records_consumption" useGeneratedKeys="true" keyProperty="rc_id">
         insert into records_consumption (rc_consumer_projects,rc_consumer_projects_code,rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,
         rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num,rc_oil_price)
         values(#{rc_consumer_projects},#{rc_consumer_projects_code},#{rc_datetime},#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
@@ -452,7 +452,7 @@
     </insert>
 
     <!--添加充值信息-->
-    <insert id="insertRecharge_information" parameterType="Records_consumption">
+    <insert id="insertRecharge_information" parameterType="Records_consumption" useGeneratedKeys="true" keyProperty="rc_id">
         insert into records_consumption (rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,rc_number)
         values (#{rc_datetime},#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode},#{rc_number})
     </insert>
@@ -492,6 +492,11 @@
     <!--依据消费记录ID查询-->
     <select id="findRecords_consumptionById" parameterType="Integer" resultType="Records_consumption">
         select * from records_consumption where rc_id=#{rc_id}
+    </select>
+
+    <!--依据消费记录ID 待支付  查询-->
+    <select id="findrecords_consumption_waitById" parameterType="Integer" resultType="Records_consumption">
+        select * from records_consumption_wait where rc_id=#{rc_id}
     </select>
 
     <!--依据单号查询消费记录-->

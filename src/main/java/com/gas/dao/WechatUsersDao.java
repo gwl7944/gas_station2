@@ -343,6 +343,11 @@ public interface WechatUsersDao {
     Property_change findRecords_consumptionByRc_number(String pce_code);
 
     /**
+     * 依据单号查询 待支付 消费记录
+     * */
+    Records_consumption findrecords_consumption_waitById(Integer rc_id);
+
+    /**
      * 添加属性变更信息
      * */
     Integer insertProperty_change(Property_change property_change);

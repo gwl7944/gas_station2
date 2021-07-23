@@ -311,6 +311,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
 
+    /**
+     * 打印公共类
+     * */
     public void publicPrint(String order_num){
         //查询当前单号的待支付信息
         Records_consumption records_consumption = wechatUsersDao.findRecordsByRcNum(order_num);
@@ -843,7 +846,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             //添加待支付
             Integer integer = wechatUsersDao.insertRecords_consumptionByConsumptionToBePaid(records_consumption);
             if (integer>0){
-                Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
+                Records_consumption records_consumptionById = wechatUsersDao.findrecords_consumption_waitById(records_consumption.getRc_id());
                 if (records_consumptionById!=null){
                     //添加属性记录
                     Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
@@ -887,10 +890,12 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     public Integer BalancePayment(Records_consumption records_consumption) {
         try {
             Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
+            Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
             if (integer>0){
                 //添加属性记录
                 Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
                 Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                if(integer1>0){this.publicPrint(records_consumptionById.getRc_number());}
                 return integer1;
             }
             return null;
