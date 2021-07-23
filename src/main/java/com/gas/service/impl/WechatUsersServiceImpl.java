@@ -893,8 +893,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
             if (integer>0){
                 //添加属性记录
-                Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
-                Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
+                //变更属性
+                Integer integer1 = this.PaymentSuccessful_ChangeInformation(property_change);
                 if(integer1>0){this.publicPrint(records_consumptionById.getRc_number());}
                 return integer1;
             }
