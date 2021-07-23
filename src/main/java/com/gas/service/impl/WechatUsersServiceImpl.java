@@ -839,41 +839,20 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Override
     public String ToBePaid(Records_consumption records_consumption) {
         try {
-            //充值待支付
-            if(records_consumption.getRc_type()==1){
-                //添加待支付消费记录
-                Integer integer = wechatUsersDao.insertRecharge_informationToBePaid(records_consumption);
-                if (integer>0){
-                    Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
-                    if (records_consumptionById!=null){
-                        //添加属性记录
-                        Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
-                        Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
-                        if (integer1>0){
-                            return records_consumptionById.getRc_number();
-                        }
+            //添加待支付
+            Integer integer = wechatUsersDao.insertRecords_consumptionByConsumptionToBePaid(records_consumption);
+            if (integer>0){
+                Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
+                if (records_consumptionById!=null){
+                    //添加属性记录
+                    Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
+                    Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                    if (integer1>0){
+                        return records_consumptionById.getRc_number();
                     }
                 }
-                return null;
             }
-            //消费待支付
-            else if (records_consumption.getRc_type()==2){
-                Integer integer = wechatUsersDao.insertRecords_consumptionByConsumptionToBePaid(records_consumption);
-                if (integer>0){
-                    Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
-                    if (records_consumptionById!=null){
-                        //添加属性记录
-                        Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
-                        Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
-                        if (integer1>0){
-                            return records_consumptionById.getRc_number();
-                        }
-                    }
-                }
-                return null;
-            }else {
-                return null;
-            }
+            return null;
         }catch (Exception e){
             e.printStackTrace();
             return null;
@@ -906,31 +885,14 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Override
     public Integer BalancePayment(Records_consumption records_consumption) {
         try {
-            //充值待支付
-            if(records_consumption.getRc_type()==1){
-                //添加待支付消费记录
-                Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
-                if (integer>0){
-                    //添加属性记录
-                    Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
-                    Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
-                    return integer1;
-                }
-                return null;
+            Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
+            if (integer>0){
+                //添加属性记录
+                Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
+                Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
+                return integer1;
             }
-            //消费待支付
-            else if (records_consumption.getRc_type()==2){
-                Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
-                if (integer>0){
-                    //添加属性记录
-                    Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
-                    Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
-                    return integer1;
-                }
-                return null;
-            }else {
-                return null;
-            }
+            return null;
         }catch (Exception e){
             e.printStackTrace();
             return null;
@@ -1090,7 +1052,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         property_change.setPce_balance(records_consumption.getRc_balance_deduction());
         property_change.setPce_wu_id(records_consumption.getRc_wu_id());
         property_change.setPce_site_id(records_consumption.getRc_sitecode());
-        property_change.setPce_type(1);
+        property_change.setPce_type(records_consumption.getRc_type());
         property_change.setPce_money(records_consumption.getRc_amount_payable());
         return  property_change;
     }
