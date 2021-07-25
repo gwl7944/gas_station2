@@ -39,8 +39,8 @@ public class OfficialAccPayService {
 	private static OfficialAccPayRequest componentRequestData() {
 		OfficialAccPayRequest request = new OfficialAccPayRequest();
 		//必传字段
-		request.setMchId("849177055410007");//嘉联分配的商户号
-		request.setOrgCode("2110962173");//嘉联分配的机构号
+		request.setMchId("849177055410018");//嘉联分配的商户号
+		request.setOrgCode("2111097218");//嘉联分配的机构号
 		request.setNonceStr("123456789abcdefg");//随机字符串
 		request.setPayType("wxpay");//交易类型    wxpay
 		request.setOutTradeNo("GZH"+RandomStringUtils.randomNumeric(10));//商家系统内部订单号   机构下唯一
@@ -48,11 +48,11 @@ public class OfficialAccPayService {
 		request.setBody("公众号支付测试");//商品名
 		request.setTermNo("800056");//终端号
 		request.setDeviceInfo("800056");//终端设备号
-		request.setMchCreateIp("183.189.150.45");//终端IP 小程序获取
+		request.setMchCreateIp("127.0.0.1");//终端IP 小程序获取  //183.189.150.45
 		request.setNotifyUrl("http://127.0.0.1/qrcode/notify/");//回调地址  https://xr.lykj-tech.com/gas/applets/async
 		request.setAttach("公众号支付商品描述");//商品描述
-		request.setOpenId("oxxTH0mRT9d1Bs43TZvrx-D2K1eE");//用户标识,此标识需要动态获取
-		request.setSubAppid("");//公众账号ID
+		request.setOpenId("oWK_W6RvJJ0B2wvfvfzevjsfD8II");//用户标识,此标识需要动态获取
+		request.setSubAppid("wx83f243d532c0e911");//公众账号ID
 		//非必传字段
 		request.setVersion("V1.0.1");//版本号
 		request.setCharset("UTF-8");//字符集
@@ -88,8 +88,8 @@ public class OfficialAccPayService {
 		request.setBody(recordsConsumption.getRc_consumer_projects());//商品名
 		request.setTermNo("800056");//终端号
 		request.setDeviceInfo("800056");//终端设备号
-		request.setMchCreateIp(recordsConsumption.getMchCreateIp());//终端IP 小程序获取
-		request.setNotifyUrl("https://xr.lykj-tech.com/gas/applets/async");//回调地址  https://xr.lykj-tech.com/gas/applets/async   http://305ct14671.zicp.vip/applets/async
+		request.setMchCreateIp(recordsConsumption.getMchCreateIp());//终端IP 小程序获取 recordsConsumption.getMchCreateIp()
+		request.setNotifyUrl("https://comeon.lslongyu.com/gas2/applets/async");//回调地址  https://xr.lykj-tech.com/gas/applets/async   http://305ct14671.zicp.vip/applets/async
 		request.setAttach("公众号支付商品描述");//商品描述
 		request.setOpenId(recordsConsumption.getOpenId());//用户标识,此标识需要动态获取 oMOjl51FtsCh1vEa39tE0qaw2uqU
 		//非必传字段

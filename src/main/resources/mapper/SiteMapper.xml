@@ -3,13 +3,13 @@
 <mapper namespace="com.gas.dao.SiteDao">
 
     <select id="findSite" resultType="com.gas.pojo.Site">
-        select site_id,site_name,site_appid,site_state,site_del from site where site_del =1
+        select site_id,site_name,site_appid,site_state,site_del,site_secret,site_address from site where site_del =1
     </select>
 
     <!-- 新增站点 -->
     <insert id="addSite" parameterType="com.gas.pojo.Site">
-        insert into site(site_name,site_appid,site_secret,site_mch_id,site_org_code,site_state,site_del)
-        values (#{site_name},#{site_appid},#{site_secret},#{site_mch_id},#{site_org_code},1,1)
+        insert into site(site_name,site_appid,site_secret,site_mch_id,site_org_code,site_state,site_del,site_address)
+        values (#{site_name},#{site_appid},#{site_secret},#{site_mch_id},#{site_org_code},1,1,#{site_address})
     </insert>
     <!--修改站点-->
     <update id="updateSite" parameterType="com.gas.pojo.Site">
@@ -31,7 +31,10 @@
                 site_org_code=#{site_org_code},
             </if>
             <if test='site_state!=0 and site_state!=null'>
-                site_state=#{site_state}
+                site_state=#{site_state},
+            </if>
+            <if test='site_address!=null and site_address!=""'>
+                site_address=#{site_address}
             </if>
         </set>
         where site_id=#{site_id}
@@ -43,6 +46,6 @@
 
     <!-- 根据id查询站点 -->
     <select id="findSiteById" parameterType="Integer" resultType="com.gas.pojo.Site">
-        select site_id,site_name,site_appid,site_state from site where site_id=#{rc_sitecode}
+        select * from site where site_id=#{rc_sitecode}
     </select>
 </mapper>

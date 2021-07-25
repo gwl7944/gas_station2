@@ -35,7 +35,7 @@ public class AuthorizationBindService {
 		request.setPayType("wxpay");//交易类型    wxpay
 		request.setMchCreateIp("118.72.8.247");//终端IP
 		//非必传字段
-		request.setJsapiPath("");//JSAPI支付授权目录  https://xr.lykj-tech.com/gasStationH5/  https://xr.lykj-tech.com/gasStationH5/index/
+		request.setJsapiPath("https://comeon.lslongyu.com/gasStationH5/");//JSAPI支付授权目录  https://comeon.lslongyu.com/gasStationH5/  https://xr.lykj-tech.com/gasStationH5/index/
 
 		request.setSubAppid("");//公众账号ID    军港:wxf1096614416a31b7     国信:wx83f243d532c0e911
 		request.setVersion("V1.0.1");//版本号

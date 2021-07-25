@@ -44,5 +44,6 @@ public class Site {
 
     private Integer site_del;//	删除（默认为1   删除为2）
 
+    private String site_address; //站点位置
 
 }

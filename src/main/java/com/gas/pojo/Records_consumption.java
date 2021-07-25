@@ -98,4 +98,6 @@ public class Records_consumption {
     private String org_code;//机构号
 
     private String appid;//	appID
+
+    private Integer rc_pay_type;  //实体字段  支付类型
 }

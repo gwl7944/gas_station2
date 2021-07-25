@@ -275,7 +275,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int insertMembershipLevel(Membership_level membershipLevel) {
-
+        System.out.println("membershipLevel>>"+membershipLevel);
         int i = membershipLevelDao.insertMembershipLevel(membershipLevel);
         if (i>0){
             //新增规则

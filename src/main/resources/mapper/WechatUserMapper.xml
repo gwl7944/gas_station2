@@ -264,7 +264,7 @@
     </insert>
     <!-- 根据单号查询消费记录 -->
     <select id="findRecordsByRcNum" parameterType="String" resultType="Records_consumption">
-        select * from records_consumption_wait where rc_number=#{out_trade_no}
+        select * from records_consumption where rc_number=#{out_trade_no}
     </select>
 
     <!--查询全部会员日-->
@@ -321,7 +321,7 @@
     <select id="findCarouselByCal_id" parameterType="Integer" resultMap="findCarouselByCal_idMap">
         select car.*,ppe.ppe_id,ppe.ppe_type,ppe.ppe_url
         from carousel car,product_picture ppe
-        where car.cal_id=ppe.ppe_carousel_id and car.cal_id=#{param1} and ppe.ppe_siteid=#{param2}
+        where car.cal_id=ppe.ppe_carousel_id and car.cal_id=#{param1} and ppe.ppe_siteid=#{param2} and ppe.ppe_del =1
     </select>
 
     <!--根据ID 查询会员等级-->
@@ -346,8 +346,7 @@
         wu_membership_card_growth =wu_membership_card_growth +#{wu_membership_card_growth },
         wu_ml_id=(select ml_id from membership_level where ml_level=1 and ml_sitecode=#{wu_sitecode}),
         wu_membership_card_number=CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
-        wu_remainder=wu_remainder+#{wu_remainder},
-        wu_current_points=wu_current_points+#{wu_current_points}
+        wu_remainder=wu_remainder+#{wu_remainder}
         where wu_id=#{wu_id}
     </update>
 
@@ -446,9 +445,9 @@
     <!--消费支付成功信息添加-->
     <insert id="insertRecords_consumptionByConsumption" parameterType="Records_consumption" useGeneratedKeys="true" keyProperty="rc_id">
         insert into records_consumption (rc_consumer_projects,rc_consumer_projects_code,rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,
-        rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num,rc_oil_price)
+        rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num,rc_oil_price,rc_balance_deduction)
         values(#{rc_consumer_projects},#{rc_consumer_projects_code},#{rc_datetime},#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
-        #{rc_coupon},#{rc_integral},#{rc_member},#{rc_number},#{rc_oil_gun},#{rc_oil_num},#{rc_oil_price})
+        #{rc_coupon},#{rc_integral},#{rc_member},#{rc_number},#{rc_oil_gun},#{rc_oil_num},#{rc_oil_price},#{rc_balance_deduction})
     </insert>
 
     <!--添加充值信息-->
@@ -460,7 +459,7 @@
     <!--添加充值  待支付  信息-->
     <insert id="insertRecharge_informationToBePaid" parameterType="Records_consumption" useGeneratedKeys="true" keyProperty="rc_id">
         insert into records_consumption_wait (rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,rc_number)
-        values (NOW(),1,#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode},
+        values (NOW(),#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_sitecode},
         CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))))
     </insert>
 
@@ -468,7 +467,7 @@
     <insert id="insertRecords_consumptionByConsumptionToBePaid" parameterType="Records_consumption" useGeneratedKeys="true" keyProperty="rc_id">
         insert into records_consumption_wait (rc_consumer_projects,rc_consumer_projects_code,rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,
         rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num,rc_oil_price)
-        values(#{rc_consumer_projects},#{rc_consumer_projects_code},NOW(),2,#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
+        values(#{rc_consumer_projects},#{rc_consumer_projects_code},NOW(),#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
         #{rc_coupon},#{rc_integral},#{rc_member},
         CONCAT((replace ((replace ((replace ((select now()),'-','')),' ','')),':','')),(select getnextnum('seq_test1_num1'))),
         #{rc_oil_gun},#{rc_oil_num},#{rc_oil_price})

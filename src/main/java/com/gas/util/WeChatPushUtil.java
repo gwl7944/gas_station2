@@ -90,9 +90,12 @@ public class WeChatPushUtil {
     }
 
     public static String getJsapiTicket(Open open) {
+        //System.out.println("open>>>"+open);
         //微信公众号获取openID
         //String str = sendGet("https://api.weixin.qq.com/cgi-bin/token","appid="+open.getAppId()+"&secret="+open.getSecret()+"&grant_type=client_credential");
         String str = TokenSave.getToken(open);
+        //System.out.println("str>"+str);
+
         JSONObject jsonObject = JSONObject.parseObject(str);
         String access_token = jsonObject.getString("access_token");
         String str1 = sendGet("https://api.weixin.qq.com/cgi-bin/ticket/getticket","access_token="+access_token+"&type=jsapi");

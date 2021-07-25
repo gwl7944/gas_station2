@@ -237,7 +237,7 @@ public class WechatUserController {
      */
     @PostMapping("/WechatUserController/jlPay")
     public JSON jlPay(@ModelAttribute Records_consumption recordsConsumption) {
-        System.out.println("recordsConsumption>>"+recordsConsumption);
+        //System.out.println("recordsConsumption>>"+recordsConsumption);
         OfficialAccPayService officialAccPayService = new OfficialAccPayService();
         OfficialAccPayResponse response = new OfficialAccPayResponse();
         try {
@@ -627,11 +627,5 @@ public class WechatUserController {
         return  ResultData.getResponseData(wechatUsersService.BalancePayment(records_consumption),ResultCode.SYS_SUCCESS);
 
     }
-
-
-
-
-
-
 
 }

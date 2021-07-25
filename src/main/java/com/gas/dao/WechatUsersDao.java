@@ -3,8 +3,6 @@ package com.gas.dao;
 import com.gas.pojo.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.omg.CORBA.INTERNAL;
-
 import java.util.List;
 
 /**

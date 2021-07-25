@@ -33,8 +33,8 @@ public class RefundService {
 		request.setOrgCode("2111097218");//嘉联分配的机构号     2110962173        2111097218
 		request.setNonceStr("123456789abcdefg");//随机字符串
 		request.setOutTradeNo("TK"+RandomStringUtils.randomNumeric(10));//商家系统内部订单号   机构下唯一
-		request.setOriOutTradeNo("GZH9060662544");//商家系统内部原订单号   机构下唯一
-		request.setTotalFee("1");//交易金额（退货金额）
+		request.setOriOutTradeNo("2021072516475648");//商家系统内部原订单号   机构下唯一
+		request.setTotalFee("100");//交易金额（退货金额）
 		request.setMchCreateIp("172.20.6.21");//终端IP
 		//非必传字段
 		request.setPayType("alipay");//交易类型    wxpay、alipay、unionpay

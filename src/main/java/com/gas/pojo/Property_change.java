@@ -39,4 +39,5 @@ public class Property_change {
 
     private Double pce_money; //支付金额
 
+    private Integer pce_pay_type; //支付类型 实体字段
 }
