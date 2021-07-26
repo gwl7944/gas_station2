@@ -388,8 +388,8 @@
 
     <!--添加用户积分变更记录-->
     <insert id="insertPointegers_details" parameterType="Pointegers_details">
-        insert into pointegers_details (pds_type,pds_operation,pds_project,pds_date,pds_num,pds_wu_id)
-        value(#{pds_type},#{pds_operation},#{pds_project},now(),#{pds_num},#{pds_wu_id})
+        insert into pointegers_details (pds_type,pds_operation,pds_project,pds_date,pds_num,pds_wu_id,pds_pim_id)
+        value(#{pds_type},#{pds_operation},#{pds_project},now(),#{pds_num},#{pds_wu_id},#{pds_pim_id})
     </insert>
 
     <!--扣除用户积分值-->

@@ -34,4 +34,6 @@ public class Pointegers_details {
     private Integer pds_write_off;  //核销值
 
     private Integer pds_wu_id;//	用户外键
+
+    private Integer pds_pim_id;  //积分商品外键
 }
