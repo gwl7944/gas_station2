@@ -580,6 +580,10 @@ public class WechatUsersServiceImpl implements WechatUsersService {
         Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(pointegers_details.getPds_wu_id(), -pointegers_details.getPds_num());
         Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
         if (integer+integer1>1){
+            //更新商品库存
+            if(pointegers_details.getPds_type()==3 && pointegers_details.getPds_pim_id()!=null){
+                integralDao.updateIntegralProductNum(pointegers_details.getPds_pim_id());
+            }
             return 1;
         }else {
             return 0;

@@ -447,7 +447,7 @@
         insert into records_consumption (rc_consumer_projects,rc_consumer_projects_code,rc_datetime,rc_type,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,
         rc_activity,rc_coupon,rc_integral,rc_member,rc_number,rc_oil_gun,rc_oil_num,rc_oil_price,rc_balance_deduction)
         values(#{rc_consumer_projects},#{rc_consumer_projects_code},#{rc_datetime},#{rc_type},#{rc_actual_amount},#{rc_amount_payable},#{rc_wu_id},#{rc_wu_name},#{rc_sitecode},#{rc_activity},
-        #{rc_coupon},#{rc_integral},#{rc_member},#{rc_number},#{rc_oil_gun},#{rc_oil_num},#{rc_oil_price},#{rc_balance_deduction})
+        #{rc_coupon},#{rc_integral},#{rc_member},#{rc_oil_gun},#{rc_oil_num},#{rc_oil_price},#{rc_balance_deduction})
     </insert>
 
     <!--添加充值信息-->

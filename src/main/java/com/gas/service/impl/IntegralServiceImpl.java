@@ -132,13 +132,13 @@ public class IntegralServiceImpl implements IntegralService {
     public int updateintegralConversion(Integer pds_id) {
         int i = 0;
         i = integralDao.updateintegralConversion(pds_id);
-        if (i>0){
+        /*if (i>0){
             Pointegers_details pointegersDetails = integralDao.findPointegersDetailsById(pds_id);
             if (pointegersDetails.getPds_type()==3 && pointegersDetails.getPds_pim_id()!=null){
                 //更新商品库存
                 i = integralDao.updateIntegralProductNum(pointegersDetails.getPds_pim_id());
             }
-        }
+        }*/
         return i;
     }
 
