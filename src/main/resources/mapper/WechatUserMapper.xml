@@ -419,7 +419,7 @@
     <select id="findAllPointegers_item" parameterType="Integer" resultMap="findAllPointegers_itemMap">
         select pp.*,pi.*
         from product_picture pp,pointegers_item pi
-        where pi.pim_site_id=#{pim_site_id} and pi.pim_del=1 and pi.pim_id=pp.ppe_pim_id
+        where pi.pim_site_id=#{pim_site_id} and pi.pim_del!=2 and pi.pim_id=pp.ppe_pim_id
     </select>
 
     <!--查询全部奖池奖品-->

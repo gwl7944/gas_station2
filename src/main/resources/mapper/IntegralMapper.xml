@@ -31,7 +31,7 @@
 
     <!-- 查询积分商品 -->
     <select id="findIntegralProduct" parameterType="Pointegers_item" resultType="Pointegers_item">
-        select * from pointegers_item where pim_del =1
+        select * from pointegers_item where pim_del !=2
         <if test="pim_name !=null and pim_name!=''">
            and pim_name = #{pim_name}
         </if>

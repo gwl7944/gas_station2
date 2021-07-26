@@ -36,7 +36,6 @@ public class Records_consumption {
 
     private String rc_Date_str; //消费时间
 
-
     private Integer rc_type;  //消费类型
 
 
