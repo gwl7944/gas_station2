@@ -4,10 +4,7 @@ import com.gas.dao.CouponDao;
 import com.gas.dao.IntegralDao;
 import com.gas.dao.PictureDao;
 import com.gas.dao.SiteDao;
-import com.gas.pojo.Pointegers_item;
-import com.gas.pojo.Page;
-import com.gas.pojo.Points_lottery;
-import com.gas.pojo.Product_picture;
+import com.gas.pojo.*;
 import com.gas.service.IntegralService;
 import com.gas.util.OOS_Util;
 import com.github.pagehelper.PageHelper;
@@ -133,7 +130,16 @@ public class IntegralServiceImpl implements IntegralService {
 
     @Override
     public int updateintegralConversion(Integer pds_id) {
-        return integralDao.updateintegralConversion(pds_id);
+        int i = 0;
+        i = integralDao.updateintegralConversion(pds_id);
+        if (i>0){
+            Pointegers_details pointegersDetails = integralDao.findPointegersDetailsById(pds_id);
+            if (pointegersDetails.getPds_type()==3 && pointegersDetails.getPds_pim_id()!=null){
+                //更新商品库存
+                i = integralDao.updateIntegralProductNum(pointegersDetails.getPds_pim_id());
+            }
+        }
+        return i;
     }
 
 }

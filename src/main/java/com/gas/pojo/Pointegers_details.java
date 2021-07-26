@@ -36,4 +36,6 @@ public class Pointegers_details {
     private Integer pds_wu_id;//	用户外键
 
     private Integer pds_pim_id;  //积分商品外键
+
+    private Pointegers_item pointegersItem;  //积分商品对象
 }

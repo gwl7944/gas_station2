@@ -1,5 +1,6 @@
 package com.gas.dao;
 
+import com.gas.pojo.Pointegers_details;
 import com.gas.pojo.Pointegers_item;
 import com.gas.pojo.Points_lottery;
 import org.apache.ibatis.annotations.Mapper;
@@ -50,4 +51,19 @@ public interface IntegralDao {
      * 奖品兑换
      */
     int updateintegralConversion(Integer pds_id);
+
+    /**
+     * 奖品兑换
+     */
+    Pointegers_details findPointegersDetailsById(Integer pds_id);
+
+    /**
+     * 更新商品库存
+     */
+    int updateIntegralProductNum(Integer pds_pim_id);
+
+    /**
+     * 根据id查询积分商品信息
+     */
+    Pointegers_item findIntegralProductById(Integer pds_pim_id);
 }

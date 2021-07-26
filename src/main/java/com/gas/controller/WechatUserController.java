@@ -606,7 +606,7 @@ public class WechatUserController {
     public JSON insertWCI(@ModelAttribute Wu_coupon_information wu_coupon_information){
         int i = wechatUsersService.insertWCI(wu_coupon_information);
         if (i<0){
-            return ResultData.getResponseData(null,ResultCode.REPEAT_ERROR);
+            return ResultData.getResponseData(i,ResultCode.REPEAT_ERROR);
         }
         return  ResultData.getResponseData(null,ResultCode.QUERY_SUCCESS);
     }

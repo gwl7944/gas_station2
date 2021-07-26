@@ -19,10 +19,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @ProjectName: gas_station
@@ -49,6 +46,10 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     UserDao userDao;
     @Resource
     CouponDao couponDao;
+    @Resource
+    IntegralDao integralDao;
+    @Resource
+    PictureDao pictureDao;
 
 
     @Override
@@ -560,7 +561,17 @@ public class WechatUsersServiceImpl implements WechatUsersService {
 
     @Override
     public List<Pointegers_details> getPoIntegers_detailsByPds_wu_id(Integer pds_wu_id) {
-        return wechatUsersDao.findPoIntegers_detailsByPds_wu_id(pds_wu_id);
+        List<Pointegers_details> pointegersDetails = wechatUsersDao.findPoIntegers_detailsByPds_wu_id(pds_wu_id);
+        for (Pointegers_details pointegersDetail : pointegersDetails) {
+            if (pointegersDetail.getPds_type()==3 && pointegersDetail.getPds_pim_id()!=null){
+                Pointegers_item integralProductById = integralDao.findIntegralProductById(pointegersDetail.getPds_pim_id());
+                if (integralProductById!=null){
+                    integralProductById.setPictureList(pictureDao.findProductPictureByPpePimId(integralProductById.getPim_id()));
+                }
+                pointegersDetail.setPointegersItem(integralProductById);
+            }
+        }
+        return pointegersDetails;
     }
 
     @Override
@@ -892,6 +903,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     public Integer BalancePayment(Records_consumption records_consumption) {
         try {
             records_consumption.setRc_datetime(new Date());
+            records_consumption.setRc_number("YE"+ UUID.randomUUID().toString().trim().replaceAll("-",""));
             Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
             Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
             if (integer>0){
@@ -1016,7 +1028,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         pointegers_details.setPds_wu_id(property_change.getPce_wu_id());
                         wechatUsersDao.insertPointegers_details(pointegers_details);
                     }
-                    //添加优惠券  使用信息
+                    //更新优惠券  使用信息
                     if (property_change.getPce_coupon()!=null && property_change.getPce_coupon()!=0){
                         wechatUsersDao.updateCouponState(property_change.getPce_coupon(),property_change.getPce_wu_id());
                     }
@@ -1066,7 +1078,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
      * 组装实体 Property_change
      * */
     public Property_change AssemblyEntityProperty_change(Records_consumption records_consumption){
-        System.out.println("records_consumption>>"+records_consumption);
+        //System.out.println("records_consumption>>"+records_consumption);
         //添加属性记录
         Property_change property_change = new Property_change();
         property_change.setPce_code(records_consumption.getRc_number());

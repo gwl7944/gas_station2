@@ -40,6 +40,6 @@
 
     <!-- 根据商品id查询图片 -->
     <select id="findProductPictureByPpePimId" parameterType="Integer" resultType="Product_picture">
-        select * from product_picture where ppe_pim_id = #{pim_id}
+        select * from product_picture where ppe_pim_id = #{pim_id} and ppe_del=1
     </select>
 </mapper>

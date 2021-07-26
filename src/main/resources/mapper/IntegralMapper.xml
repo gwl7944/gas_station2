@@ -35,7 +35,7 @@
         <if test="pim_name !=null and pim_name!=''">
            and pim_name = #{pim_name}
         </if>
-        <if test="pim_site_id !=null and pim_site_id!=0">
+        <if test="pim_site_id !=null">
             and pim_site_id = #{pim_site_id}
         </if>
     </select>
@@ -73,11 +73,26 @@
 
     <!-- 查询积分抽奖 -->
     <select id="findPointsLottery" parameterType="Points_lottery" resultType="Points_lottery">
-        select * from points_lottery
+        select * from points_lottery where pl_site_id = #{pl_site_id}
     </select>
 
     <!-- 奖品兑换 -->
     <update id="updateintegralConversion" parameterType="Integer">
         update pointegers_details set pds_write_off=1 where pds_id=#{pds_id}
     </update>
+
+    <!-- 查询所有积分对换项目 -->
+    <select id="findPointegersDetailsById" parameterType="Integer" resultType="Pointegers_details">
+        select * from pointegers_details where pds_id =#{pds_id}
+    </select>
+
+    <!-- 更新商品库存 -->
+    <update id="updateIntegralProductNum" parameterType="Integer">
+         update pointegers_item set pim_stock = pim_stock-1 where pim_id=#{pds_pim_id}
+    </update>
+
+    <!-- 据id查询积分商品信息 -->
+    <select id="findIntegralProductById" parameterType="Integer" resultType="Pointegers_item">
+        select * from pointegers_item where pim_id=#{pds_pim_id}
+    </select>
 </mapper>

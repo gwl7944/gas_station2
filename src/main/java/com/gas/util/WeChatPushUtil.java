@@ -36,13 +36,14 @@ import java.util.Map;
 public class WeChatPushUtil {
 
     public static Map<String,String> weChatGetOpenid(Open open){
+        //System.out.println("open>>>"+open);
         //微信公众号获取openID
         String str = sendGet("https://api.weixin.qq.com/sns/oauth2/access_token","appid="+open.getAppId()+"&secret="+open.getSecret()+"&code="+open.getCode()+"&grant_type=authorization_code");
         //System.out.println("str>>>"+str);
         if (str!=null && !"".equals(str)){
             JSONObject jsonObject = JSONObject.parseObject(str);
             String openid = jsonObject.getString("openid");
-           // System.out.println("jsonObject》》》"+jsonObject);
+            System.out.println("jsonObject》》》"+jsonObject);
             String access_token = jsonObject.getString("access_token");
             //获取微信用户信息
             String userInfo = sendGet("https://api.weixin.qq.com/sns/userinfo","access_token="+access_token+"&openid="+openid+"&lang=zh_CN");
