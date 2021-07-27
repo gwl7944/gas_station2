@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class DataCompletion {
 
-    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+    public static SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
     public  static Wechat_users getWechat_usersData(Wechat_users wechat_users){
         wechat_users.setWu_membership_card_number(getNumberData());   //会员卡号
         wechat_users.setWu_membership_card_growth(0);  //会员成长值
@@ -53,7 +53,7 @@ public class DataCompletion {
             //首字母不能为0
             result += (random.nextInt(9) + 1);
         }
-        return result;
+        return sdf.format(new Date())+result;
     }
 
     public static String getDateNum(Calendar now){
@@ -67,5 +67,9 @@ public class DataCompletion {
         return year.toString()+month+date+hour+minute+second;
     }
 
-
+    /*public static void main(String[] args) {
+        System.out.println("getRcNum>>"+getRcNum());
+        System.out.println("generateUID>>"+generateUID());
+        System.out.println("getDateNum>>"+getDateNum(Calendar.getInstance()));
+    }*/
 }

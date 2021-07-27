@@ -81,7 +81,7 @@ public class WechatUserController {
      */
     @PostMapping("/WechatUserController/GetAccessToken")
     public JSON GetAccessToken(@ModelAttribute Site site) {
-        System.out.println("site》》" + site);
+        //System.out.println("site》》" + site);
         String accessToken = WeChatPushUtil.getAccessToken(site);
         //System.out.println(accessToken);
         if (accessToken != null && !"".equals(accessToken)) {

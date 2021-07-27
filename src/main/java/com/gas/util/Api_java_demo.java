@@ -365,14 +365,15 @@ public class Api_java_demo {
         //油品
         String rc_consumer_projects = recordsConsumption.getRc_consumer_projects();
         //单价
-        Oil_price oilPrice = recordsConsumption.getOilPrice();
+        Double oilPrice = recordsConsumption.getRc_oil_price();
         Double oil_price = 0.0;
         if (oilPrice != null) {
-            if (recordsConsumption.getRc_oil_price() != null && !oilPrice.getOp_price().equals(recordsConsumption.getRc_oil_price())) {
+          /*  if (recordsConsumption.getRc_oil_price() != null && !oilPrice.getOp_price().equals(recordsConsumption.getRc_oil_price())) {
                 oil_price = recordsConsumption.getRc_oil_price();
             } else {
                 oil_price = oilPrice.getOp_price();
-            }
+            }*/
+            oil_price = oilPrice;
         }
         //System.out.println("oil_price>>>>" + oil_price);
         DecimalFormat df = new DecimalFormat("0.00");
@@ -398,7 +399,7 @@ public class Api_java_demo {
         //手机号
         String phone = null;
         Wechat_users wechat_users = recordsConsumption.getWechat_users();
-        if (wechat_users != null) {
+        if (wechat_users != null && wechat_users.getWu_telephone()!=null) {
             phone = wechat_users.getWu_telephone().substring(0, 3) + "****" + wechat_users.getWu_telephone().substring(7);
         }
 

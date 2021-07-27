@@ -134,7 +134,7 @@
 
     <!-- 查询 消费无卡支付总金额 -->
     <select id="findNoCardInfo" parameterType="User" resultType="com.gas.pojo.StationPrintInfo">
-        SELECT sum(rc_amount_payable) as sales_nocard_amount FROM records_consumption WHERE ISNULL(rc_wu_id) and rc_sitecode=#{user_sitecode}
+        SELECT sum(rc_amount_payable) as sales_nocard_amount FROM records_consumption as rcp WHERE  rcp.rc_consumer_projects_code IS NOT NULL and ISNULL(rcp.rc_balance_deduction) and rc_sitecode=#{user_sitecode}
         <if test="user_onduty_time_str!='' and user_onduty_time_str!=null">
             and rc_datetime &gt;=#{user_onduty_time_str}
         </if>

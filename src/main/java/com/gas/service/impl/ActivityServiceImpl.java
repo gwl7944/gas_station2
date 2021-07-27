@@ -42,7 +42,7 @@ public class ActivityServiceImpl implements ActivityService {
         if (activity.getActivity_end_date_str()!=""&&activity.getActivity_end_date_str()!=null){
             activity.setActivity_end_date(DateTO.getDate(activity.getActivity_end_date_str()));
         }
-        System.out.println("activity>>"+activity);
+        //System.out.println("activity>>"+activity);
         return activityDao.insertActivity(activity);
     }
 

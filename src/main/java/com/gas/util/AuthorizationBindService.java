@@ -28,8 +28,8 @@ public class AuthorizationBindService {
 	private static AuthorizationBindRequest componentRequestData() {
 		AuthorizationBindRequest request = new AuthorizationBindRequest();
 		//必传字段
-		request.setMchId("849177055410018");//嘉联分配的商户号 849177055410007
-		request.setOrgCode("2111097218");//嘉联分配的机构号    2110962173
+		request.setMchId("849177055410019");//嘉联分配的商户号 849177055410007
+		request.setOrgCode("50455862");//嘉联分配的机构号    2110962173
 		request.setNonceStr("398E482C39C243C985C3E8");//随机字符串
 
 		request.setPayType("wxpay");//交易类型    wxpay

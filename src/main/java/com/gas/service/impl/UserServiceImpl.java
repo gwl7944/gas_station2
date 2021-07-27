@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User login(User user) {
-        System.out.println("user》》" + user);
+        //System.out.println("user》》" + user);
         User userByName = userDao.findUserByName(user.getUser_loginname());
         if (userByName != null && user.getUser_pwd() != "" && user.getUser_pwd() != null) {
             if (userByName.getUser_pwd().equals(user.getUser_pwd())) {
@@ -275,7 +275,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public int insertMembershipLevel(Membership_level membershipLevel) {
-        System.out.println("membershipLevel>>"+membershipLevel);
+        //System.out.println("membershipLevel>>"+membershipLevel);
         int i = membershipLevelDao.insertMembershipLevel(membershipLevel);
         if (i>0){
             //新增规则
@@ -437,7 +437,7 @@ public class UserServiceImpl implements UserService {
     // ------------------------- 公共方法 -------------------------------------------
     public List<Wechat_users> findAllWcUserPu(Wechat_users wechatUsers) {
         List<Wechat_users> wechat_users = userDao.findWcUser(wechatUsers);
-        System.out.println("wechat_users1>>" + wechat_users);
+        //System.out.println("wechat_users1>>" + wechat_users);
         for (Wechat_users wechat_user : wechat_users) {
             /*if (wechat_user.getWu_birthday()!=null){
                 wechat_user.setWu_birthday_str(DateTO.getStringDate(wechat_user.getWu_birthday()));
@@ -446,7 +446,7 @@ public class UserServiceImpl implements UserService {
             Site site = siteDao.findSiteById(wechat_user.getWu_sitecode());
             wechat_user.setSite(site);
         }
-        System.out.println("wechat_users>>" + wechat_users);
+        //System.out.println("wechat_users>>" + wechat_users);
         return wechat_users;
     }
 }

@@ -77,14 +77,14 @@ public class PrintServiceImpl implements PrintService {
     @Override
     public StationPrintInfo findStationPrintInfo(User user) {
 
-        System.out.println("user>>" + user);
+        //System.out.println("user>>" + user);
         StationPrintInfo stationPrintInfo = printDao.findStationPrintInfo(user);
-        System.out.println("stationPrintInfo>>" + stationPrintInfo);
+        //System.out.println("stationPrintInfo>>" + stationPrintInfo);
 
         //查询充值金额
         StationPrintInfo stationPrintInfo1 = printDao.findTopUpAmounp(user);
 
-        System.out.println("stationPrintInfo1>>" + stationPrintInfo1);
+        //System.out.println("stationPrintInfo1>>" + stationPrintInfo1);
         if (stationPrintInfo1 != null) {
             stationPrintInfo.setTop_up_amounp(stationPrintInfo1.getTop_up_amounp());
             //优惠金额
@@ -153,7 +153,7 @@ public class PrintServiceImpl implements PrintService {
     @Override
     public int addStationRecordInfo(User user) {
         int i = 0;
-        System.out.println("user>>" + user);
+        //System.out.println("user>>" + user);
 
         //查询充值金额
         StationPrintInfo stationPrintInfo1 = printDao.findTopUpAmounp(user);
@@ -170,14 +170,14 @@ public class PrintServiceImpl implements PrintService {
             printInfo.setSite_id(user.getUser_sitecode());
             printInfo.setSite_name(user.getUser_site_name());
             printInfo.setOperator(user.getUser_name());
-            System.out.println("printInfo》》》" + printInfo);
+            //System.out.println("printInfo》》》" + printInfo);
             i = printDao.insertPrint(printInfo);
-            System.out.println("i#####" + i);
+            //System.out.println("i#####" + i);
             if (i > 0) {
                 //将用户结班时间开班时间清空
                 int i2 = printDao.updateUserOnOFFClear(printInfo);
             }
-            System.out.println("i》》》" + i);
+            //System.out.println("i》》》" + i);
             return i;
         }
         stationPrintInfo = new StationPrintInfo();
@@ -229,7 +229,7 @@ public class PrintServiceImpl implements PrintService {
 
     @Override
     public StationPrintInfo findStationRecordByUser(User user) {
-        System.out.println("user--------->" + user);
+        //System.out.println("user--------->" + user);
         StationPrintInfo stationPrintInfo = getPrintInfo(user);
         Date dateTime = DateTO.getDateTime(user.getUser_onduty_time_str());
         stationPrintInfo.setBusiness_day(DateTO.getStringDate(dateTime)); //开班日
@@ -373,6 +373,7 @@ public class PrintServiceImpl implements PrintService {
 
 
     public StationPrintInfo getPrintInfo(User user) {
+        //System.out.println("user>>>"+user);
         DecimalFormat df = new DecimalFormat("0.00");
         /*-------------------------- 充值信息 -------------------------------*/
         //查询 充值应收总金额  充值实收总金额  充值活动优惠总金额
@@ -469,6 +470,7 @@ public class PrintServiceImpl implements PrintService {
 
         stationPrintInfo.setOilPrintList(list);
 
+        //System.out.println("stationPrintInfo???"+stationPrintInfo);
         return stationPrintInfo;
     }
 

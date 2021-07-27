@@ -43,7 +43,7 @@ public class WeChatPushUtil {
         if (str!=null && !"".equals(str)){
             JSONObject jsonObject = JSONObject.parseObject(str);
             String openid = jsonObject.getString("openid");
-            System.out.println("jsonObject》》》"+jsonObject);
+            //System.out.println("jsonObject》》》"+jsonObject);
             String access_token = jsonObject.getString("access_token");
             //获取微信用户信息
             String userInfo = sendGet("https://api.weixin.qq.com/sns/userinfo","access_token="+access_token+"&openid="+openid+"&lang=zh_CN");

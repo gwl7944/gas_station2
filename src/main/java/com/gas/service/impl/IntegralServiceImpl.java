@@ -91,7 +91,7 @@ public class IntegralServiceImpl implements IntegralService {
         Page<Pointegers_item> page = new Page<>();
         PageHelper.startPage(currentpage, currentnumber);
         List<Pointegers_item> pointegers_items = integralDao.findIntegralProduct(pointegersItem);
-        System.out.println("pointegers_items>>"+pointegers_items);
+        //System.out.println("pointegers_items>>"+pointegers_items);
         for (Pointegers_item pointegers_item : pointegers_items) {
                 pointegers_item.setPictureList(pictureDao.findProductPictureByPpePimId(pointegers_item.getPim_id()));
         }

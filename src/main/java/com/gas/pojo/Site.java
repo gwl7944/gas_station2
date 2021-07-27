@@ -46,4 +46,6 @@ public class Site {
 
     private String site_address; //站点位置
 
+    private String site_title_url;  //头像地址
+
 }

@@ -85,7 +85,7 @@ public class UserController {
      */
     @PostMapping("/AuthorityController/updateUser")
     public JSON updateUser(@RequestBody User user) {
-        System.out.println("user----->>>>"+user);
+        //System.out.println("user----->>>>"+user);
         return ResultData.getResponseData(userService.updateUser(user), ResultCode.SYS_SUCCESS);
     }
 
@@ -287,7 +287,7 @@ public class UserController {
      */
     @PostMapping("/user/editMembershipRules")
     public JSON editMembershipRules(@RequestBody Membership_rules membershipRules){
-        System.out.println("membershipRules>>"+membershipRules);
+        //System.out.println("membershipRules>>"+membershipRules);
         int i = userService.updateMembershipRules(membershipRules);
         if (i>0){
             return ResultData.getResponseData(i,ResultCode.UPDATE_SUCCESS);

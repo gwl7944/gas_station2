@@ -56,7 +56,7 @@ public class PrintController {
     }
 
     /** 
-    * @FunctionName: 打印当前站点 开班时间 -  下班时间的石油售卖情况
+    * @FunctionName: 打印当前站点 开班时间 -  下班时间的石油售卖情况  废弃
     * @author: Ywj
     * @Param: 
     * @Return: 
@@ -73,7 +73,7 @@ public class PrintController {
 
 
     /**
-     * @FunctionName: 结班记录石油售卖情况
+     * @FunctionName: 结班记录石油售卖情况  废弃
      * @author: Ywj
      * @Param:
      * @Return:

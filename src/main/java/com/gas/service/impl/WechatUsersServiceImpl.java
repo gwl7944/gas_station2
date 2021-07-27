@@ -318,14 +318,15 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     public void publicPrint(String order_num){
         //查询当前单号的待支付信息
         Records_consumption records_consumption = wechatUsersDao.findRecordsByRcNum(order_num);
+        //System.out.println("订单信息》》》"+records_consumption);
         //站点信息
         Site site = siteDao.findSiteById(records_consumption.getRc_sitecode());
         records_consumption.setRc_sitecode_name(site.getSite_name());
         //消费时间
         records_consumption.setRc_Date_str(DateTO.getStringDateTime(records_consumption.getRc_datetime()));
         //油价
-        Oil_price oilPrice = oliInDao.findOliInfoById(records_consumption.getRc_consumer_projects_code());
-        records_consumption.setOilPrice(oilPrice);
+        //Oil_price oilPrice = oliInDao.findOliInfoById(records_consumption.getRc_consumer_projects_code());
+        //records_consumption.setOilPrice(oilPrice);
         //用户信息
         if (records_consumption.getRc_wu_id() != null) {
             Wechat_users wcUserById = userDao.findWcUserById(records_consumption.getRc_wu_id());
@@ -337,6 +338,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             for (Printer printer : printerList) {
                 //调用飞鹅打印
                 Api_java_demo.queryPrinterStatus2(printer.getPrinter_code());
+                //System.out.println("records_consumption>>>"+records_consumption);
                 String s = Api_java_demo.print2(printer, records_consumption);
                 JSONObject jsonObject = JSON.parseObject(s);
                 String ret = jsonObject.getString("ret");
@@ -483,7 +485,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Transactional
     public Integer getTheCard(Wechat_users wechat_users,Integer coupon_id) {
         Integer integer=0;
-        System.out.println("wechat_users>>>"+wechat_users);
+        //System.out.println("wechat_users>>>"+wechat_users);
         //添加成长值记录
         if (wechat_users.getWu_membership_card_growth()!=null && wechat_users.getWu_membership_card_growth()!=0){
             Growthvalue_record growthvalue_record = new Growthvalue_record();
@@ -866,6 +868,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 Records_consumption records_consumptionById = wechatUsersDao.findrecords_consumption_waitById(records_consumption.getRc_id());
                 if (records_consumptionById!=null){
                     //添加属性记录
+                    records_consumptionById.setRc_integral_num(records_consumption.getRc_integral_num());
+                    records_consumptionById.setRc_coupon_id(records_consumption.getRc_coupon_id());
+                    records_consumptionById.setRc_balance_deduction(records_consumption.getRc_balance_deduction());
                     Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
                     Integer integer1 = wechatUsersDao.insertProperty_change(property_change);
                     if (integer1>0){
@@ -904,10 +909,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
      * 余额支付
      * */
     @Override
+    @Transactional
     public Integer BalancePayment(Records_consumption records_consumption) {
         try {
             records_consumption.setRc_datetime(new Date());
-            records_consumption.setRc_number("YE"+ UUID.randomUUID().toString().trim().replaceAll("-",""));
+            records_consumption.setRc_number(DataCompletion.generateUID());
             Integer integer = wechatUsersDao.insertRecords_consumptionByConsumption(records_consumption);
             Records_consumption records_consumptionById = wechatUsersDao.findRecords_consumptionById(records_consumption.getRc_id());
             if (integer>0){
@@ -919,7 +925,12 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 Property_change property_change = this.AssemblyEntityProperty_change(records_consumptionById);
                 //变更属性
                 Integer integer1 = this.PaymentSuccessful_ChangeInformation(property_change);
-                //if(integer1>0){this.publicPrint(records_consumptionById.getRc_number());}
+               // System.out.println("消费》》》"+integer1);
+                try {
+                    if(integer1>0){this.publicPrint(records_consumptionById.getRc_number());}
+                }catch (Exception e){
+                   log.info("【余额支付打印异常】--->print"+integer1);
+                }
                 return integer1;
             }
             return null;
@@ -961,7 +972,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     @Transactional
     public Boolean PointsChange(Pointegers_details pointegers_details){
         //修改用户积分记录
-        System.out.println("pointegers_details>>>"+pointegers_details);
+       // System.out.println("pointegers_details>>>"+pointegers_details);
         Integer integer = wechatUsersDao.updateWechat_usersByWu_current_points(pointegers_details.getPds_wu_id(), pointegers_details.getPds_num());
         //添加积分变更记录
         Integer integer1 = wechatUsersDao.insertPointegers_details(pointegers_details);
@@ -1061,7 +1072,14 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                         //查询待支付消费信息
                         Records_consumption recharge_informationToBePaid = wechatUsersDao.findRecharge_informationToBePaid(property_change.getPce_code());
                         //添加消费记录
-                        wechatUsersDao.insertRecharge_information(recharge_informationToBePaid);
+                        Integer integer = wechatUsersDao.insertRecharge_information(recharge_informationToBePaid);
+                        try {
+                            if (integer>0){
+                                this.publicPrint(recharge_informationToBePaid.getRc_number());
+                            }
+                        }catch (Exception e){
+                            log.info("【消费打印异常】--->publicPrint"+integer);
+                        }
                     }
                     return 1;
                 }else {
@@ -1073,10 +1091,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             e.printStackTrace();
             return null;
         }
-
     }
-
-
 
     /**
      * 组装实体 Property_change
