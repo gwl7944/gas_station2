@@ -25,6 +25,8 @@ public class Property_change {
 
     private Integer pce_integral; //积分值
 
+    private Integer pce_integral_num; //积分值  实体
+
     private Integer pce_coupon; //优惠券
 
     private Integer pce_growth_value; //成长值

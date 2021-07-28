@@ -67,9 +67,9 @@ public class DataCompletion {
         return year.toString()+month+date+hour+minute+second;
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         System.out.println("getRcNum>>"+getRcNum());
         System.out.println("generateUID>>"+generateUID());
         System.out.println("getDateNum>>"+getDateNum(Calendar.getInstance()));
-    }*/
+    }
 }
