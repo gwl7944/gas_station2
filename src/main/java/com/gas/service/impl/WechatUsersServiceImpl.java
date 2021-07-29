@@ -19,6 +19,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -81,8 +82,18 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     }
 
     @Override
-    public List<Coupon> getCouponByWci_wu_id(Integer wci_wu_id) {
-        return wechatUsersDao.findCouponByWci_wu_id(wci_wu_id);
+    public List<Wu_coupon_information> getCouponByWci_wu_id(Integer wci_wu_id) {
+        List<Wu_coupon_information> couponByWci_wu_id = wechatUsersDao.findCouponByWci_wu_id(wci_wu_id);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = DateTO.getDate(sdf.format(new Date()));
+        for (Wu_coupon_information wuCouponInformation : couponByWci_wu_id) {
+            if (date.getTime()>=wuCouponInformation.getCoupon().getCoupon_term_validity().getTime() && date.getTime()<=wuCouponInformation.getCoupon().getCoupon_enddate().getTime()){
+                wuCouponInformation.getCoupon().setOverdue_state(1); //未过期
+            }else {
+                wuCouponInformation.getCoupon().setOverdue_state(2); //已过期
+            }
+        }
+        return couponByWci_wu_id;
     }
 
     @Override

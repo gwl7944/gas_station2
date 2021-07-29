@@ -10,7 +10,7 @@
 
     <!-- 查询当前站点下的所有优惠卷 -->
     <select id="findAllCouponBySite" parameterType="com.gas.pojo.Coupon" resultType="com.gas.pojo.Coupon">
-        select * from coupon where coupon_del=1
+        select * from coupon where coupon_del=1 and #{nowDate}&gt;=coupon_term_validity and #{nowDate}&lt;=coupon_enddate
         <if test=" coupon_site_id!=null">
             and  coupon_site_id =#{coupon_site_id}
         </if>

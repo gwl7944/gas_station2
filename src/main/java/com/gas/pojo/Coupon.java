@@ -62,5 +62,7 @@ public class Coupon {
 
     /*private Integer coupon_wxuser_number;*/  //用户优惠券持有数量
 
+    private String nowDate; //当前日期
 
+    private Integer overdue_state; //过期状态
 }

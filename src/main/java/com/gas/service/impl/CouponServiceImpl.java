@@ -12,6 +12,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +41,7 @@ public class CouponServiceImpl implements CouponService {
     public Page<Coupon> findAllCouponBySite(Coupon coupon, Integer currentpage, Integer currentnumber) {
         Page<Coupon> page = new Page<>();
         PageHelper.startPage(currentpage, currentnumber);
+        coupon.setNowDate(DateTO.getStringDate(new Date()));
         List<Coupon> couponList = couponDao.findAllCouponBySite(coupon);
         for (Coupon coupon1 : couponList) {
             coupon1.setCoupon_term_validity_str(DateTO.getStringDate(coupon1.getCoupon_term_validity()));

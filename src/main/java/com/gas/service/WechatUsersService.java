@@ -32,7 +32,7 @@ public interface WechatUsersService {
     /**
      * 查询用户优惠券列表
      * */
-    List<Coupon> getCouponByWci_wu_id(Integer wci_wu_id);
+    List<Wu_coupon_information> getCouponByWci_wu_id(Integer wci_wu_id);
 
     /**
      * 查询用户消费记录
