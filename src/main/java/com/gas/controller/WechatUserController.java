@@ -19,10 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Ywj
@@ -123,16 +120,19 @@ public class WechatUserController {
      */
     @PostMapping("/WechatUserController/WxLogin")
     public JSON WxLogin(@ModelAttribute Wechat_users wechat_users) {
-        Wechat_users wechat_usersByOpenId = wechatUsersService.getWechat_usersByOpenId(wechat_users.getWu_openid());
-        if (wechat_usersByOpenId != null) {
-            return ResultData.getResponseData(wechat_usersByOpenId, ResultCode.LOGIN_SUCCESS);
-        } else {
-            if (wechatUsersService.insertWechat_users(wechat_users) > 0) {
-                return ResultData.getResponseData(wechatUsersService.getWechat_usersByOpenId(wechat_users.getWu_openid()), ResultCode.LOGIN_SUCCESS);
+        if (wechat_users.getWu_openid()!=null && !"null".equals(wechat_users.getWu_openid())){
+            Wechat_users wechat_usersByOpenId = wechatUsersService.getWechat_usersByOpenId(wechat_users.getWu_openid());
+            if (wechat_usersByOpenId != null) {
+                return ResultData.getResponseData(wechat_usersByOpenId, ResultCode.LOGIN_SUCCESS);
             } else {
-                return ResultData.getResponseData(null, ResultCode.SYS_ERROR);
+                if (wechatUsersService.insertWechat_users(wechat_users) > 0) {
+                    return ResultData.getResponseData(wechatUsersService.getWechat_usersByOpenId(wechat_users.getWu_openid()), ResultCode.LOGIN_SUCCESS);
+                } else {
+                    return ResultData.getResponseData(null, ResultCode.SYS_ERROR);
+                }
             }
         }
+        return ResultData.getResponseData(wechat_users, ResultCode.LOGIN_SUCCESS);
     }
 
     /**
