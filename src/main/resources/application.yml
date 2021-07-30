@@ -7,7 +7,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://rm-bp1ico89l2ndglykp1250100m.mysql.rds.aliyuncs.com:3306/gasstation2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = Asia/Shanghai
+    url: jdbc:mysql://rm-bp1ico89l2ndglykp1250100m.mysql.rds.aliyuncs.com:3306/gasstation2_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = Asia/Shanghai
     #url: jdbc:mysql://rm-bp1ico89l2ndglykp1250100m.mysql.rds.aliyuncs.com:3306/gas_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone = Asia/Shanghai
     username: gwl7944
     password: Gwl794403044

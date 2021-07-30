@@ -191,4 +191,12 @@
         update station_print set print_num=print_num+1 where user_onduty_time_str=#{user_onduty_time_str} and user_offduty_time_str=#{user_offduty_time_str}
     </update>
 
+    <!--门店全部订单信息-->
+    <select id="findAllRecords_consumptionByRc_sitecode" parameterType="Integer" resultType="Records_consumption">
+        select * from records_consumption where 1=1
+        <if test="rc_sitecode!=null and rc_sitecode!=0">
+            and rc_sitecode=#{rc_sitecode}
+        </if>
+    </select>
+
 </mapper>

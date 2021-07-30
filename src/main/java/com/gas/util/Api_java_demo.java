@@ -403,6 +403,9 @@ public class Api_java_demo {
             phone = wechat_users.getWu_telephone().substring(0, 3) + "****" + wechat_users.getWu_telephone().substring(7);
         }
 
+        //加油员
+        String rc_topup_boy = recordsConsumption.getRc_topup_boy();
+
         String content;
         content = "<CB>" + rc_sitecode_name + "</CB><BR>";
         //content += "名称　　　　　 单价  数量 金额<BR>";
@@ -421,6 +424,9 @@ public class Api_java_demo {
         if (phone != null) {
             content += "手机号:" + phone + "<BR>";
         }
+        if(rc_topup_boy!=null && !"".equals(rc_topup_boy)){
+            content += "加油员:" + rc_topup_boy + "<BR>";
+        }
         content += "--------------------------------<BR>";
         content += "<CB>" + "应付金额:" + rc_actual_amount + "</CB><BR>";
         content += "--------------------------------<BR>";
@@ -429,6 +435,8 @@ public class Api_java_demo {
         //content += "联系电话：13888888888888<BR>";
         //content += "订餐时间：2016-08-08 08:08:08<BR>";
         //content += "<QR>http://www.dzist.com</QR>";
+
+        //System.out.println("小票：----"+content);
 
         //通过POST请求，发送打印信息到服务器
         RequestConfig requestConfig = RequestConfig.custom()

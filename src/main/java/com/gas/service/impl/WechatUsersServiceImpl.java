@@ -864,9 +864,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     /**
      * 待支付整合   待支付调用
      * @param records_consumption 消费实体
-     * 充值参数--->  rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode
-     * 消费参数--->  rc_consumer_projects,rc_consumer_projects_code,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,rc_activity,rc_coupon
-     *              rc_integral,rc_member,rc_oil_gun,rc_oil_num,rc_oil_price
+     * 充值参数--->  rc_type,.rc_actual_amount,rc_amount_payable,rc_wu_id,rc_sitecode,rc_integral_num,rc_coupon_id,rc_balance_deduction
+     * 消费参数--->  rc_type,rc_consumer_projects,rc_consumer_projects_code,rc_actual_amount,rc_amount_payable,rc_wu_id,rc_wu_name,rc_sitecode,rc_activity,rc_coupon
+     *              rc_integral,rc_member,rc_oil_gun,rc_oil_num,rc_integral_num,rc_coupon_id,rc_balance_deduction,rc_topup_boy
      *
      *
      * */
@@ -951,6 +951,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public List<User> getAllUser(User user) {
+        return userDao.findAllUser(user);
     }
 
     /**

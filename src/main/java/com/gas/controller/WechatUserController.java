@@ -625,7 +625,16 @@ public class WechatUserController {
     @PostMapping("/WechatUserController/BalancePayment")
     public JSON BalancePayment(Records_consumption records_consumption){
         return  ResultData.getResponseData(wechatUsersService.BalancePayment(records_consumption),ResultCode.SYS_SUCCESS);
-
     }
+
+    /**
+     * 拉取全部用户
+     * */
+    @PostMapping("/WechatUserController/findAllUser")
+    public JSON findAllUser(@ModelAttribute User user){
+        //System.out.println("user----"+user);
+        return  ResultData.getResponseData(wechatUsersService.getAllUser(user),ResultCode.QUERY_SUCCESS);
+    }
+
 
 }
