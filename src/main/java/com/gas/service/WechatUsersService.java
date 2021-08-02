@@ -244,4 +244,9 @@ public interface WechatUsersService {
      * */
     Integer BalancePayment(Records_consumption records_consumption);
 
+    /**
+     * 拉取全部用户
+     * */
+    List<User> getAllUser(User user);
+
 }

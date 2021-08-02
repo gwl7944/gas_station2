@@ -99,4 +99,6 @@ public class Records_consumption {
     private String appid;//	appID
 
     private Integer rc_pay_type;  //实体字段  支付类型
+
+    private String rc_topup_boy; //加油员
 }

@@ -58,4 +58,10 @@ public interface PrintDao {
     Integer findPrintNum(User user);
 
     int updatePrintNum(User user);
+
+    /**
+     * 门店全部订单信息
+     * */
+    List<Records_consumption> findAllRecords_consumptionByRc_sitecode(Records_consumption records_consumption);
+
 }
