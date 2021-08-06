@@ -13,6 +13,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -30,15 +31,14 @@ public class OilGunServiceImpl implements OilGunService {
     @Resource
     OilGunDao oilGunDao;
     @Resource
-    AuthorityDao authorityDao;
-    @Resource
     SiteDao siteDao;
     @Resource
     OliInDao oliInDao;
 
-    @Override
-    public int insertOilGun(OilGun oilGun) {
 
+    @Override
+    @Transactional
+    public int insertOilGun(OilGun oilGun) {
         return oilGunDao.insertOilGun(oilGun);
     }
 

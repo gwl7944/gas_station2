@@ -51,6 +51,8 @@ public class WechatUsersServiceImpl implements WechatUsersService {
     IntegralDao integralDao;
     @Resource
     PictureDao pictureDao;
+    @Resource
+    WechatUsersServiceImpl wechatUsersService;
 
 
     @Override
@@ -317,6 +319,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
      *  直接消费（无卡消费、充值记录  联合消费--->微信）
      */
     @Override
+    @Transactional
     public int insertConsumeReco(String out_trade_no) {
         Integer integer = PaymentSuccessful(out_trade_no);
         return integer;
@@ -361,7 +364,7 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 }
             }
         }catch (Exception e){
-            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
@@ -906,10 +909,11 @@ public class WechatUsersServiceImpl implements WechatUsersService {
      *
      * */
     @Override
+    @Transactional
     public Integer PaymentSuccessful(String rc_number) {
         //变更记录信息
         Property_change property_change = wechatUsersDao.findRecords_consumptionByRc_number(rc_number);
-        Integer integer = this.PaymentSuccessful_ChangeInformation(property_change);
+        Integer integer = wechatUsersService.PaymentSuccessful_ChangeInformation(property_change);
         //查询待支付记录
         //Records_consumption records_consumptionById = wechatUsersDao.findRecharge_informationToBePaid(rc_number);
         //添加正式消费记录
@@ -935,9 +939,9 @@ public class WechatUsersServiceImpl implements WechatUsersService {
                 }
                 records_consumptionById.setRc_pay_type(records_consumption.getRc_pay_type());*/
                 //添加属性记录
-                Property_change property_change = this.AssemblyEntityProperty_change(records_consumption);
+                Property_change property_change = wechatUsersService.AssemblyEntityProperty_change(records_consumption);
                 //变更属性
-                Integer integer1 = this.PaymentSuccessful_ChangeInformation(property_change);
+                Integer integer1 = wechatUsersService.PaymentSuccessful_ChangeInformation(property_change);
                // System.out.println("消费》》》"+integer1);
                 try {
                     if(integer1>0){this.publicPrint(records_consumption.getRc_number());}
