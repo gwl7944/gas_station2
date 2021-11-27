@@ -33,12 +33,12 @@
             </exclusions>-->
         </dependency>
 
-        <!--<dependency>
+        <dependency>
             <groupId>org.apache.tomcat</groupId>
             <artifactId>tomcat-servlet-api</artifactId>
             <version>8.0.36</version>
             <scope>provided</scope>
-        </dependency>-->
+        </dependency>
 
 
         <!--spring boot 2.2.2-->
@@ -261,15 +261,15 @@
     </dependencies>
 
 
-    <build>
+    <!--<build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
+                &lt;!&ndash;<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>&ndash;&gt;
                 <configuration>
-                    <source>1.8</source> <!-- 源代码使用的JDK版本 -->
-                    <target>1.8</target> <!-- 需要生成的目标class文件的编译版本 -->
-                    <encoding>UTF-8</encoding><!-- 字符集编码 -->
+                    <source>1.8</source> &lt;!&ndash; 源代码使用的JDK版本 &ndash;&gt;
+                    <target>1.8</target> &lt;!&ndash; 需要生成的目标class文件的编译版本 &ndash;&gt;
+                    <encoding>UTF-8</encoding>&lt;!&ndash; 字符集编码 &ndash;&gt;
                 </configuration>
             </plugin>
 
@@ -289,6 +289,6 @@
             </plugin>
         </plugins>
         <finalName>gas2</finalName>
-    </build>
+    </build>-->
 
 </project>
